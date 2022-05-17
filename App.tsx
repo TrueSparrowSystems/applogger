@@ -29,6 +29,45 @@ import {
 import {LogTracker} from './src/LogTracker';
 import {LogTrackerConfigInterface} from './src/LogTracker/LogTrackerConfigInterface';
 
+import {NetworkInfo} from 'react-native-network-info';
+import moment from 'moment';
+
+var httpBridge = require('react-native-http-bridge');
+var html = `<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>All sessions</h2>
+    <table>
+      <tr>
+        <th>Session Id</th>
+        <th>Time</th>
+      </tr>
+      {{session_data}}
+    </table>
+  </body>
+</html>
+`;
+
 // const Section: React.FC<{
 //   title: string;
 // }> = ({children, title}) => {
@@ -74,13 +113,91 @@ const App = () => {
     });
   }
   useEffect(() => {
-    logTracker.current!.track({
-      testCaseId: '2',
-      testCaseDescription: 'Mount the app',
-      eventData: 0,
+    NetworkInfo.getIPAddress().then(ipAddress => {
+      console.log(ipAddress);
     });
-    log(0);
+    // initalize the server (now accessible via localhost:1234)
+    httpBridge.start(5561, 'http_service', request => {
+      console.log('request: ', request);
+      console.log('split: ', request.url.split('/'));
+      console.log('html: ', html);
+
+      const requestUrlComponents = request.url.split('/');
+      // you can use request.url, request.type and request.postData here
+      if (request.type === 'GET' && requestUrlComponents[1] === 'session') {
+        if (requestUrlComponents.length >= 3) {
+          logTracker.current
+            ?.getSessionDetails(requestUrlComponents[2])
+            .then(sessionData => {
+              const deviceInfo: any = logTracker.current?.getDeviceInfo();
+              const deviceInfoData: string[] = [];
+              if (deviceInfo) {
+                for (const key in deviceInfo) {
+                  if (Object.prototype.hasOwnProperty.call(deviceInfo, key)) {
+                    const val = deviceInfo[key];
+                    deviceInfoData.push(`
+                    <tr>
+            <td>${key}</td>
+            <td>${val}</td>
+          </tr>
+          `);
+                  }
+                }
+              }
+              console.log('-------> deviceInfo: ', deviceInfo);
+              httpBridge.respond(
+                request.requestId,
+                200,
+                'text/html',
+                html.replace('{{session_data}}', deviceInfoData.join('')),
+              );
+            });
+        } else {
+          const sessionData: string[] = [];
+          logTracker.current?.getAllSessions().then((allSessions: any) => {
+            if (allSessions) {
+              for (const key in allSessions) {
+                if (Object.prototype.hasOwnProperty.call(allSessions, key)) {
+                  const ts = allSessions[key];
+                  sessionData.push(`
+          <tr>
+            <td><a href="/session/${key}">${key}</a></td>
+            <td>${moment(ts).format('DD MMM YYYY hh:mm:ss')}</td>
+          </tr>`);
+                }
+              }
+            }
+
+            httpBridge.respond(
+              request.requestId,
+              200,
+              'text/html',
+              html.replace('{{session_data}}', sessionData.reverse().join('')),
+            );
+          });
+        }
+      } else {
+        httpBridge.respond(
+          request.requestId,
+          400,
+          'application/json',
+          '{"message": "Bad Request"}',
+        );
+      }
+    });
+
+    return () => {
+      httpBridge.stop();
+    };
   }, []);
+  // useEffect(() => {
+  //   logTracker.current!.track({
+  //     testCaseId: '2',
+  //     testCaseDescription: 'Mount the app',
+  //     eventData: 0,
+  //   });
+  //   log(0);
+  // }, []);
 
   const log = useCallback((index: number) => {
     logTracker.current!.track({

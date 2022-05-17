@@ -6,10 +6,12 @@ import {
 } from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
+import {DeviceInfo} from '../DeviceInfo';
 
 const LOG_SESSION_KEY = 'log_session';
 
 export class LogTracker {
+  deviceInfo = new DeviceInfo();
   sessionId: string;
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
@@ -45,9 +47,12 @@ export class LogTracker {
       .then(jsonData => {
         let data: Record<string, number> = {};
         console.log('get existing Session id: ', data);
-        if (!jsonData) {
+        if (jsonData) {
+          console.log('Here: ', jsonData);
           data = JSON.parse(jsonData!);
         }
+        console.log('=======> jsonData: ', jsonData);
+        console.log('=======> data: ', data);
         data[this.sessionId] = Date.now();
 
         AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
@@ -96,13 +101,52 @@ export class LogTracker {
     }
   }
 
+  getSessionDetails(sessionId: string) {
+    return new Promise(resolve => {
+      AsyncStorage.getItem(sessionId)
+        .then(jsonData => {
+          console.log('session data: ', jsonData);
+          try {
+            if (jsonData) {
+              resolve(JSON.parse(jsonData));
+            } else {
+              resolve({});
+            }
+          } catch (error) {
+            console.log('Error while parsing session data: ', error);
+            resolve({});
+          }
+        })
+        .catch(err => {
+          console.log('Error while getting all sessions: ', err);
+          resolve({});
+        });
+    });
+  }
   getAllSessions() {
-    AsyncStorage.getItem(LOG_SESSION_KEY)
-      .then(jsonData => {
-        console.log('All sessions: ', jsonData);
-      })
-      .catch(err => {
-        console.log('Error while getting all sessions: ', err);
-      });
+    return new Promise(resolve => {
+      AsyncStorage.getItem(LOG_SESSION_KEY)
+        .then(jsonData => {
+          console.log('All sessions: ', jsonData);
+          try {
+            if (jsonData) {
+              resolve(JSON.parse(jsonData));
+            } else {
+              resolve({});
+            }
+          } catch (error) {
+            console.log('Error while parsing session data: ', error);
+            resolve({});
+          }
+        })
+        .catch(err => {
+          console.log('Error while getting all sessions: ', err);
+          resolve({});
+        });
+    });
+  }
+
+  getDeviceInfo() {
+    return this.deviceInfo.get();
   }
 }
