@@ -57,7 +57,7 @@ export function TouchableHighlight(props: any) {
         });
       }
 
-      props.onPress(event);
+      props.onLongPress(event);
     },
     [props],
   );
@@ -86,7 +86,7 @@ export function TouchableHighlight(props: any) {
         });
       }
 
-      props.onPress(event);
+      props.onPressIn(event);
     },
     [props],
   );
@@ -115,7 +115,7 @@ export function TouchableHighlight(props: any) {
         });
       }
 
-      props.onPress(event);
+      props.onPressOut(event);
     },
     [props],
   );
