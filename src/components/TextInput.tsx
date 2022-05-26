@@ -1,6 +1,6 @@
 import {capitalize} from 'lodash';
 import React, {useCallback, useMemo} from 'react';
-import {TextInput as RnTextInput} from 'react-native';
+import {TextInput as RnTextInput, TextInputProps} from 'react-native';
 import LogTracker from '../LogTracker/index';
 
 export function TextInput(props: any) {
@@ -409,7 +409,7 @@ export function TextInput(props: any) {
     [props],
   );
 
-  const filteredProps = useMemo(() => {
+  const filteredProps: TextInputProps = useMemo(() => {
     const propsCopy = {...props};
     delete propsCopy.onPressIn;
     delete propsCopy.onPressOut;
