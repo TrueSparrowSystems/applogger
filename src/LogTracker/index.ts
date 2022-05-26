@@ -1,16 +1,14 @@
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
-import {
-  LogDataInterface,
-  LogTrackerConfigInterface,
-} from './LogTrackerConfigInterface';
+import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
-import {DeviceInfo} from '../DeviceInfo';
+import {DeviceInfo} from './DeviceInfo';
+import {TrackInterface} from './TrackInterface';
 
 const LOG_SESSION_KEY = 'log_session';
 
-export class LogTracker {
+class LogTracker {
   deviceInfo = new DeviceInfo();
   sessionId: string;
   sessionData: Record<number, any>[] = [];
@@ -35,9 +33,9 @@ export class LogTracker {
     this.storeSessionId.bind(this);
   }
 
-  public track(logData: LogDataInterface) {
+  public track(logData: TrackInterface) {
     console.log('track: ', logData);
-    this.currentData[this.currentStoreId] = logData;
+    this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};
     this.currentStoreId++;
   }
 
@@ -150,3 +148,7 @@ export class LogTracker {
     return this.deviceInfo.get();
   }
 }
+
+export default new LogTracker({
+  writeFrequencyInSeconds: 5000,
+});
