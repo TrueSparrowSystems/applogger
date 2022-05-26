@@ -3,7 +3,7 @@ import {v4 as uuidv4} from 'uuid';
 import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
-import {DeviceInfo} from './DeviceInfo';
+import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
 
 const LOG_SESSION_KEY = 'log_session';

@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {AppState, Keyboard} from 'react-native';
-import LogTracker from './index';
+import LogTracker from '../LogTracker/index';
 
 export function useTracker() {
   useEffect(() => {
@@ -43,7 +43,6 @@ export function useTracker() {
         type: 'App State',
         params: {appState: nextAppState},
       });
-      
     });
 
     return () => {
