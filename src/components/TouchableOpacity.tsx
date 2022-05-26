@@ -1,7 +1,7 @@
 import {capitalize} from 'lodash';
 import React, {useCallback, useMemo} from 'react';
 import {TouchableOpacity as RnTouchableOpacity} from 'react-native';
-import LogTracker from './index';
+import LogTracker from '../LogTracker/index';
 
 export function TouchableOpacity(props: any) {
   const onPress = useCallback(

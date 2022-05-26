@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
-import LogTracker from './index';
+import LogTracker from '../LogTracker/index';
 import moment from 'moment';
-import {DataParser} from './DataParser';
-import {DeviceInfo} from './DeviceInfo';
+import {DataParser} from '../LogTracker/DataParser';
+import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import deviceInfoModule from 'react-native-device-info';
 
 var httpBridge = require('react-native-http-bridge');
