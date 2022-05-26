@@ -49,8 +49,8 @@ export function Pressable(props: any) {
         }
 
         LogTracker.track({
-          stepDescription: `Tap on ${buttonName} (#${props.testId})`,
-          type: 'PressIn',
+          stepDescription: `Press In on ${buttonName} (#${props.testId})`,
+          type: 'Tap',
           params: {
             testId: props.testId,
           },
@@ -78,8 +78,8 @@ export function Pressable(props: any) {
         }
 
         LogTracker.track({
-          stepDescription: `Tap on ${buttonName} (#${props.testId})`,
-          type: 'PressOut',
+          stepDescription: `Press out on ${buttonName} (#${props.testId})`,
+          type: 'Tap',
           params: {
             testId: props.testId,
           },
@@ -107,8 +107,8 @@ export function Pressable(props: any) {
         }
 
         LogTracker.track({
-          stepDescription: `Tap on ${buttonName} (#${props.testId})`,
-          type: 'LongPress',
+          stepDescription: `Long press on ${buttonName} (#${props.testId})`,
+          type: 'Tap',
           params: {
             testId: props.testId,
           },
