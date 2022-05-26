@@ -17,7 +17,7 @@ export function useMountLogger(componentId: string, params: any) {
 
     return () => {
       LogTracker.track({
-        stepDescription: `mounting component with id: ${componentId}.`,
+        stepDescription: `unmounting component with id: ${componentId}.`,
         type: 'Mount',
         params: params,
       });
