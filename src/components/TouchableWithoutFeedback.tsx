@@ -1,9 +1,9 @@
 import {capitalize} from 'lodash';
 import React, {useCallback, useMemo} from 'react';
-import {TouchableOpacity as RnTouchableOpacity} from 'react-native';
+import {TouchableWithoutFeedback as RnTouchableWithoutFeedback} from 'react-native';
 import LogTracker from '../LogTracker/index';
 
-export function TouchableOpacity(props: any) {
+export function TouchableWithoutFeedback(props: any) {
   const onPress = useCallback(
     (event: any) => {
       if (props.testId) {
@@ -130,13 +130,13 @@ export function TouchableOpacity(props: any) {
   }, [props]);
 
   return (
-    <RnTouchableOpacity
+    <RnTouchableWithoutFeedback
       onPress={onPress}
       onLongPress={onLongPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       {...filteredProps}>
       {props.children}
-    </RnTouchableOpacity>
+    </RnTouchableWithoutFeedback>
   );
 }
