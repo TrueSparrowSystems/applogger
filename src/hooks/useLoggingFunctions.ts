@@ -119,10 +119,40 @@ export function useLoggingFunctions(props: any) {
     [props],
   );
 
+  const onValueChange = useCallback(
+    (event: any) => {
+      if (props.testID && props.onValueChange) {
+        let buttonName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('buttonName: ', buttonName);
+        console.log('buttonName.toLowerCase(): ', buttonName.toLowerCase());
+        console.log(
+          'buttonName.toLowerCase().endsWith(button): ',
+          buttonName.toLowerCase().trim().endsWith('button'),
+        );
+        if (buttonName.toLowerCase().trim().endsWith('button')) {
+        } else {
+          buttonName = `${buttonName} button`;
+        }
+
+        LogTracker.track({
+          stepDescription: `Value change called for ${buttonName} (#${props.testID})`,
+          type: 'Tap',
+          params: {
+            testID: props.testID,
+          },
+        });
+      }
+
+      props.onValueChange(event);
+    },
+    [props],
+  );
+
   return {
     onPress,
     onLongPress,
     onPressIn,
     onPressOut,
+    onValueChange,
   };
 }
