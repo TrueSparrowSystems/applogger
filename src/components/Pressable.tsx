@@ -3,7 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {Pressable as RnPressable} from 'react-native';
 import LogTracker from '../LogTracker/index';
 
-export function TouchableOpacity(props: any) {
+export function Pressable(props: any) {
   const onPress = useCallback(
     (event: any) => {
       if (props.testId && props.onPress) {
