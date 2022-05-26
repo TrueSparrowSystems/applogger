@@ -20,7 +20,7 @@ export function Switch(props: any) {
         }
 
         LogTracker.track({
-          stepDescription: `Change on ${buttonName} (#${props.testId})`,
+          stepDescription: `On Change called for ${buttonName} (#${props.testId})`,
           type: 'Tap',
           params: {
             testId: props.testId,
@@ -49,7 +49,7 @@ export function Switch(props: any) {
         }
 
         LogTracker.track({
-          stepDescription: `Value change on ${buttonName} (#${props.testId})`,
+          stepDescription: `onValue change called for ${buttonName} (#${props.testId})`,
           type: 'Tap',
           params: {
             testId: props.testId,
