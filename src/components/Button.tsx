@@ -1,19 +1,10 @@
-import React, {useMemo} from 'react';
-import {Button as RnButton, ButtonProps} from 'react-native';
+import React from 'react';
+import {Button as RnButton} from 'react-native';
+import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 export function Button(props: any) {
-  const {onPress} = useLoggingFunctions(props);
+  const {filteredProps} = useLoggingFunctions(props, ComponentTypes.Button);
 
-  const filteredProps: ButtonProps = useMemo(() => {
-    const propsCopy = {...props};
-    delete propsCopy.onPress;
-    return propsCopy;
-  }, [props]);
-
-  return (
-    <RnButton onPress={onPress} {...filteredProps}>
-      {props.children}
-    </RnButton>
-  );
+  return <RnButton {...filteredProps}>{props.children}</RnButton>;
 }
