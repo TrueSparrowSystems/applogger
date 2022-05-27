@@ -1,27 +1,13 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {TouchableHighlight as RnTouchableHighlight} from 'react-native';
+import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 export function TouchableHighlight(props: any) {
-  const {onPress, onLongPress, onPressIn, onPressOut} =
-    useLoggingFunctions(props);
-
-  const filteredProps = useMemo(() => {
-    const propsCopy = {...props};
-    delete propsCopy.onPress;
-    delete propsCopy.onLongPress;
-    delete propsCopy.onPressIn;
-    delete propsCopy.onPressOut;
-    return propsCopy;
-  }, [props]);
+  const {filteredProps} = useLoggingFunctions(props, ComponentTypes.Button);
 
   return (
-    <RnTouchableHighlight
-      onPress={onPress}
-      onLongPress={onLongPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      {...filteredProps}>
+    <RnTouchableHighlight {...filteredProps}>
       {props.children}
     </RnTouchableHighlight>
   );

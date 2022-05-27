@@ -6,14 +6,14 @@ export function useTracker() {
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       LogTracker.track({
-        stepDescription: 'Keyboard Shown',
+        description: 'Keyboard Shown',
         type: 'Keyboard State',
         params: {state: 'shown'},
       });
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
       LogTracker.track({
-        stepDescription: 'Keyboard Hidden',
+        description: 'Keyboard Hidden',
         type: 'Keyboard State',
         params: {state: 'hidden'},
       });
@@ -39,7 +39,7 @@ export function useTracker() {
       // appState.current = nextAppState;
 
       LogTracker.track({
-        stepDescription: `App state changed to ${nextAppState}`,
+        description: `App state changed to ${nextAppState}`,
         type: 'App State',
         params: {appState: nextAppState},
       });
@@ -67,7 +67,7 @@ export function useTracker() {
     if (currentScreenName && previousScreenName !== currentScreenName) {
       console.log('currentScreenName is ', currentScreenName, 'now track this');
       LogTracker.track({
-        stepDescription: `Navigate to ${currentScreenName} screen`,
+        description: `Navigate to ${currentScreenName} screen`,
         type: 'Navigation',
         params: {currentScreenName, previousScreenName},
       });
