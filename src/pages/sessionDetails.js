@@ -215,10 +215,26 @@ export const sessionDetails = `<!DOCTYPE html>
         letter-spacing: -0.006em;
         color: #FFFFFF;
       }
+      .downloadLogButton {
+        background-color: #040E2F;
+        border: 2px solid #FFFFFF;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+      }
+      .header{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: -webkit-fill-available;
+      }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js" integrity="sha512-xcHCGC5tQ0SHlRX8Anbz6oy/OullASJkEhb4gjkneVpGE3/QGYejf14CUO5n5q5paiHfRFTa9HKgByxzidw2Bw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
     function flag(sessionId) {
-  
         // Creating Our XMLHttpRequest object 
         var xhr = new XMLHttpRequest();
   
@@ -236,6 +252,37 @@ export const sessionDetails = `<!DOCTYPE html>
         // Sending our request 
         xhr.send();
     }
+
+    async function downloadZipFile(filename, content) {
+      const zip = new JSZip();
+      zip.file("Log.txt", content);
+  
+      zip.generateAsync({
+              type: "blob"
+          })
+          .then(function(content) {
+              const element = document.createElement("a");
+              element.setAttribute("href", window.URL.createObjectURL(content));
+              element.setAttribute("download", filename);
+              element.style.display = "none";
+              document.body.appendChild(element);
+              element.click();
+              document.body.removeChild(element);
+          });
+      }
+  
+  function downloadLogs() {
+      var xhr = new XMLHttpRequest();
+      var url = window.location.href + "/download";
+      xhr.open("POST", url, true);
+      xhr.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+              console.log("result", this.responseText)
+              downloadZipFile("log.zip", this.responseText)
+          }
+      }
+      xhr.send();
+   }
     </script>
   </head>
   <body>
@@ -257,7 +304,10 @@ export const sessionDetails = `<!DOCTYPE html>
             />
           </svg>
         </span>
+        <div class="header">
         <span class="headText"> Session Details </span>
+        <input type="button" class="downloadLogs" class="downloadLogButton" value="Download Logs"  onclick="downloadLogs()" />
+        </div>
       </div>
 
       <div class="log-container">
