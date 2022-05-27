@@ -1,391 +1,275 @@
+import {pick} from 'lodash';
 import deviceInfoModule from 'react-native-device-info';
+import {DeviceConstantKeys, DeviceConstants} from './types';
 
 export class DeviceInfo {
-  appName = deviceInfoModule.getApplicationName();
-  brand = deviceInfoModule.getBrand();
-  buildNumber = deviceInfoModule.getBuildNumber();
-  bundleId = deviceInfoModule.getBundleId();
-  deviceId = deviceInfoModule.getDeviceId();
-  model = deviceInfoModule.getModel();
-  readableVersion = deviceInfoModule.getReadableVersion();
-  systemName = deviceInfoModule.getSystemName();
-  systemVersion = deviceInfoModule.getSystemVersion();
-  uniqueId = deviceInfoModule.getUniqueId();
-  version = deviceInfoModule.getVersion();
-  isKeyboardConnected = JSON.stringify(deviceInfoModule.isKeyboardConnected());
-  isTablet = JSON.stringify(deviceInfoModule.isTablet());
-  isTabletMode = JSON.stringify(deviceInfoModule.isTabletMode());
-  isMouseConnected = JSON.stringify(deviceInfoModule.isMouseConnected());
-  hasNotch = deviceInfoModule.hasNotch();
-  type = deviceInfoModule.getDeviceType();
-  apiLevel?: number;
-  androidId?: string;
-  baseOs?: string;
-  batteryLevel?: number;
-  bootloader?: string;
-  isCameraPresent?: boolean;
-  carrier?: string;
-  codename?: string;
-  device?: string;
-  display?: string;
-  deviceName?: string;
-  deviceToken?: string;
-  firstInstallTime?: number;
-  fingerprint?: string;
-  fontScale?: number;
-  freeDiskStorage?: number;
-  hardware?: string;
-  host?: string;
-  ip?: string;
-  incremental?: string;
-  installerPackageName?: string;
-  installReferrer?: string;
-  instanceId?: string;
-  lastUpdateTime?: number;
-  macAddress?: string;
-  manufacturer?: string;
-  maxMemory?: number;
-  phoneNumber?: string;
-  powerState?: any;
-  product?: string;
-  previewSdkInt?: number;
-  serialNumber?: string;
-  securityPatch?: string;
-  buildId?: string;
-  tags?: string;
-  totalDiskCapacity?: number;
-  totalDiskCapacityOld?: number;
-  totalMemory?: number;
-  syncUniqueId?: string;
-  usedMemory?: number;
-  userAgent?: string;
-  airplaneModeOn?: boolean;
-  isCharging?: boolean;
-  isEmulator?: boolean;
-  isPinOrFingerprintSet?: boolean;
-  isLandscape?: boolean;
-  hasGms?: boolean;
-  hasHms?: boolean;
-  supported32BitAbis?: string[];
-  supported64BitAbis?: string[];
-  supportedAbis?: string[];
-  systemFeatures?: string[];
-  isLocationEnabled?: boolean;
-  isHeadphonesConnected?: boolean;
-  locationProviders?: any;
-  brightness?: number;
-
+  deviceConstants: DeviceConstants = {
+    appName: deviceInfoModule.getApplicationName(),
+    brand: deviceInfoModule.getBrand(),
+    buildNumber: deviceInfoModule.getBuildNumber(),
+    bundleId: deviceInfoModule.getBundleId(),
+    deviceId: deviceInfoModule.getDeviceId(),
+    model: deviceInfoModule.getModel(),
+    readableVersion: deviceInfoModule.getReadableVersion(),
+    systemName: deviceInfoModule.getSystemName(),
+    systemVersion: deviceInfoModule.getSystemVersion(),
+    uniqueId: deviceInfoModule.getUniqueId(),
+    version: deviceInfoModule.getVersion(),
+    type: deviceInfoModule.getDeviceType(),
+    isTablet: deviceInfoModule.isTablet(),
+    hasNotch: deviceInfoModule.hasNotch(),
+  };
   constructor() {
+    deviceInfoModule.isKeyboardConnected().then(isKeyboardConnected => {
+      this.deviceConstants.isKeyboardConnected = isKeyboardConnected;
+    });
+    deviceInfoModule.isTabletMode().then(isTabletMode => {
+      this.deviceConstants.isTabletMode = isTabletMode;
+    });
+    deviceInfoModule.isMouseConnected().then(isMouseConnected => {
+      this.deviceConstants.isMouseConnected = isMouseConnected;
+    });
     deviceInfoModule.getApiLevel().then(apiLevel => {
-      this.apiLevel = apiLevel;
+      this.deviceConstants.apiLevel = apiLevel;
     });
     deviceInfoModule.getAndroidId().then(androidId => {
-      this.androidId = androidId;
+      this.deviceConstants.androidId = androidId;
     });
     deviceInfoModule.getBaseOs().then(baseOs => {
-      this.baseOs = baseOs;
+      this.deviceConstants.baseOs = baseOs;
     });
     deviceInfoModule.getBatteryLevel().then(batteryLevel => {
-      this.batteryLevel = batteryLevel;
+      this.deviceConstants.batteryLevel = batteryLevel;
     });
     deviceInfoModule.getBootloader().then(bootloader => {
-      this.bootloader = bootloader;
+      this.deviceConstants.bootloader = bootloader;
       // "mw8998-002.0069.00"
     });
 
     deviceInfoModule
       .isCameraPresent()
       .then(isCameraPresent => {
-        this.isCameraPresent = isCameraPresent;
+        this.deviceConstants.isCameraPresent = isCameraPresent;
       })
       .catch(() => {
         // is thrown if a camera device could not be queried or opened by the CameraManager on Android
       });
 
     deviceInfoModule.getCarrier().then(carrier => {
-      this.carrier = carrier;
+      this.deviceConstants.carrier = carrier;
     });
 
     deviceInfoModule.getCodename().then(codename => {
-      this.codename = codename;
+      this.deviceConstants.codename = codename;
     });
 
     deviceInfoModule.getDevice().then(device => {
-      this.device = device;
+      this.deviceConstants.device = device;
     });
 
     deviceInfoModule.getDisplay().then(display => {
-      this.display = display;
+      this.deviceConstants.display = display;
     });
 
     deviceInfoModule.getDeviceName().then(deviceName => {
-      this.deviceName = deviceName;
+      this.deviceConstants.deviceName = deviceName;
     });
 
     deviceInfoModule.getDeviceToken().then(deviceToken => {
-      this.deviceToken = deviceToken;
+      this.deviceConstants.deviceToken = deviceToken;
     });
 
     deviceInfoModule.getFirstInstallTime().then(firstInstallTime => {
-      this.firstInstallTime = firstInstallTime;
+      this.deviceConstants.firstInstallTime = firstInstallTime;
     });
 
     deviceInfoModule.getFingerprint().then(fingerprint => {
-      this.fingerprint = fingerprint;
+      this.deviceConstants.fingerprint = fingerprint;
     });
 
     deviceInfoModule.getFontScale().then(fontScale => {
-      this.fontScale = fontScale;
+      this.deviceConstants.fontScale = fontScale;
     });
 
     deviceInfoModule.getFreeDiskStorage().then(freeDiskStorage => {
-      this.freeDiskStorage = freeDiskStorage;
+      this.deviceConstants.freeDiskStorage = freeDiskStorage;
     });
 
     deviceInfoModule.getFreeDiskStorageOld().then(freeDiskStorage => {
-      this.freeDiskStorage = freeDiskStorage;
+      this.deviceConstants.freeDiskStorage = freeDiskStorage;
     });
 
     deviceInfoModule.getHardware().then(hardware => {
-      this.hardware = hardware;
+      this.deviceConstants.hardware = hardware;
     });
 
     deviceInfoModule.getHost().then(host => {
-      this.host = host;
+      this.deviceConstants.host = host;
     });
 
     deviceInfoModule.getIpAddress().then(ip => {
-      this.ip = ip;
+      this.deviceConstants.ip = ip;
     });
 
     deviceInfoModule.getIncremental().then(incremental => {
-      this.incremental = incremental;
+      this.deviceConstants.incremental = incremental;
     });
 
     deviceInfoModule.getInstallerPackageName().then(installerPackageName => {
-      this.installerPackageName = installerPackageName;
+      this.deviceConstants.installerPackageName = installerPackageName;
     });
 
     deviceInfoModule.getInstallReferrer().then(installReferrer => {
-      this.installReferrer = installReferrer;
+      this.deviceConstants.installReferrer = installReferrer;
     });
 
     deviceInfoModule.getInstanceId().then(instanceId => {
-      this.instanceId = instanceId;
+      this.deviceConstants.instanceId = instanceId;
     });
 
     deviceInfoModule.getLastUpdateTime().then(lastUpdateTime => {
-      this.lastUpdateTime = lastUpdateTime;
+      this.deviceConstants.lastUpdateTime = lastUpdateTime;
     });
 
     deviceInfoModule.getMacAddress().then(mac => {
-      this.macAddress = mac;
+      this.deviceConstants.macAddress = mac;
     });
 
     deviceInfoModule.getManufacturer().then(manufacturer => {
-      this.manufacturer = manufacturer;
+      this.deviceConstants.manufacturer = manufacturer;
     });
 
     deviceInfoModule.getMaxMemory().then(maxMemory => {
-      this.maxMemory = maxMemory;
+      this.deviceConstants.maxMemory = maxMemory;
     });
 
     deviceInfoModule.getPhoneNumber().then(phoneNumber => {
-      this.phoneNumber = phoneNumber;
+      this.deviceConstants.phoneNumber = phoneNumber;
     });
 
     deviceInfoModule.getPowerState().then(state => {
-      this.powerState = JSON.stringify(state);
+      this.deviceConstants.powerState = JSON.stringify(state);
     });
 
     deviceInfoModule.getProduct().then(product => {
-      this.product = product;
+      this.deviceConstants.product = product;
     });
 
     deviceInfoModule.getPreviewSdkInt().then(previewSdkInt => {
-      this.previewSdkInt = previewSdkInt;
+      this.deviceConstants.previewSdkInt = previewSdkInt;
     });
 
     deviceInfoModule.getSerialNumber().then(serialNumber => {
-      this.serialNumber = serialNumber;
+      this.deviceConstants.serialNumber = serialNumber;
     });
 
     deviceInfoModule.getSecurityPatch().then(securityPatch => {
-      this.securityPatch = securityPatch;
+      this.deviceConstants.securityPatch = securityPatch;
     });
 
     deviceInfoModule.getBuildId().then(buildId => {
-      this.buildId = buildId;
+      this.deviceConstants.buildId = buildId;
     });
 
     deviceInfoModule.getTags().then(tags => {
-      this.tags = tags;
+      this.deviceConstants.tags = tags;
     });
 
     deviceInfoModule.getType().then(type => {
-      this.type = type;
+      this.deviceConstants.type = type;
     });
 
     deviceInfoModule.getTotalDiskCapacity().then(capacity => {
-      this.totalDiskCapacity = capacity;
+      this.deviceConstants.totalDiskCapacity = capacity;
     });
 
     deviceInfoModule.getTotalDiskCapacityOld().then(capacity => {
-      this.totalDiskCapacityOld = capacity;
+      this.deviceConstants.totalDiskCapacityOld = capacity;
     });
 
     deviceInfoModule.getTotalMemory().then(totalMemory => {
-      this.totalMemory = totalMemory;
+      this.deviceConstants.totalMemory = totalMemory;
     });
 
     deviceInfoModule.syncUniqueId().then(uniqueId => {
-      this.syncUniqueId = uniqueId;
+      this.deviceConstants.syncUniqueId = uniqueId;
     });
 
     deviceInfoModule.getUsedMemory().then(usedMemory => {
-      this.usedMemory = usedMemory;
+      this.deviceConstants.usedMemory = usedMemory;
     });
 
     deviceInfoModule.getUserAgent().then(userAgent => {
-      this.userAgent = userAgent;
+      this.deviceConstants.userAgent = userAgent;
     });
 
     deviceInfoModule.isAirplaneMode().then(airplaneModeOn => {
-      this.airplaneModeOn = airplaneModeOn;
+      this.deviceConstants.airplaneModeOn = airplaneModeOn;
     });
 
     deviceInfoModule.isBatteryCharging().then(isCharging => {
-      this.isCharging = isCharging;
+      this.deviceConstants.isCharging = isCharging;
     });
 
     deviceInfoModule.isEmulator().then(isEmulator => {
-      this.isEmulator = isEmulator;
+      this.deviceConstants.isEmulator = isEmulator;
     });
 
     deviceInfoModule.isPinOrFingerprintSet().then(isPinOrFingerprintSet => {
-      this.isPinOrFingerprintSet = isPinOrFingerprintSet;
+      this.deviceConstants.isPinOrFingerprintSet = isPinOrFingerprintSet;
     });
 
     deviceInfoModule.isLandscape().then(isLandscape => {
-      this.isLandscape = isLandscape;
+      this.deviceConstants.isLandscape = isLandscape;
     });
 
     deviceInfoModule.hasGms().then(hasGms => {
-      this.hasGms = hasGms;
+      this.deviceConstants.hasGms = hasGms;
     });
 
     deviceInfoModule.hasHms().then(hasHms => {
-      this.hasHms = hasHms;
+      this.deviceConstants.hasHms = hasHms;
     });
 
     deviceInfoModule.supported32BitAbis().then(abis => {
-      this.supported32BitAbis = abis;
+      this.deviceConstants.supported32BitAbis = abis;
     });
 
     deviceInfoModule.supported64BitAbis().then(abis => {
-      this.supported64BitAbis = abis;
+      this.deviceConstants.supported64BitAbis = abis;
     });
 
     deviceInfoModule.supportedAbis().then(abis => {
-      this.supportedAbis = abis;
+      this.deviceConstants.supportedAbis = abis;
     });
 
     deviceInfoModule.getSystemAvailableFeatures().then(features => {
-      this.systemFeatures = features;
+      this.deviceConstants.systemFeatures = features;
     });
 
     deviceInfoModule.isLocationEnabled().then(enabled => {
-      this.isLocationEnabled = enabled;
+      this.deviceConstants.isLocationEnabled = enabled;
     });
 
     deviceInfoModule.isHeadphonesConnected().then(enabled => {
-      this.isHeadphonesConnected = enabled;
+      this.deviceConstants.isHeadphonesConnected = enabled;
     });
 
     deviceInfoModule.getAvailableLocationProviders().then(providers => {
-      this.locationProviders = JSON.stringify(providers);
+      this.deviceConstants.locationProviders = JSON.stringify(providers);
     });
 
     deviceInfoModule.getBrightness().then(brightness => {
-      this.brightness = brightness;
+      this.deviceConstants.brightness = brightness;
     });
   }
 
+  getByKeys(keys: DeviceConstantKeys[]) {
+    const allValues = this.get();
+    return pick(allValues, keys);
+  }
+
   get() {
-    return {
-      appName: this.appName,
-      brand: this.brand,
-      buildNumber: this.buildNumber,
-      bundleId: this.bundleId,
-      deviceId: this.deviceId,
-      model: this.model,
-      readableVersion: this.readableVersion,
-      systemName: this.systemName,
-      systemVersion: this.systemVersion,
-      uniqueId: this.uniqueId,
-      version: this.version,
-      isKeyboardConnected: this.isKeyboardConnected,
-      isTablet: this.isTablet,
-      isTabletMode: this.isTabletMode,
-      isMouseConnected: this.isMouseConnected,
-      hasNotch: this.hasNotch,
-      type: this.type,
-      apiLevel: this.apiLevel,
-      androidId: this.androidId,
-      baseOs: this.baseOs,
-      batteryLevel: this.batteryLevel,
-      bootloader: this.bootloader,
-      isCameraPresent: this.isCameraPresent,
-      carrier: this.carrier,
-      codename: this.codename,
-      device: this.device,
-      display: this.display,
-      deviceName: this.deviceName,
-      deviceToken: this.deviceToken,
-      firstInstallTime: this.firstInstallTime,
-      fingerprint: this.fingerprint,
-      fontScale: this.fontScale,
-      freeDiskStorage: this.freeDiskStorage,
-      hardware: this.hardware,
-      host: this.host,
-      ip: this.ip,
-      incremental: this.incremental,
-      installerPackageName: this.installerPackageName,
-      installReferrer: this.installReferrer,
-      instanceId: this.instanceId,
-      lastUpdateTime: this.lastUpdateTime,
-      macAddress: this.macAddress,
-      manufacturer: this.manufacturer,
-      maxMemory: this.maxMemory,
-      phoneNumber: this.phoneNumber,
-      powerState: this.powerState,
-      product: this.product,
-      previewSdkInt: this.previewSdkInt,
-      serialNumber: this.serialNumber,
-      securityPatch: this.securityPatch,
-      buildId: this.buildId,
-      tags: this.tags,
-      totalDiskCapacity: this.totalDiskCapacity,
-      totalDiskCapacityOld: this.totalDiskCapacityOld,
-      totalMemory: this.totalMemory,
-      syncUniqueId: this.syncUniqueId,
-      usedMemory: this.usedMemory,
-      userAgent: this.userAgent,
-      airplaneModeOn: this.airplaneModeOn,
-      isCharging: this.isCharging,
-      isEmulator: this.isEmulator,
-      isPinOrFingerprintSet: this.isPinOrFingerprintSet,
-      isLandscape: this.isLandscape,
-      hasGms: this.hasGms,
-      hasHms: this.hasHms,
-      supported32BitAbis: this.supported32BitAbis,
-      supported64BitAbis: this.supported64BitAbis,
-      supportedAbis: this.supportedAbis,
-      systemFeatures: this.systemFeatures,
-      isLocationEnabled: this.isLocationEnabled,
-      isHeadphonesConnected: this.isHeadphonesConnected,
-      locationProviders: this.locationProviders,
-      brightness: this.brightness,
-    };
+    return this.deviceConstants;
   }
 }

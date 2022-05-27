@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
+import {DeviceConstantKeys} from '../DeviceInfo/types';
 
 const LOG_SESSION_KEY = 'log_session';
 
@@ -146,6 +147,10 @@ class LogTracker {
 
   getDeviceInfo() {
     return this.deviceInfo.get();
+  }
+
+  getDeviceInfoByKeys(keys: DeviceConstantKeys[]) {
+    return this.deviceInfo.getByKeys(keys);
   }
 }
 
