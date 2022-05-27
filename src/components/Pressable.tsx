@@ -1,28 +1,10 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {Pressable as RnPressable} from 'react-native';
+import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 export function Pressable(props: any) {
-  const {onPress, onLongPress, onPressIn, onPressOut} =
-    useLoggingFunctions(props);
+  const {filteredProps} = useLoggingFunctions(props, ComponentTypes.Button);
 
-  const filteredProps = useMemo(() => {
-    const propsCopy = {...props};
-    delete propsCopy.onPress;
-    delete propsCopy.onPressIn;
-    delete propsCopy.onPressOut;
-    delete propsCopy.onLongPress;
-    return propsCopy;
-  }, [props]);
-
-  return (
-    <RnPressable
-      {...filteredProps}
-      onPress={onPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      onLongPress={onLongPress}>
-      {props.children}
-    </RnPressable>
-  );
+  return <RnPressable {...filteredProps}>{props.children}</RnPressable>;
 }

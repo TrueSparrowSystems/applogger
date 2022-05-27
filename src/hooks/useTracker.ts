@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {AppState, Keyboard} from 'react-native';
+import {LogTypes} from '../constants/LogTypes';
 import LogTracker from '../LogTracker/index';
 
 export function useTracker() {
@@ -7,14 +8,14 @@ export function useTracker() {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       LogTracker.track({
         description: 'Keyboard Shown',
-        type: 'Keyboard State',
+        type: LogTypes.KeyboardState,
         params: {state: 'shown'},
       });
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
       LogTracker.track({
         description: 'Keyboard Hidden',
-        type: 'Keyboard State',
+        type: LogTypes.KeyboardState,
         params: {state: 'hidden'},
       });
     });
@@ -40,7 +41,7 @@ export function useTracker() {
 
       LogTracker.track({
         description: `App state changed to ${nextAppState}`,
-        type: 'App State',
+        type: LogTypes.AppState,
         params: {appState: nextAppState},
       });
     });
@@ -68,7 +69,7 @@ export function useTracker() {
       console.log('currentScreenName is ', currentScreenName, 'now track this');
       LogTracker.track({
         description: `Navigate to ${currentScreenName} screen`,
-        type: 'Navigation',
+        type: LogTypes.Navigation,
         params: {currentScreenName, previousScreenName},
       });
     }

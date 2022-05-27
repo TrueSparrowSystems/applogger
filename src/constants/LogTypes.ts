@@ -4,4 +4,7 @@ export enum LogTypes {
   Mount = 'Mount',
   Refresh = 'Refresh',
   Text = 'Text',
+  KeyboardState = 'Keyboard State',
+  AppState = 'App State',
+  Navigation = 'Navigation',
 }
