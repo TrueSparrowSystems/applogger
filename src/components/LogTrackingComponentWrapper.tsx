@@ -1,11 +1,14 @@
 import React, {useMemo} from 'react';
+import {View} from 'react-native';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 export function ComponentWrapper(props: any) {
   let component = props.children;
+  const newProps = {...props};
+  delete newProps.children;
   if (Array.isArray(component)) {
     return (
-      <>
+      <View {...newProps}>
         {component.map((element: JSX.Element, index) => {
           return (
             <LogTrackingComponentWrapper key={index}>
@@ -13,7 +16,7 @@ export function ComponentWrapper(props: any) {
             </LogTrackingComponentWrapper>
           );
         })}
-      </>
+      </View>
     );
   } else {
     return (
