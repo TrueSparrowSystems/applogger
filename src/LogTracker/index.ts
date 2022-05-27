@@ -14,9 +14,11 @@ class LogTracker {
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
+  isTrackingDisabled: boolean = false;
 
   constructor(private config: LogTrackerConfigInterface) {
     this.sessionId = uuidv4();
+    this.isTrackingDisabled = this.config?.disableTracking || !__DEV__;
     this.bind();
     console.log('Tracker initialized with config: ', this.config);
 
@@ -29,17 +31,37 @@ class LogTracker {
   private bind() {
     this.store.bind(this);
     this.track.bind(this);
-    this.store.bind(this);
     this.storeSessionId.bind(this);
+    this.enableTracking.bind(this);
+    this.disableTracking.bind(this);
+    this.clearTrackingLogs.bind(this);
+  }
+
+  public enableTracking() {
+    this.isTrackingDisabled = false;
+  }
+
+  public disableTracking() {
+    this.isTrackingDisabled = true;
+  }
+
+  private clearTrackingLogs() {
+    AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify({}));
   }
 
   public track(logData: TrackInterface) {
+    if (this.isTrackingDisabled) {
+      return;
+    }
     console.log('track: ', logData);
     this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};
     this.currentStoreId++;
   }
 
   private storeSessionId() {
+    if (this.isTrackingDisabled) {
+      return;
+    }
     console.log('Tracker storeSessionId called: ', this.sessionId);
     AsyncStorage.getItem(LOG_SESSION_KEY)
       .then(jsonData => {
@@ -68,6 +90,9 @@ class LogTracker {
   }
 
   private store() {
+    if (this.isTrackingDisabled) {
+      return;
+    }
     const data = this.currentData;
     console.log('store called ', data);
     if (isEmpty(data)) {
