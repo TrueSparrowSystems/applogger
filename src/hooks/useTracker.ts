@@ -1,20 +1,21 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {AppState, Keyboard} from 'react-native';
+import {LogTypes} from '../constants/LogTypes';
 import LogTracker from '../LogTracker/index';
 
 export function useTracker() {
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       LogTracker.track({
-        stepDescription: 'Keyboard Shown',
-        type: 'Keyboard State',
+        description: 'Keyboard Shown',
+        type: LogTypes.KeyboardState,
         params: {state: 'shown'},
       });
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
       LogTracker.track({
-        stepDescription: 'Keyboard Hidden',
-        type: 'Keyboard State',
+        description: 'Keyboard Hidden',
+        type: LogTypes.KeyboardState,
         params: {state: 'hidden'},
       });
     });
@@ -39,8 +40,8 @@ export function useTracker() {
       // appState.current = nextAppState;
 
       LogTracker.track({
-        stepDescription: `App state changed to ${nextAppState}`,
-        type: 'App State',
+        description: `App state changed to ${nextAppState}`,
+        type: LogTypes.AppState,
         params: {appState: nextAppState},
       });
     });
@@ -67,8 +68,8 @@ export function useTracker() {
     if (currentScreenName && previousScreenName !== currentScreenName) {
       console.log('currentScreenName is ', currentScreenName, 'now track this');
       LogTracker.track({
-        stepDescription: `Navigate to ${currentScreenName} screen`,
-        type: 'Navigation',
+        description: `Navigate to ${currentScreenName} screen`,
+        type: LogTypes.Navigation,
         params: {currentScreenName, previousScreenName},
       });
     }

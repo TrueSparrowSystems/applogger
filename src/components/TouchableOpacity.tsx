@@ -20,7 +20,7 @@ export function TouchableOpacity(props: any) {
         }
 
         LogTracker.track({
-          stepDescription: `Tap on ${buttonName} (#${props.testId})`,
+          description: `Tap on ${buttonName} (#${props.testId})`,
           type: 'Tap',
           params: {
             testId: props.testId,
