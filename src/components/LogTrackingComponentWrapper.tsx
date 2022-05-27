@@ -45,7 +45,6 @@ function LogTrackingComponentWrapper(props: any) {
       delete propsCopy.onPressOut;
       propsCopy = {...propsCopy, onPressOut};
     }
-    propsCopy = {...propsCopy, disabled: false};
     return propsCopy;
   }, [Component.props, onLongPress, onPress, onPressIn, onPressOut]);
 
