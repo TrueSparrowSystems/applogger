@@ -264,12 +264,21 @@ export class DeviceInfo {
     });
   }
 
-  getByKeys(keys: DeviceConstantKeys[]) {
+  /**
+   * A function which returns the device values for the provided keys.
+   * @param {DeviceConstantKeys[]} keys Array for the keys for which we what the values
+   * @returns {Partial<DeviceConstants>} Object containing device information for the provided keys
+   */
+  getByKeys(keys: DeviceConstantKeys[]): Partial<DeviceConstants> {
     const allValues = this.get();
-    return pick(allValues, keys);
+    return pick<DeviceConstants>(allValues, keys);
   }
 
-  get() {
+  /**
+   * Function to get device information.
+   * @returns {DeviceConstants} Object container device information.
+   */
+  get(): DeviceConstants {
     return this.deviceConstants;
   }
 }
