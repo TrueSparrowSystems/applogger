@@ -1,6 +1,6 @@
 export interface TrackInterface {
   id?: string;
-  stepDescription?: string;
+  description?: string;
   type: string;
   params: any;
   ts?: number;

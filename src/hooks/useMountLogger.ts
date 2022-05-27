@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect} from 'react';
+import {LogTypes} from '../constants/LogTypes';
 import LogTracker from '../LogTracker';
 
 /**
@@ -10,15 +11,15 @@ import LogTracker from '../LogTracker';
 export function useMountLogger(componentId: string, params: any) {
   useEffect(() => {
     LogTracker.track({
-      stepDescription: `mounting component with id: ${componentId}.`,
-      type: 'Mount',
+      description: `mounting component with id: ${componentId}.`,
+      type: LogTypes.Mount,
       params: params,
     });
 
     return () => {
       LogTracker.track({
-        stepDescription: `unmounting component with id: ${componentId}.`,
-        type: 'Mount',
+        description: `unmounting component with id: ${componentId}.`,
+        type: LogTypes.Mount,
         params: params,
       });
     };
