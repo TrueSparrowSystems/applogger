@@ -10,13 +10,13 @@ export class DataParser {
       const chunkValue = Object.values(dataChunk);
       for (let subIndex = 0; subIndex < chunkValue.length; subIndex++) {
         const log = chunkValue[subIndex] as TrackInterface;
-        if (log.stepDescription) {
+        if (log.description) {
           stepCount++;
           steps.push(
             `
             <div class="div-table-row">
                     <div class="div-table-col1"><div class="text">${stepCount}</div></div>
-                    <div class="div-table-col2"><div class="text">${log.stepDescription}</div></div>
+                    <div class="div-table-col2"><div class="text">${log.description}</div></div>
                   </div>
             `,
           );
