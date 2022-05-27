@@ -1,5 +1,6 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {View} from 'react-native';
+import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 export function ComponentWrapper(props: any) {
@@ -27,29 +28,10 @@ export function ComponentWrapper(props: any) {
 
 function LogTrackingComponentWrapper(props: any) {
   let Component: JSX.Element = props.children;
-  const {onPress, onLongPress, onPressIn, onPressOut} = useLoggingFunctions(
+  const {filteredProps} = useLoggingFunctions(
     Component.props,
+    ComponentTypes.Component,
   );
-  const filteredProps = useMemo(() => {
-    let propsCopy = {...Component.props};
-    if (propsCopy.onPress) {
-      delete propsCopy.onPress;
-      propsCopy = {...propsCopy, onPress};
-    }
-    if (propsCopy.onLongPress) {
-      delete propsCopy.onLongPress;
-      propsCopy = {...propsCopy, onLongPress};
-    }
-    if (propsCopy.onPressIn) {
-      delete propsCopy.onPressIn;
-      propsCopy = {...propsCopy, onPressIn};
-    }
-    if (propsCopy.onPressOut) {
-      delete propsCopy.onPressOut;
-      propsCopy = {...propsCopy, onPressOut};
-    }
-    return propsCopy;
-  }, [Component.props, onLongPress, onPress, onPressIn, onPressOut]);
 
   delete Component.props;
   Component = {...Component, props: filteredProps};

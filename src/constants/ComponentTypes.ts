@@ -3,4 +3,5 @@ export enum ComponentTypes {
   Switch = 'Switch',
   TextInput = 'TextInput',
   RefreshControl = 'RefreshControl',
+  Component = 'Component',
 }
