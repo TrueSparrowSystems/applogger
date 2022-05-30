@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useMemo} from 'react';
+import {Animated, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useMemo} from 'react';
 import {TouchableOpacity} from '../TouchableOpacity';
 import useHelperMenuData from './useHelperMenuData';
 
@@ -15,22 +15,57 @@ function HelperMenu() {
     handleSession,
   } = useHelperMenuData();
 
+  const yOffset = new Animated.Value(300);
+
+  useEffect(() => {
+    if (isVisible) {
+      Animated.timing(yOffset, {
+        duration: 500,
+        toValue: 0,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [isVisible]);
+
+  const closeMenu = () => {
+    Animated.timing(yOffset, {
+      duration: 500,
+      toValue: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      hideMenu();
+    });
+  };
+
   const cancelButtonTextStyle = useMemo(
     () => [styles.optionText, {color: 'red'}],
     [],
   );
   const optionsTextStyle = useMemo(
-    () => [styles.optionText, {color: 'blue'}],
+    () => [styles.optionText, {color: '#6798D4'}],
     [],
   );
   const optionWithBottomBorderStyle = useMemo(
-    () => [styles.optionButton, {borderBottomWidth: 1, borderColor: 'blue'}],
+    () => [
+      styles.optionButton,
+      {borderBottomWidth: 1, borderColor: '#A8BEC466'},
+    ],
     [],
   );
 
   return isVisible ? (
     <View style={styles.container}>
-      <View style={styles.modalStyle}>
+      <Animated.View
+        style={[
+          styles.modalStyle,
+          {
+            transform: [
+              {
+                translateY: yOffset,
+              },
+            ],
+          },
+        ]}>
         <View style={styles.optionButtonContainer}>
           <TouchableOpacity
             style={optionWithBottomBorderStyle}
@@ -39,13 +74,13 @@ function HelperMenu() {
             <Text style={optionsTextStyle}>Copy Link: {serverUrl}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.optionButton}
+            style={optionWithBottomBorderStyle}
             onPress={uploadLogs}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>Upload log</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.optionButton}
+            style={optionWithBottomBorderStyle}
             onPress={deleteCurrentSessionLogs}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>Delete current session logs</Text>
@@ -59,11 +94,11 @@ function HelperMenu() {
         </View>
         <TouchableOpacity
           style={styles.cancelButtonContainer}
-          onPress={hideMenu}
+          onPress={closeMenu}
           activeOpacity={0.7}>
           <Text style={cancelButtonTextStyle}>Cancel</Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </View>
   ) : null;
 }
@@ -75,7 +110,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: '100%',
     width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalStyle: {
     width: '100%',
@@ -103,7 +138,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionText: {
-    fontFamily: 'OpenSans-SemiBold',
     fontSize: 14,
   },
   optionButton: {

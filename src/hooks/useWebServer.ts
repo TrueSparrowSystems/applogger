@@ -10,6 +10,8 @@ import NetworkHelper from '../helper/NetworkHelper';
 
 var httpBridge = require('react-native-http-bridge');
 
+export const WEB_SERVER_PORT = 5561;
+
 export function useWebServer() {
   useEffect(() => {
     deviceInfoModule.getIpAddress().then(ip => {
@@ -25,7 +27,7 @@ export function useWebServer() {
       });
     });
 
-    httpBridge.start(5561, 'http_service', (request: any) => {
+    httpBridge.start(WEB_SERVER_PORT, 'http_service', (request: any) => {
       WebServerHelper.onStart(request);
     });
 

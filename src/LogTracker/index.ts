@@ -35,10 +35,16 @@ class LogTracker {
     return this.sessionActive;
   }
 
+  private resetLogger() {
+    this.currentStoreId = 0;
+    this.sessionData = [];
+    this.currentData = {};
+  }
+
   public createNewSession() {
+    this.resetLogger();
     this.sessionId = uuidv4();
     console.log('Tracker initialized with config: ', this.config);
-    this.currentStoreId = 0;
 
     this.storeSessionId();
 
