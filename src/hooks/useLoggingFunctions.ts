@@ -97,6 +97,28 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  const onValueChange = useCallback(
+    (value: any) => {
+      if (props.testID && props.onValueChange) {
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
+        }
+
+        LogTracker.track({
+          description: `Value change to ${value} for ${componentName} - (#${props.testID})`,
+          type: LogTypes.Tap,
+          params: {
+            testID: props.testID,
+          },
+        });
+        props.onValueChange(value);
+      }
+    },
+    [props, type],
+  );
   const onRefresh = useCallback(() => {
     const testId = props.testID;
     if (testId && props.onRefresh) {
@@ -114,8 +136,8 @@ export function useLoggingFunctions(props: any, type: string) {
           testId: testId,
         },
       });
+      props.onRefresh();
     }
-    props.onRefresh?.();
   }, [props, type]);
 
   const filteredProps = useMemo(() => {
@@ -136,14 +158,33 @@ export function useLoggingFunctions(props: any, type: string) {
       delete propsCopy.onPressOut;
       propsCopy = {...propsCopy, onPressOut};
     }
+
+    if (propsCopy.onValueChange) {
+      delete propsCopy.onValueChange;
+      propsCopy = {...propsCopy, onValueChange};
+    }
     if (propsCopy.onRefresh) {
       delete propsCopy.onRefresh;
       propsCopy = {...propsCopy, onRefresh};
     }
+
     return propsCopy;
-  }, [onLongPress, onPress, onPressIn, onPressOut, onRefresh, props]);
+  }, [
+    onLongPress,
+    onPress,
+    onPressIn,
+    onPressOut,
+    onRefresh,
+    onValueChange,
+    props,
+  ]);
 
   return {
     filteredProps,
+    onPress,
+    onLongPress,
+    onPressIn,
+    onPressOut,
+    onValueChange,
   };
 }
