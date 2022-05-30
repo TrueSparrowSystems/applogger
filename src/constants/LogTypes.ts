@@ -9,4 +9,5 @@ export enum LogTypes {
   AppState = 'App State',
   Navigation = 'Navigation',
   Scroll = 'Scroll',
+  Shake = 'Shake',
 }
