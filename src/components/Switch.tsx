@@ -1,15 +1,13 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {Switch as RnSwitch} from 'react-native';
+import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 export function Switch(props: any) {
-  const {onValueChange} = useLoggingFunctions(props);
-  const filteredProps = useMemo(() => {
-    const propsCopy = {...props};
-    delete propsCopy.onChange;
-    delete propsCopy.onValueChange;
-    return propsCopy;
-  }, [props]);
+  const {onValueChange, filteredProps} = useLoggingFunctions(
+    props,
+    ComponentTypes.Switch,
+  );
 
   return (
     <RnSwitch onValueChange={onValueChange} {...filteredProps}>

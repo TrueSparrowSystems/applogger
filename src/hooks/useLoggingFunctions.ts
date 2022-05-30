@@ -1,113 +1,91 @@
 import {capitalize} from 'lodash';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
+import {LogTypes} from '../constants/LogTypes';
 import LogTracker from '../LogTracker';
 
-export function useLoggingFunctions(props: any) {
+export function useLoggingFunctions(props: any, type: string) {
   const onPress = useCallback(
     (event: any) => {
       if (props.testID && props.onPress) {
-        let buttonName = capitalize(props.testID.replaceAll('_', ' '));
-        console.log('buttonName: ', buttonName);
-        console.log('buttonName.toLowerCase(): ', buttonName.toLowerCase());
-        console.log(
-          'buttonName.toLowerCase().endsWith(button): ',
-          buttonName.toLowerCase().trim().endsWith('button'),
-        );
-        if (buttonName.toLowerCase().trim().endsWith('button')) {
-        } else {
-          buttonName = `${buttonName} button`;
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (!componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
         }
 
         LogTracker.track({
-          stepDescription: `Tap on ${buttonName} (#${props.testID})`,
-          type: 'Tap',
+          description: `Tap on ${componentName} (#${props.testID})`,
+          type: LogTypes.Tap,
           params: {
             testID: props.testID,
           },
         });
+        props.onPress(event);
       }
-
-      props.onPress(event);
     },
-    [props],
+    [props, type],
   );
 
   const onLongPress = useCallback(
     (event: any) => {
       if (props.testID && props.onLongPress) {
-        let buttonName = capitalize(props.testID.replaceAll('_', ' '));
-        console.log('buttonName: ', buttonName);
-        console.log('buttonName.toLowerCase(): ', buttonName.toLowerCase());
-        console.log(
-          'buttonName.toLowerCase().endsWith(button): ',
-          buttonName.toLowerCase().trim().endsWith('button'),
-        );
-        if (buttonName.toLowerCase().trim().endsWith('button')) {
-        } else {
-          buttonName = `${buttonName} button`;
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (!componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
         }
 
         LogTracker.track({
-          stepDescription: `LongPress on ${buttonName} (#${props.testID})`,
-          type: 'Tap',
+          description: `LongPress on ${componentName} (#${props.testID})`,
+          type: LogTypes.Tap,
           params: {
             testID: props.testID,
           },
         });
+        props.onLongPress(event);
       }
-
-      props.onLongPress(event);
     },
-    [props],
+    [props, type],
   );
 
   const onPressIn = useCallback(
     (event: any) => {
       if (props.testID && props.onPressIn) {
-        let buttonName = capitalize(props.testID.replaceAll('_', ' '));
-        console.log('buttonName: ', buttonName);
-        console.log('buttonName.toLowerCase(): ', buttonName.toLowerCase());
-        console.log(
-          'buttonName.toLowerCase().endsWith(button): ',
-          buttonName.toLowerCase().trim().endsWith('button'),
-        );
-        if (buttonName.toLowerCase().trim().endsWith('button')) {
-        } else {
-          buttonName = `${buttonName} button`;
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (!componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
         }
 
         LogTracker.track({
-          stepDescription: `Press In on ${buttonName} (#${props.testID})`,
-          type: 'Tap',
+          description: `Press In on ${componentName} (#${props.testID})`,
+          type: LogTypes.Tap,
           params: {
             testID: props.testID,
           },
         });
+        props.onPressIn(event);
       }
-
-      props.onPressIn(event);
     },
-    [props],
+    [props, type],
   );
 
   const onPressOut = useCallback(
     (event: any) => {
       if (props.testID && props.onPressOut) {
-        let buttonName = capitalize(props.testID.replaceAll('_', ' '));
-        console.log('buttonName: ', buttonName);
-        console.log('buttonName.toLowerCase(): ', buttonName.toLowerCase());
-        console.log(
-          'buttonName.toLowerCase().endsWith(button): ',
-          buttonName.toLowerCase().trim().endsWith('button'),
-        );
-        if (buttonName.toLowerCase().trim().endsWith('button')) {
-        } else {
-          buttonName = `${buttonName} button`;
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (!componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
         }
 
         LogTracker.track({
-          stepDescription: `Press Out on ${buttonName} (#${props.testID})`,
-          type: 'Tap',
+          description: `Press Out on ${componentName} (#${props.testID})`,
+          type: LogTypes.Tap,
           params: {
             testID: props.testID,
           },
@@ -116,27 +94,22 @@ export function useLoggingFunctions(props: any) {
 
       props.onPressOut(event);
     },
-    [props],
+    [props, type],
   );
 
   const onValueChange = useCallback(
     (event: any) => {
       if (props.testID && props.onValueChange) {
-        let buttonName = capitalize(props.testID.replaceAll('_', ' '));
-        console.log('buttonName: ', buttonName);
-        console.log('buttonName.toLowerCase(): ', buttonName.toLowerCase());
-        console.log(
-          'buttonName.toLowerCase().endsWith(button): ',
-          buttonName.toLowerCase().trim().endsWith('button'),
-        );
-        if (buttonName.toLowerCase().trim().endsWith('button')) {
-        } else {
-          buttonName = `${buttonName} button`;
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
         }
 
         LogTracker.track({
-          stepDescription: `Value change called for ${buttonName} (#${props.testID})`,
-          type: 'Tap',
+          description: `Value change called for ${buttonName} (#${props.testID})`,
+          type: LogTypes.Tap,
           params: {
             testID: props.testID,
           },
@@ -148,7 +121,29 @@ export function useLoggingFunctions(props: any) {
     [props],
   );
 
+  const filteredProps = useMemo(() => {
+    let propsCopy = {...props};
+    if (propsCopy.onPress) {
+      delete propsCopy.onPress;
+      propsCopy = {...propsCopy, onPress};
+    }
+    if (propsCopy.onLongPress) {
+      delete propsCopy.onLongPress;
+      propsCopy = {...propsCopy, onLongPress};
+    }
+    if (propsCopy.onPressIn) {
+      delete propsCopy.onPressIn;
+      propsCopy = {...propsCopy, onPressIn};
+    }
+    if (propsCopy.onPressOut) {
+      delete propsCopy.onPressOut;
+      propsCopy = {...propsCopy, onPressOut};
+    }
+    return propsCopy;
+  }, [onLongPress, onPress, onPressIn, onPressOut, props]);
+
   return {
+    filteredProps,
     onPress,
     onLongPress,
     onPressIn,
