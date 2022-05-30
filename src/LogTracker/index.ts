@@ -15,6 +15,7 @@ class LogTracker {
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
   isTrackingDisabled: boolean = false;
+  timer?: NodeJS.Timeout;
 
   constructor(private config: LogTrackerConfigInterface) {
     this.sessionId = uuidv4();
@@ -23,9 +24,15 @@ class LogTracker {
     console.log('Tracker initialized with config: ', this.config);
 
     this.storeSessionId();
-    setTimeout(() => {
-      this.store();
-    }, this.config.writeFrequencyInSeconds);
+    if (this.config.logRotateDurationInHours) {
+      this.removeOldTrackingLogs();
+    }
+
+    if (!this.isTrackingDisabled) {
+      this.timer = setTimeout(() => {
+        this.store();
+      }, this.config.writeFrequencyInSeconds);
+    }
   }
 
   private bind() {
@@ -34,19 +41,47 @@ class LogTracker {
     this.storeSessionId.bind(this);
     this.enableTracking.bind(this);
     this.disableTracking.bind(this);
-    this.clearTrackingLogs.bind(this);
+    this.removeOldTrackingLogs.bind(this);
+    this.clearTrackingLogsOfSession.bind(this);
   }
 
   public enableTracking() {
+    this.timer = setTimeout(() => {
+      this.store();
+    }, this.config.writeFrequencyInSeconds);
     this.isTrackingDisabled = false;
   }
 
   public disableTracking() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
     this.isTrackingDisabled = true;
   }
 
-  private clearTrackingLogs() {
-    AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify({}));
+  private removeOldTrackingLogs() {
+    let allSessionData: any = {};
+    this.getAllSessions().then(data => {
+      allSessionData = data;
+      const currentTime = Date.now();
+      Object.keys(allSessionData).map(key => {
+        const sessionTS = allSessionData[key];
+        const differenceHours = Math.floor(
+          (currentTime - sessionTS) / 1000 / 3600,
+        );
+        if (differenceHours > this.config.logRotateDurationInHours) {
+          this.clearTrackingLogsOfSession(key);
+        }
+      });
+    });
+  }
+
+  public clearTrackingLogsOfSession(sessionId: string) {
+    this.getAllSessions().then((data: any) => {
+      delete data[sessionId];
+      AsyncStorage.removeItem(sessionId);
+      AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data));
+    });
   }
 
   public track(logData: TrackInterface) {
@@ -97,7 +132,7 @@ class LogTracker {
     console.log('store called ', data);
     if (isEmpty(data)) {
       console.log('Data is empty will do nothing');
-      setTimeout(() => {
+      this.timer = setTimeout(() => {
         this.store();
       }, this.config.writeFrequencyInSeconds);
     } else {
@@ -117,7 +152,7 @@ class LogTracker {
         })
         .finally(() => {
           console.log('scheduling for ', this.config.writeFrequencyInSeconds);
-          setTimeout(() => {
+          this.timer = setTimeout(() => {
             this.store();
           }, this.config.writeFrequencyInSeconds);
         });
