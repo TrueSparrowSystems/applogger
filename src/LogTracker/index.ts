@@ -5,6 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
+import * as RNFS from 'react-native-fs';
+import {zip} from 'react-native-zip-archive';
 
 const LOG_SESSION_KEY = 'log_session';
 
@@ -14,6 +16,7 @@ class LogTracker {
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
+  uploadLogs: Function;
 
   constructor(private config: LogTrackerConfigInterface) {
     this.sessionId = uuidv4();
@@ -21,6 +24,7 @@ class LogTracker {
     console.log('Tracker initialized with config: ', this.config);
 
     this.storeSessionId();
+    this.uploadLogs = config?.uploadLogs;
     setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
@@ -37,6 +41,80 @@ class LogTracker {
     console.log('track: ', logData);
     this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};
     this.currentStoreId++;
+  }
+
+  private getLogTextFile(content: any, path: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      RNFS.writeFile(path, content, 'utf8')
+        .then(() => {
+          return resolve(path);
+        })
+        .catch(() => {
+          return reject();
+        });
+    });
+  }
+
+  private getZipFile(sourcePath: string, targetPath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      zip(sourcePath, targetPath)
+        .then(zipPath => {
+          return resolve(zipPath);
+        })
+        .catch(() => {
+          return reject();
+        });
+    });
+  }
+
+  uploadLogBySession(): Promise<boolean> {
+    return new Promise(resolve => {
+      this.getSessionDetails(this.sessionId).then(data => {
+        if (data) {
+          var path = RNFS.DocumentDirectoryPath + `/${this.sessionId}.txt`;
+          this.getLogTextFile(data, path).then(textFilePath => {
+            var targetZipPath =
+              RNFS.DocumentDirectoryPath + `/${this.sessionId}.zip`;
+            this.getZipFile(textFilePath, targetZipPath).then(zipPath => {
+              this.uploadLogs?.(zipPath)
+                .then(() => {
+                  return resolve(true);
+                })
+                .catch(() => {
+                  return resolve(false);
+                });
+            });
+          });
+        }
+      });
+    });
+  }
+
+  uploadAll(): Promise<boolean> {
+    return new Promise(resolve => {
+      AsyncStorage.getItem(LOG_SESSION_KEY).then(jsonData => {
+        if (jsonData) {
+          var sourceZipPath = RNFS.DocumentDirectoryPath + '/logs/';
+          var targetZipPath = RNFS.DocumentDirectoryPath + '/logs/all_logs.zip';
+          for (const key in JSON.parse(jsonData)) {
+            var path = RNFS.DocumentDirectoryPath + `/logs/${key}.txt`;
+            AsyncStorage.getItem(key).then(singleSessionData => {
+              this.getLogTextFile(singleSessionData, path).then();
+            });
+          }
+
+          this.getZipFile(sourceZipPath, targetZipPath).then(zipPath => {
+            this.uploadLogs?.(zipPath)
+              .then(() => {
+                return resolve(true);
+              })
+              .catch(() => {
+                return resolve(false);
+              });
+          });
+        }
+      });
+    });
   }
 
   private storeSessionId() {
@@ -121,6 +199,7 @@ class LogTracker {
         });
     });
   }
+
   getAllSessions() {
     return new Promise(resolve => {
       AsyncStorage.getItem(LOG_SESSION_KEY)
