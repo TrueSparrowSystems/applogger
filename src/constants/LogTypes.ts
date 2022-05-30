@@ -7,4 +7,5 @@ export enum LogTypes {
   KeyboardState = 'Keyboard State',
   AppState = 'App State',
   Navigation = 'Navigation',
+  Shake = 'Shake',
 }

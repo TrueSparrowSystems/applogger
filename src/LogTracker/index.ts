@@ -10,27 +10,51 @@ const LOG_SESSION_KEY = 'log_session';
 
 class LogTracker {
   deviceInfo = new DeviceInfo();
-  sessionId: string;
+  sessionId: string = uuidv4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
+  sessionActive: boolean = false;
 
   constructor(private config: LogTrackerConfigInterface) {
-    this.sessionId = uuidv4();
     this.bind();
-    console.log('Tracker initialized with config: ', this.config);
-
-    this.storeSessionId();
-    setTimeout(() => {
-      this.store();
-    }, this.config.writeFrequencyInSeconds);
+    this.createNewSession();
   }
 
   private bind() {
     this.store.bind(this);
     this.track.bind(this);
-    this.store.bind(this);
     this.storeSessionId.bind(this);
+    this.createNewSession.bind(this);
+    this.getSessionId.bind(this);
+    this.stopSession.bind(this);
+    this.isSessionActive.bind(this);
+  }
+
+  public isSessionActive(): boolean {
+    return this.sessionActive;
+  }
+
+  public createNewSession() {
+    this.sessionId = uuidv4();
+    console.log('Tracker initialized with config: ', this.config);
+    this.currentStoreId = 0;
+
+    this.storeSessionId();
+
+    this.sessionActive = true;
+
+    setTimeout(() => {
+      this.store();
+    }, this.config.writeFrequencyInSeconds);
+  }
+
+  public getSessionId() {
+    return this.sessionId;
+  }
+
+  public stopSession() {
+    this.sessionActive = false;
   }
 
   public track(logData: TrackInterface) {
@@ -68,34 +92,36 @@ class LogTracker {
   }
 
   private store() {
-    const data = this.currentData;
-    console.log('store called ', data);
-    if (isEmpty(data)) {
-      console.log('Data is empty will do nothing');
-      setTimeout(() => {
-        this.store();
-      }, this.config.writeFrequencyInSeconds);
-    } else {
-      console.log('Data exists');
-      this.currentData = {};
-      this.currentStoreId = 0;
+    if (this.sessionActive) {
+      const data = this.currentData;
+      console.log('store called ', data);
+      if (isEmpty(data)) {
+        console.log('Data is empty will do nothing');
+        setTimeout(() => {
+          this.store();
+        }, this.config.writeFrequencyInSeconds);
+      } else {
+        console.log('Data exists');
+        this.currentData = {};
+        this.currentStoreId = 0;
 
-      this.sessionData.push(data);
+        this.sessionData.push(data);
 
-      console.log('storing ', JSON.stringify(this.sessionData));
-      AsyncStorage.setItem(this.sessionId, JSON.stringify(this.sessionData))
-        .then(() => {
-          console.log('Successfully stored the logs');
-        })
-        .catch(err => {
-          console.error('Error while storing the logs', err);
-        })
-        .finally(() => {
-          console.log('scheduling for ', this.config.writeFrequencyInSeconds);
-          setTimeout(() => {
-            this.store();
-          }, this.config.writeFrequencyInSeconds);
-        });
+        console.log('storing ', JSON.stringify(this.sessionData));
+        AsyncStorage.setItem(this.sessionId, JSON.stringify(this.sessionData))
+          .then(() => {
+            console.log('Successfully stored the logs');
+          })
+          .catch(err => {
+            console.error('Error while storing the logs', err);
+          })
+          .finally(() => {
+            console.log('scheduling for ', this.config.writeFrequencyInSeconds);
+            setTimeout(() => {
+              this.store();
+            }, this.config.writeFrequencyInSeconds);
+          });
+      }
     }
   }
 
