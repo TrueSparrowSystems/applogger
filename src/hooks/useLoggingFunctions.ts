@@ -98,7 +98,7 @@ export function useLoggingFunctions(props: any, type: string) {
   );
 
   const onValueChange = useCallback(
-    (event: any) => {
+    (value: any) => {
       if (props.testID && props.onValueChange) {
         let componentName = capitalize(props.testID.replaceAll('_', ' '));
         console.log('componentName: ', componentName);
@@ -108,7 +108,7 @@ export function useLoggingFunctions(props: any, type: string) {
         }
 
         LogTracker.track({
-          description: `Value change called for ${buttonName} (#${props.testID})`,
+          description: `Value change to ${value} for ${componentName} - (#${props.testID})`,
           type: LogTypes.Tap,
           params: {
             testID: props.testID,
@@ -116,9 +116,9 @@ export function useLoggingFunctions(props: any, type: string) {
         });
       }
 
-      props.onValueChange(event);
+      props.onValueChange(value);
     },
-    [props],
+    [props, type],
   );
 
   const filteredProps = useMemo(() => {
@@ -139,8 +139,14 @@ export function useLoggingFunctions(props: any, type: string) {
       delete propsCopy.onPressOut;
       propsCopy = {...propsCopy, onPressOut};
     }
+
+    if (propsCopy.onValueChange) {
+      delete propsCopy.onValueChange;
+      propsCopy = {...propsCopy, onValueChange};
+    }
+
     return propsCopy;
-  }, [onLongPress, onPress, onPressIn, onPressOut, props]);
+  }, [onLongPress, onPress, onPressIn, onPressOut, onValueChange, props]);
 
   return {
     filteredProps,
