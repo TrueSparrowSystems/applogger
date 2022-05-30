@@ -97,6 +97,27 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  const onRefresh = useCallback(() => {
+    const testId = props.testID;
+    if (testId && props.onRefresh) {
+      let componentName = capitalize(props.testID.replaceAll('_', ' '));
+      console.log('componentName: ', componentName);
+
+      if (!componentName.toLowerCase().trim().endsWith(type)) {
+        componentName = `${componentName} ${type}`;
+      }
+
+      LogTracker.track({
+        description: `on Refresh called for ${componentName} (#${testId})`,
+        type: LogTypes.Refresh,
+        params: {
+          testId: testId,
+        },
+      });
+    }
+    props.onRefresh?.();
+  }, [props, type]);
+
   const filteredProps = useMemo(() => {
     let propsCopy = {...props};
     if (propsCopy.onPress) {
@@ -115,8 +136,12 @@ export function useLoggingFunctions(props: any, type: string) {
       delete propsCopy.onPressOut;
       propsCopy = {...propsCopy, onPressOut};
     }
+    if (propsCopy.onRefresh) {
+      delete propsCopy.onRefresh;
+      propsCopy = {...propsCopy, onRefresh};
+    }
     return propsCopy;
-  }, [onLongPress, onPress, onPressIn, onPressOut, props]);
+  }, [onLongPress, onPress, onPressIn, onPressOut, onRefresh, props]);
 
   return {
     filteredProps,
