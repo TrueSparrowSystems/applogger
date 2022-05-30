@@ -1,9 +1,9 @@
 import React from 'react';
-import {Switch as RnSwitch} from 'react-native';
+import {Switch as RnSwitch, SwitchProps} from 'react-native';
 import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
-export function Switch(props: any) {
+export function Switch(props: SwitchProps) {
   const {onValueChange, filteredProps} = useLoggingFunctions(
     props,
     ComponentTypes.Switch,
