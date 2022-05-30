@@ -64,23 +64,32 @@ class LogTracker {
     this.getAllSessions().then(data => {
       allSessionData = data;
       const currentTime = Date.now();
+      const sessionIdArray: string[] = [];
       Object.keys(allSessionData).map(key => {
         const sessionTS = allSessionData[key];
         const differenceHours = Math.floor(
           (currentTime - sessionTS) / 1000 / 3600,
         );
-        if (differenceHours > this.config.logRotateDurationInHours) {
-          this.clearTrackingLogsOfSession(key);
+        if (differenceHours >= this.config.logRotateDurationInHours!) {
+          sessionIdArray.push(key);
         }
       });
+      this.clearTrackingLogsOfSession(sessionIdArray);
     });
   }
 
-  public clearTrackingLogsOfSession(sessionId: string) {
-    this.getAllSessions().then((data: any) => {
-      delete data[sessionId];
-      AsyncStorage.removeItem(sessionId);
-      AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data));
+  public clearTrackingLogsOfSession(sessionId: string | string[]) {
+    this.getAllSessions().then(async (data: any) => {
+      if (Array.isArray(sessionId)) {
+        for (let index = 0; index < sessionId.length; index++) {
+          delete data[sessionId[index]];
+        }
+        await AsyncStorage.multiRemove(sessionId);
+      } else {
+        delete data[sessionId];
+        await AsyncStorage.removeItem(sessionId);
+      }
+      await AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data));
     });
   }
 
