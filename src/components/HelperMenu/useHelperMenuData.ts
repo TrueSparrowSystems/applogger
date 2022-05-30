@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useMemo, useCallback, useState, useEffect} from 'react';
 import NetworkHelper from '../../helper/NetworkHelper';
+import {WEB_SERVER_PORT} from '../../hooks/useWebServer';
 import LogTracker from '../../LogTracker';
 import EventTypes from '../../services/local-event/EventTypes';
 import {LocalEvent} from '../../services/local-event/LocalEvent';
@@ -45,10 +46,10 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
     const ipAddress: string | null = NetworkHelper.getDeviceIpAddress();
     const path: string = '/session';
     if (ipAddress) {
-      return `${ipAddress}${path}`;
+      return `${ipAddress}${WEB_SERVER_PORT}${path}`;
     }
     return null;
-  }, []);
+  }, [isVisible]);
 
   const copyLink = useCallback(() => {
     if (serverUrl) {
