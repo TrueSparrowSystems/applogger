@@ -15,7 +15,6 @@ class LogTracker {
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
   isTrackingDisabled: boolean = false;
-  timer?: NodeJS.Timeout;
 
   constructor(private config: LogTrackerConfigInterface) {
     this.sessionId = uuidv4();
@@ -29,7 +28,7 @@ class LogTracker {
     }
 
     if (!this.isTrackingDisabled) {
-      this.timer = setTimeout(() => {
+      setTimeout(() => {
         this.store();
       }, this.config.writeFrequencyInSeconds);
     }
@@ -46,16 +45,13 @@ class LogTracker {
   }
 
   public enableTracking() {
-    this.timer = setTimeout(() => {
+    this.isTrackingDisabled = false;
+    setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
-    this.isTrackingDisabled = false;
   }
 
   public disableTracking() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
     this.isTrackingDisabled = true;
   }
 
@@ -134,14 +130,14 @@ class LogTracker {
   }
 
   private store() {
-    if (this.isTrackingDisabled) {
-      return;
-    }
     const data = this.currentData;
     console.log('store called ', data);
     if (isEmpty(data)) {
       console.log('Data is empty will do nothing');
-      this.timer = setTimeout(() => {
+      if (this.isTrackingDisabled) {
+        return;
+      }
+      setTimeout(() => {
         this.store();
       }, this.config.writeFrequencyInSeconds);
     } else {
@@ -161,7 +157,10 @@ class LogTracker {
         })
         .finally(() => {
           console.log('scheduling for ', this.config.writeFrequencyInSeconds);
-          this.timer = setTimeout(() => {
+          if (this.isTrackingDisabled) {
+            return;
+          }
+          setTimeout(() => {
             this.store();
           }, this.config.writeFrequencyInSeconds);
         });
