@@ -73,6 +73,8 @@ class LogTracker {
     this.getAllSessions.bind(this);
     this.getDeviceInfo.bind(this);
     this.getDeviceInfoByKeys.bind(this);
+    this.deleteAllLogs.bind(this);
+    this.zipAndUploadAllLogs.bind(this);
   }
 
   canUpload(): boolean {
@@ -94,11 +96,11 @@ class LogTracker {
     this.sessionId = uuidv4();
     console.log('Tracker initialized with config: ', this.config);
 
-    this.storeSessionId();
-
     this.sessionState = SessionState.Active;
 
     this.trackingState = TrackingState.Enabled;
+
+    this.storeSessionId();
 
     setTimeout(() => {
       this.store();
@@ -143,18 +145,57 @@ class LogTracker {
     });
   }
 
+  public deleteAllLogs() {
+    return new Promise((resolve, reject) => {
+      this.getAllSessions()
+        .then((data: any) => {
+          const sessionIds: string[] = Object.keys(data);
+          this.clearTrackingLogsOfSession(sessionIds)
+            .then(() => {
+              resolve({});
+            })
+            .catch(() => {
+              reject();
+            });
+        })
+        .catch(() => {
+          reject();
+        });
+    });
+  }
+
   public clearTrackingLogsOfSession(sessionId: string | string[]) {
-    this.getAllSessions().then(async (data: any) => {
-      if (Array.isArray(sessionId)) {
-        for (let index = 0; index < sessionId.length; index++) {
-          delete data[sessionId[index]];
-        }
-        await AsyncStorage.multiRemove(sessionId);
-      } else {
-        delete data[sessionId];
-        await AsyncStorage.removeItem(sessionId);
-      }
-      await AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+      this.getAllSessions()
+        .then(async (data: any) => {
+          if (Array.isArray(sessionId)) {
+            for (let index = 0; index < sessionId.length; index++) {
+              delete data[sessionId[index]];
+            }
+            try {
+              await AsyncStorage.multiRemove(sessionId);
+            } catch {
+              reject();
+            }
+          } else {
+            delete data[sessionId];
+            try {
+              await AsyncStorage.removeItem(sessionId);
+            } catch {
+              reject();
+            }
+          }
+          AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
+            .then(() => {
+              resolve({});
+            })
+            .catch(() => {
+              reject();
+            });
+        })
+        .catch(() => {
+          reject();
+        });
     });
   }
 
@@ -241,6 +282,35 @@ class LogTracker {
       });
     });
   }
+  private zipAndUploadAllLogs(
+    sourceZipPath: string,
+    targetZipPath: string,
+    sessionIds: string[],
+  ) {
+    return new Promise<boolean>(resolve => {
+      this.getZipFile(sourceZipPath, targetZipPath).then(zipPath => {
+        this.uploadLogs?.(zipPath, () => {
+          RNFS.readDir(sourceZipPath).then(res => {
+            res.forEach(file => {
+              RNFS.unlink(file.path);
+            });
+          });
+
+          RNFS.unlink(zipPath);
+
+          if (this.clearStorageOnUpload) {
+            this.clearTrackingLogsOfSession(sessionIds);
+          }
+        })
+          .then(() => {
+            return resolve(true);
+          })
+          .catch(() => {
+            return resolve(false);
+          });
+      });
+    });
+  }
 
   uploadAllLogs(): Promise<boolean> {
     return new Promise(resolve => {
@@ -251,7 +321,7 @@ class LogTracker {
 
           const sessionIds: string[] = [];
 
-          Object.keys(JSON.parse(jsonData)).forEach(key => {
+          Object.keys(JSON.parse(jsonData)).forEach((key, index, arr) => {
             if (key !== this.sessionId) {
               sessionIds.push(key);
             }
@@ -261,32 +331,20 @@ class LogTracker {
               this.getLogFile(singleSessionData, filename, dir)
                 .then(path => {
                   console.log('created text file', path);
+                  if (index === arr.length - 1) {
+                    this.zipAndUploadAllLogs(
+                      sourceZipPath,
+                      targetZipPath,
+                      sessionIds,
+                    ).then((res: boolean) => {
+                      resolve(res);
+                    });
+                  }
                 })
                 .catch(() => {
                   console.log('error in creating text file');
                 });
             });
-          });
-
-          this.getZipFile(sourceZipPath, targetZipPath).then(zipPath => {
-            this.uploadLogs?.(zipPath, () => {
-              RNFS.readDir(sourceZipPath).then(res => {
-                res.forEach(file => {
-                  RNFS.unlink(file.path);
-                });
-              });
-
-              RNFS.unlink(zipPath);
-              if (this.clearStorageOnUpload) {
-                this.clearTrackingLogsOfSession(sessionIds);
-              }
-            })
-              .then(() => {
-                return resolve(true);
-              })
-              .catch(() => {
-                return resolve(false);
-              });
           });
         }
       });
