@@ -19,10 +19,12 @@
     "react": "17.0.2",
     "react-native": "0.68.2",
     "react-native-device-info": "8.7.1",
+    "react-native-shake": "5.1.1",
+    "react-native-fs": "2.20.0",
     "react-native-get-random-values": "1.8.0",
     "react-native-http-bridge": "github:babeone/react-native-http-bridge",
     "react-native-network-info": "5.2.1",
-    "react-native-shake": "5.1.1",
+    "react-native-zip-archive": "6.0.8",
     "uuidv4": "6.2.13"
   },
   "devDependencies": {

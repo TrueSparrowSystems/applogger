@@ -1,4 +1,6 @@
 import moment from 'moment';
+import {Share} from 'react-native';
+import deviceInfoModule from 'react-native-device-info';
 import LogTracker from '../LogTracker';
 import {DataParser} from '../LogTracker/DataParser';
 import {sessionDash} from '../pages/sessionDashboard';
@@ -6,7 +8,62 @@ import {sessionDetails} from '../pages/sessionDetails';
 
 var httpBridge = require('react-native-http-bridge');
 
+export const DEFAULT_SERVER_PORT = 5561;
 class WebServerHelper {
+  port: number | undefined;
+  /**
+   * Function which starts a web server on a given `port`.
+   * @param port Port on which the web server will start.
+   */
+  startWebServer(port: number = DEFAULT_SERVER_PORT) {
+    this.port = port;
+    httpBridge.start(this.port, 'http_service', (request: any) => {
+      this.onStart(request);
+    });
+  }
+
+  /**
+   * Function to stop the running web server.
+   */
+  stopWebServer() {
+    httpBridge.stop();
+  }
+
+  /**
+   * Function which prepares the Log tracker UI URL.
+   * @returns {Promise<string>} A promise which resolves to URL string.
+   */
+  getUIUrl(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      deviceInfoModule
+        .getIpAddress()
+        .then(ipAddr => {
+          const uiUrl = `http://${ipAddr}:${this.port}/session`;
+          resolve(uiUrl);
+        })
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Function which opens the native share dialog.
+   */
+  shareUIUrl() {
+    this.getUIUrl().then((url: string) => {
+      const shareContent = {
+        title: 'Log Tracker UI URL',
+        url: url,
+        message: url,
+      };
+
+      Share.share(shareContent)
+        .then(value => {
+          console.log(value);
+        })
+        .catch(err => console.log('There was an error while sharing. ', err));
+    });
+  }
+
   onStart(request: any) {
     console.log('request: ', request);
     console.log('split: ', request.url.split('/'));
@@ -72,6 +129,29 @@ class WebServerHelper {
           '{"message": "Bad Request"}',
         );
       }
+    } else if (
+      request.type === 'POST' &&
+      requestUrlComponents[3] === 'download'
+    ) {
+      LogTracker.getSessionDetails(requestUrlComponents[2])
+        .then(res => {
+          console.log('session data', res);
+          return httpBridge.respond(
+            request.requestId,
+            200,
+            'application/json',
+            JSON.stringify(res),
+          );
+        })
+        .catch(error => {
+          console.log({error});
+          httpBridge.respond(
+            request.requestId,
+            500,
+            'application/json',
+            '{"message": "Bad Request"}',
+          );
+        });
     }
 
     // you can use request.url, request.type and request.postData here

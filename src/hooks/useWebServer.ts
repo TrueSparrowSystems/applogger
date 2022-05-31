@@ -8,11 +8,7 @@ import LogTracker from '../LogTracker';
 import EventTypes from '../services/local-event/EventTypes';
 import NetworkHelper from '../helper/NetworkHelper';
 
-var httpBridge = require('react-native-http-bridge');
-
-export const WEB_SERVER_PORT = 5561;
-
-export function useWebServer() {
+export function useWebServer(port?: number) {
   useEffect(() => {
     deviceInfoModule.getIpAddress().then(ip => {
       console.log('-------------> ip address: ', ip);
@@ -27,13 +23,9 @@ export function useWebServer() {
       });
     });
 
-    httpBridge.start(WEB_SERVER_PORT, 'http_service', (request: any) => {
-      WebServerHelper.onStart(request);
-    });
-
+    WebServerHelper.startWebServer(port);
     return () => {
-      httpBridge.stop();
-      RnShakeSubscription.remove();
+      WebServerHelper.stopWebServer();
     };
-  }, []);
+  }, [port]);
 }
