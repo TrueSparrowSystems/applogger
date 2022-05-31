@@ -13,6 +13,7 @@ interface HelperMenuDataInterface {
   uploadAllLogs: () => void;
   shareUrl: () => void;
   hideMenu: () => void;
+  deleteAllLogs: () => void;
   deleteCurrentSessionLogs: () => void;
   handleSession: () => void;
   handleTracking: () => void;
@@ -60,22 +61,38 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
 
   const deleteCurrentSessionLogs = useCallback(() => {
     const currentSessionId = LogTracker.getSessionId();
-    LogTracker.clearTrackingLogsOfSession(currentSessionId);
+    LogTracker.clearTrackingLogsOfSession(currentSessionId)
+      .then(() => {
+        LogTracker.createNewSession();
+      })
+      .catch(() => {});
+  }, []);
+
+  const deleteAllLogs = useCallback(() => {
+    LogTracker.deleteAllLogs()
+      .then(() => {
+        LogTracker.createNewSession();
+      })
+      .catch(() => {});
   }, []);
 
   const handleTracking = useCallback(() => {
     if (isTrackingActive) {
       LogTracker.disableTracking();
+      setIsTrackingActive(false);
     } else {
       LogTracker.enableTracking();
+      setIsTrackingActive(true);
     }
   }, [isTrackingActive]);
 
   const handleSession = useCallback(() => {
     if (isSessionActive) {
       LogTracker.stopSession();
+      setIsSessionActive(false);
     } else {
       LogTracker.createNewSession();
+      setIsSessionActive(true);
     }
   }, [isSessionActive]);
 
@@ -88,6 +105,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
     enableUploadButtons: LogTracker.canUpload(),
     uploadCurrentSessionLogs,
     uploadAllLogs,
+    deleteAllLogs,
     shareUrl,
     hideMenu,
     deleteCurrentSessionLogs,

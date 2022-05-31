@@ -12,6 +12,7 @@ function HelperMenu() {
     uploadCurrentSessionLogs,
     uploadAllLogs,
     shareUrl,
+    deleteAllLogs,
     hideMenu,
     deleteCurrentSessionLogs,
     handleSession,
@@ -28,6 +29,7 @@ function HelperMenu() {
         useNativeDriver: false,
       }).start();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible]);
 
   const closeMenu = () => {
@@ -70,6 +72,7 @@ function HelperMenu() {
         ]}>
         <View style={styles.optionButtonContainer}>
           <TouchableOpacity
+            testID="share_server_url"
             style={optionWithBottomBorderStyle}
             onPress={shareUrl}
             activeOpacity={0.7}>
@@ -78,12 +81,14 @@ function HelperMenu() {
           {enableUploadButtons ? (
             <View>
               <TouchableOpacity
+                testID="upload_current_session_log"
                 style={optionWithBottomBorderStyle}
                 onPress={uploadCurrentSessionLogs}
                 activeOpacity={0.7}>
                 <Text style={optionsTextStyle}>Upload current session log</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                testID="upload_all_log"
                 style={optionWithBottomBorderStyle}
                 onPress={uploadAllLogs}
                 activeOpacity={0.7}>
@@ -92,18 +97,28 @@ function HelperMenu() {
             </View>
           ) : null}
           <TouchableOpacity
+            testID="delete_current_session_logs"
             style={optionWithBottomBorderStyle}
             onPress={deleteCurrentSessionLogs}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>Delete current session logs</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            testID="delete_all_logs"
+            style={optionWithBottomBorderStyle}
+            onPress={deleteAllLogs}
+            activeOpacity={0.7}>
+            <Text style={optionsTextStyle}>Delete all logs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="tracking_control"
             style={optionWithBottomBorderStyle}
             onPress={handleTracking}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>{trackingControlText}</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            testID="session_control"
             style={styles.optionButton}
             onPress={handleSession}
             activeOpacity={0.7}>
@@ -111,6 +126,7 @@ function HelperMenu() {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
+          testID="cancel"
           style={styles.cancelButtonContainer}
           onPress={closeMenu}
           activeOpacity={0.7}>
