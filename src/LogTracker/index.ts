@@ -1,6 +1,9 @@
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
-import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
+import {
+  LogTrackerConfigInterface,
+  UploaderFunc,
+} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
@@ -16,7 +19,8 @@ class LogTracker {
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
-  uploadLogs: Function;
+  uploadLogs: UploaderFunc;
+  clearStorageOnUpload: boolean;
 
   constructor(private config: LogTrackerConfigInterface) {
     this.sessionId = uuidv4();
@@ -25,6 +29,7 @@ class LogTracker {
 
     this.storeSessionId();
     this.uploadLogs = config?.uploadLogs;
+    this.clearStorageOnUpload = config?.clearStorageOnLogUpload;
     setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
@@ -93,11 +98,11 @@ class LogTracker {
               var sourceZipPath = RNFS.DocumentDirectoryPath + '/logs';
               this.getZipFile(sourceZipPath, targetZipPath)
                 .then(zipPath => {
-                  this.uploadLogs?.(zipPath)
+                  this.uploadLogs?.(zipPath, () => {
+                    RNFS.unlink(zipPath);
+                    RNFS.unlink(logFilePath);
+                  })
                     .then(() => {
-                      RNFS.unlink(zipPath);
-                      RNFS.unlink(logFilePath);
-
                       return resolve(true);
                     })
                     .catch(() => {
@@ -136,15 +141,19 @@ class LogTracker {
           });
 
           this.getZipFile(sourceZipPath, targetZipPath).then(zipPath => {
-            this.uploadLogs?.(zipPath)
-              .then(() => {
-                RNFS.readDir(sourceZipPath).then(res => {
-                  res.forEach(file => {
-                    RNFS.unlink(file.path);
-                  });
+            this.uploadLogs?.(zipPath, () => {
+              RNFS.readDir(sourceZipPath).then(res => {
+                res.forEach(file => {
+                  RNFS.unlink(file.path);
                 });
+              });
 
-                RNFS.unlink(zipPath);
+              RNFS.unlink(zipPath);
+              if (this.clearStorageOnUpload) {
+                // TODO: clear logs
+              }
+            })
+              .then(() => {
                 return resolve(true);
               })
               .catch(() => {
@@ -289,12 +298,19 @@ class LogTracker {
   }
 }
 
+function uploaderFunction(
+  zipPath: string,
+  onLogUploadComplete: Function,
+): Promise<boolean> {
+  onLogUploadComplete();
+
+  return new Promise(resolve => {
+    resolve(true);
+  });
+}
+
 export default new LogTracker({
   writeFrequencyInSeconds: 5000,
-  uploadLogs: zipPath => {
-    console.log({zipPath});
-    return new Promise(resolve => {
-      resolve(true);
-    });
-  },
+  uploadLogs: uploaderFunction,
+  clearStorageOnLogUpload: true,
 });
