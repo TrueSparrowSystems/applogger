@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.17.4",
-    "@react-native-clipboard/clipboard": "1.10.0",
     "eventemitter3": "4.0.7",
     "lodash": "4.17.21",
     "moment": "2.29.3",

@@ -2,7 +2,7 @@ import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {
   LogTrackerConfigInterface,
-  UploaderFunc,
+  UploaderFunctionInterface,
 } from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
@@ -14,25 +14,39 @@ import {DeviceConstantKeys} from '../DeviceInfo/types';
 
 const LOG_SESSION_KEY = 'log_session';
 
+enum TrackingState {
+  Enabled = 'Enabled',
+  Disabled = 'Disabled',
+}
+enum SessionState {
+  Active = 'Active',
+  InActive = 'InActive',
+}
+
 class LogTracker {
   deviceInfo = new DeviceInfo();
   sessionId: string = uuidv4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
-  uploadLogs: UploaderFunc;
+  uploadLogs: UploaderFunctionInterface;
   clearStorageOnUpload: boolean;
-  isTrackingDisabled: boolean = false;
-  sessionActive: boolean = false;
+  trackingState: TrackingState = TrackingState.Enabled;
+  sessionState: SessionState = SessionState.Active;
 
   constructor(private config: LogTrackerConfigInterface) {
-    this.sessionId = uuidv4();
-    this.isTrackingDisabled = this.config?.disableTracking || !__DEV__;
+    this.bind();
 
+    this.trackingState = this.config?.isTrackingDisabled
+      ? TrackingState.Disabled
+      : TrackingState.Enabled || !__DEV__;
     this.uploadLogs = this.config?.uploadLogs;
     this.clearStorageOnUpload = this.config?.clearStorageOnLogUpload;
 
-    this.bind();
+    if (this.config?.logRotateDurationInHours) {
+      this.removeOldTrackingLogs();
+    }
+
     this.createNewSession();
   }
 
@@ -48,10 +62,25 @@ class LogTracker {
     this.disableTracking.bind(this);
     this.removeOldTrackingLogs.bind(this);
     this.clearTrackingLogsOfSession.bind(this);
+    this.canUpload.bind(this);
+    this.isTrackingDisabled.bind(this);
+    this.uploadCurrentSessionLog.bind(this);
+    this.getLogFile.bind(this);
+    this.getZipFile.bind(this);
+    this.uploadAllLogs.bind(this);
+    this.getSessionDetails.bind(this);
+    this.getSessionDetailsAsJson.bind(this);
+    this.getAllSessions.bind(this);
+    this.getDeviceInfo.bind(this);
+    this.getDeviceInfoByKeys.bind(this);
+  }
+
+  canUpload(): boolean {
+    return !!this.uploadLogs;
   }
 
   public isSessionActive(): boolean {
-    return this.sessionActive;
+    return this.sessionState === SessionState.Active;
   }
 
   private resetLogger() {
@@ -67,20 +96,13 @@ class LogTracker {
 
     this.storeSessionId();
 
-    this.sessionActive = true;
+    this.sessionState = SessionState.Active;
+
+    this.trackingState = TrackingState.Enabled;
 
     setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
-    if (this.config.logRotateDurationInHours) {
-      this.removeOldTrackingLogs();
-    }
-
-    if (!this.isTrackingDisabled) {
-      setTimeout(() => {
-        this.store();
-      }, this.config.writeFrequencyInSeconds);
-    }
   }
 
   public getSessionId() {
@@ -88,18 +110,18 @@ class LogTracker {
   }
 
   public stopSession() {
-    this.sessionActive = false;
+    this.sessionState = SessionState.InActive;
   }
 
   public enableTracking() {
-    this.isTrackingDisabled = false;
+    this.trackingState = TrackingState.Enabled;
     setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
   }
 
   public disableTracking() {
-    this.isTrackingDisabled = true;
+    this.trackingState = TrackingState.Disabled;
   }
 
   private removeOldTrackingLogs() {
@@ -136,8 +158,12 @@ class LogTracker {
     });
   }
 
+  isTrackingDisabled() {
+    return this.trackingState === TrackingState.Disabled;
+  }
+
   public track(logData: TrackInterface) {
-    if (this.isTrackingDisabled) {
+    if (this.isTrackingDisabled() || !this.isSessionActive()) {
       return;
     }
     console.log('track: ', logData);
@@ -181,7 +207,7 @@ class LogTracker {
     });
   }
 
-  uploadLogBySession(): Promise<boolean> {
+  uploadCurrentSessionLog(): Promise<boolean> {
     return new Promise(resolve => {
       this.getSessionDetailsAsJson(this.sessionId).then(data => {
         if (data) {
@@ -216,14 +242,19 @@ class LogTracker {
     });
   }
 
-  uploadAll(): Promise<boolean> {
+  uploadAllLogs(): Promise<boolean> {
     return new Promise(resolve => {
       AsyncStorage.getItem(LOG_SESSION_KEY).then(jsonData => {
         if (jsonData) {
           var sourceZipPath = RNFS.DocumentDirectoryPath + '/logs';
           var targetZipPath = RNFS.DocumentDirectoryPath + '/all_logs.zip';
 
+          const sessionIds: string[] = [];
+
           Object.keys(JSON.parse(jsonData)).forEach(key => {
+            if (key !== this.sessionId) {
+              sessionIds.push(key);
+            }
             var dir = RNFS.DocumentDirectoryPath + '/logs';
             var filename = `/${key}.json`;
             this.getSessionDetailsAsJson(key).then(singleSessionData => {
@@ -247,7 +278,7 @@ class LogTracker {
 
               RNFS.unlink(zipPath);
               if (this.clearStorageOnUpload) {
-                // TODO: clear logs
+                this.clearTrackingLogsOfSession(sessionIds);
               }
             })
               .then(() => {
@@ -263,7 +294,7 @@ class LogTracker {
   }
 
   private storeSessionId() {
-    if (this.isTrackingDisabled) {
+    if (this.isTrackingDisabled() || !this.isSessionActive()) {
       return;
     }
     console.log('Tracker storeSessionId called: ', this.sessionId);
@@ -298,7 +329,7 @@ class LogTracker {
     console.log('store called ', data);
     if (isEmpty(data)) {
       console.log('Data is empty will do nothing');
-      if (this.isTrackingDisabled) {
+      if (this.isTrackingDisabled() || !this.isSessionActive()) {
         return;
       }
       setTimeout(() => {
@@ -321,7 +352,7 @@ class LogTracker {
         })
         .finally(() => {
           console.log('scheduling for ', this.config.writeFrequencyInSeconds);
-          if (this.isTrackingDisabled) {
+          if (this.isTrackingDisabled() || !this.isSessionActive()) {
             return;
           }
           setTimeout(() => {

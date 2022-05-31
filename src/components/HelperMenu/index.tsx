@@ -5,17 +5,20 @@ import useHelperMenuData from './useHelperMenuData';
 
 function HelperMenu() {
   const {
-    serverUrl,
     isVisible,
     sessionControlText,
-    uploadLogs,
-    copyLink,
+    trackingControlText,
+    enableUploadButtons,
+    uploadCurrentSessionLogs,
+    uploadAllLogs,
+    shareUrl,
     hideMenu,
     deleteCurrentSessionLogs,
     handleSession,
+    handleTracking,
   } = useHelperMenuData();
 
-  const yOffset = new Animated.Value(300);
+  const yOffset = new Animated.Value(500);
 
   useEffect(() => {
     if (isVisible) {
@@ -30,7 +33,7 @@ function HelperMenu() {
   const closeMenu = () => {
     Animated.timing(yOffset, {
       duration: 500,
-      toValue: 300,
+      toValue: 500,
       useNativeDriver: false,
     }).start(() => {
       hideMenu();
@@ -52,7 +55,6 @@ function HelperMenu() {
     ],
     [],
   );
-
   return isVisible ? (
     <View style={styles.container}>
       <Animated.View
@@ -69,21 +71,37 @@ function HelperMenu() {
         <View style={styles.optionButtonContainer}>
           <TouchableOpacity
             style={optionWithBottomBorderStyle}
-            onPress={copyLink}
+            onPress={shareUrl}
             activeOpacity={0.7}>
-            <Text style={optionsTextStyle}>Copy Link: {serverUrl}</Text>
+            <Text style={optionsTextStyle}>Share server URL</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={optionWithBottomBorderStyle}
-            onPress={uploadLogs}
-            activeOpacity={0.7}>
-            <Text style={optionsTextStyle}>Upload log</Text>
-          </TouchableOpacity>
+          {enableUploadButtons ? (
+            <View>
+              <TouchableOpacity
+                style={optionWithBottomBorderStyle}
+                onPress={uploadCurrentSessionLogs}
+                activeOpacity={0.7}>
+                <Text style={optionsTextStyle}>Upload current session log</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={optionWithBottomBorderStyle}
+                onPress={uploadAllLogs}
+                activeOpacity={0.7}>
+                <Text style={optionsTextStyle}>Upload all log</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
           <TouchableOpacity
             style={optionWithBottomBorderStyle}
             onPress={deleteCurrentSessionLogs}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>Delete current session logs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={optionWithBottomBorderStyle}
+            onPress={handleTracking}
+            activeOpacity={0.7}>
+            <Text style={optionsTextStyle}>{trackingControlText}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.optionButton}
