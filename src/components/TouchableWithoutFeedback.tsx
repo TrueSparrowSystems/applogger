@@ -1,15 +1,17 @@
 import React from 'react';
 import {
-  TouchableOpacity as RnTouchableOpacity,
-  TouchableOpacityProps,
+  TouchableWithoutFeedback as RnTouchableWithoutFeedback,
+  TouchableWithoutFeedbackProps,
 } from 'react-native';
 import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
-export function TouchableOpacity(props: TouchableOpacityProps) {
+export function TouchableWithoutFeedback(props: TouchableWithoutFeedbackProps) {
   const {filteredProps} = useLoggingFunctions(props, ComponentTypes.Button);
 
   return (
-    <RnTouchableOpacity {...filteredProps}>{props.children}</RnTouchableOpacity>
+    <RnTouchableWithoutFeedback {...filteredProps}>
+      {props.children}
+    </RnTouchableWithoutFeedback>
   );
 }

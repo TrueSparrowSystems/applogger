@@ -437,6 +437,49 @@ export function useLoggingFunctions(props: any, type: string) {
     },
     [props, type],
   );
+  const onValueChange = useCallback(
+    (value: any) => {
+      if (props.testID && props.onValueChange) {
+        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        console.log('componentName: ', componentName);
+
+        if (componentName.toLowerCase().trim().endsWith(type)) {
+          componentName = `${componentName} ${type}`;
+        }
+
+        LogTracker.track({
+          description: `Value change to ${value} for ${componentName} - (#${props.testID})`,
+          type: LogTypes.Tap,
+          params: {
+            testID: props.testID,
+          },
+        });
+        props.onValueChange(value);
+      }
+    },
+    [props, type],
+  );
+
+  const onRefresh = useCallback(() => {
+    const testId = props.testID;
+    if (testId && props.onRefresh) {
+      let componentName = capitalize(props.testID.replaceAll('_', ' '));
+      console.log('componentName: ', componentName);
+
+      if (!componentName.toLowerCase().trim().endsWith(type)) {
+        componentName = `${componentName} ${type}`;
+      }
+
+      LogTracker.track({
+        description: `on Refresh called for ${componentName} (#${testId})`,
+        type: LogTypes.Refresh,
+        params: {
+          testId: testId,
+        },
+      });
+      props.onRefresh();
+    }
+  }, [props, type]);
 
   const loggingFunctions: Record<string, (event: any) => void> = useMemo(
     () => ({
@@ -454,6 +497,8 @@ export function useLoggingFunctions(props: any, type: string) {
       onScroll,
       onSelectionChange,
       onSubmitEditing,
+      onRefresh,
+      onValueChange,
     }),
     [
       onChange,
@@ -470,6 +515,8 @@ export function useLoggingFunctions(props: any, type: string) {
       onScroll,
       onSelectionChange,
       onSubmitEditing,
+      onRefresh,
+      onValueChange,
     ],
   );
 
