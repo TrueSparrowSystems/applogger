@@ -93,12 +93,6 @@ class LogTracker {
     this.currentData = {};
   }
 
-  private resetLogger() {
-    this.currentStoreId = 0;
-    this.sessionData = [];
-    this.currentData = {};
-  }
-
   public createNewSession() {
     this.resetLogger();
     this.sessionId = uuidv4();
