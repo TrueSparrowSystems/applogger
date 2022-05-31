@@ -10,6 +10,7 @@ import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
 import * as RNFS from 'react-native-fs';
 import {zip} from 'react-native-zip-archive';
+import {DeviceConstantKeys} from '../DeviceInfo/types';
 
 const LOG_SESSION_KEY = 'log_session';
 
@@ -21,9 +22,11 @@ class LogTracker {
   currentStoreId: number = 0;
   uploadLogs: UploaderFunc;
   clearStorageOnUpload: boolean;
+  isTrackingDisabled: boolean = false;
 
   constructor(private config: LogTrackerConfigInterface) {
     this.sessionId = uuidv4();
+    this.isTrackingDisabled = this.config?.disableTracking || !__DEV__;
     this.bind();
     console.log('Tracker initialized with config: ', this.config);
 
@@ -33,16 +36,76 @@ class LogTracker {
     setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
+    if (this.config.logRotateDurationInHours) {
+      this.removeOldTrackingLogs();
+    }
+
+    if (!this.isTrackingDisabled) {
+      setTimeout(() => {
+        this.store();
+      }, this.config.writeFrequencyInSeconds);
+    }
   }
 
   private bind() {
     this.store.bind(this);
     this.track.bind(this);
-    this.store.bind(this);
     this.storeSessionId.bind(this);
+    this.enableTracking.bind(this);
+    this.disableTracking.bind(this);
+    this.removeOldTrackingLogs.bind(this);
+    this.clearTrackingLogsOfSession.bind(this);
+  }
+
+  public enableTracking() {
+    this.isTrackingDisabled = false;
+    setTimeout(() => {
+      this.store();
+    }, this.config.writeFrequencyInSeconds);
+  }
+
+  public disableTracking() {
+    this.isTrackingDisabled = true;
+  }
+
+  private removeOldTrackingLogs() {
+    let allSessionData: any = {};
+    this.getAllSessions().then(data => {
+      allSessionData = data;
+      const currentTime = Date.now();
+      const sessionIdArray: string[] = [];
+      Object.keys(allSessionData).map(key => {
+        const sessionTS = allSessionData[key];
+        const differenceHours = Math.floor(
+          (currentTime - sessionTS) / 1000 / 3600,
+        );
+        if (differenceHours >= this.config.logRotateDurationInHours!) {
+          sessionIdArray.push(key);
+        }
+      });
+      this.clearTrackingLogsOfSession(sessionIdArray);
+    });
+  }
+
+  public clearTrackingLogsOfSession(sessionId: string | string[]) {
+    this.getAllSessions().then(async (data: any) => {
+      if (Array.isArray(sessionId)) {
+        for (let index = 0; index < sessionId.length; index++) {
+          delete data[sessionId[index]];
+        }
+        await AsyncStorage.multiRemove(sessionId);
+      } else {
+        delete data[sessionId];
+        await AsyncStorage.removeItem(sessionId);
+      }
+      await AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data));
+    });
   }
 
   public track(logData: TrackInterface) {
+    if (this.isTrackingDisabled) {
+      return;
+    }
     console.log('track: ', logData);
     this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};
     this.currentStoreId++;
@@ -166,6 +229,9 @@ class LogTracker {
   }
 
   private storeSessionId() {
+    if (this.isTrackingDisabled) {
+      return;
+    }
     console.log('Tracker storeSessionId called: ', this.sessionId);
     AsyncStorage.getItem(LOG_SESSION_KEY)
       .then(jsonData => {
@@ -198,6 +264,9 @@ class LogTracker {
     console.log('store called ', data);
     if (isEmpty(data)) {
       console.log('Data is empty will do nothing');
+      if (this.isTrackingDisabled) {
+        return;
+      }
       setTimeout(() => {
         this.store();
       }, this.config.writeFrequencyInSeconds);
@@ -218,6 +287,9 @@ class LogTracker {
         })
         .finally(() => {
           console.log('scheduling for ', this.config.writeFrequencyInSeconds);
+          if (this.isTrackingDisabled) {
+            return;
+          }
           setTimeout(() => {
             this.store();
           }, this.config.writeFrequencyInSeconds);
@@ -295,6 +367,10 @@ class LogTracker {
 
   getDeviceInfo() {
     return this.deviceInfo.get();
+  }
+
+  getDeviceInfoByKeys(keys: DeviceConstantKeys[]) {
+    return this.deviceInfo.getByKeys(keys);
   }
 }
 
