@@ -72,6 +72,29 @@ class WebServerHelper {
           '{"message": "Bad Request"}',
         );
       }
+    } else if (
+      request.type === 'POST' &&
+      requestUrlComponents[3] === 'download'
+    ) {
+      LogTracker.getSessionDetails(requestUrlComponents[2])
+        .then(res => {
+          console.log('session data', res);
+          return httpBridge.respond(
+            request.requestId,
+            200,
+            'application/json',
+            JSON.stringify(res),
+          );
+        })
+        .catch(error => {
+          console.log({error});
+          httpBridge.respond(
+            request.requestId,
+            500,
+            'application/json',
+            '{"message": "Bad Request"}',
+          );
+        });
     }
 
     // you can use request.url, request.type and request.postData here
