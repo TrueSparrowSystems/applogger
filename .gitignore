@@ -61,5 +61,10 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-#tar
+
+#example app node_modules and pod files
+example/*/node_modules/
+example/*/ios/Pods/
+
+#tarball
 tar
