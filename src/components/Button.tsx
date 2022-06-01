@@ -1,10 +1,10 @@
 import React from 'react';
-import {Button as RnButton} from 'react-native';
+import {Button as RnButton, ButtonProps} from 'react-native';
 import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
-export function Button(props: any) {
+export function Button(props: ButtonProps) {
   const {filteredProps} = useLoggingFunctions(props, ComponentTypes.Button);
 
-  return <RnButton {...filteredProps}>{props.children}</RnButton>;
+  return <RnButton {...filteredProps} />;
 }
