@@ -9,7 +9,6 @@ import {isEmpty} from 'lodash';
 import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
 import * as RNFS from 'react-native-fs';
-import {zip} from 'react-native-zip-archive';
 import {DeviceConstantKeys} from '../DeviceInfo/types';
 
 const LOG_SESSION_KEY = 'log_session';
@@ -70,7 +69,6 @@ class LogTracker {
     this.isTrackingDisabled.bind(this);
     this.uploadCurrentSessionLog.bind(this);
     this.getJsonLogFile.bind(this);
-    this.getZipFile.bind(this);
     this.uploadAllSessionLogs.bind(this);
     this.getSessionDetails.bind(this);
     this.getSessionDetailsAsJson.bind(this);
@@ -235,19 +233,6 @@ class LogTracker {
         })
         .catch(() => {
           return reject('');
-        });
-    });
-  }
-
-  private getZipFile(sourcePath: string, targetPath: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      zip(sourcePath, targetPath)
-        .then(zipPath => {
-          return resolve(zipPath);
-        })
-        .catch(err => {
-          console.log('error in zip creation ', err);
-          return reject();
         });
     });
   }
