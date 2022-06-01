@@ -1,28 +1,29 @@
 {
   "name": "applogger",
   "version": "0.0.1",
-  "private": true,
+  "private": false,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "npx patch-package"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "1.17.4",
     "lodash": "4.17.21",
     "moment": "2.29.3",
     "react": "17.0.2",
     "react-native": "0.68.2",
-    "react-native-device-info": "8.7.1",
-    "react-native-fs": "2.20.0",
     "react-native-get-random-values": "1.8.0",
-    "react-native-http-bridge": "github:babeone/react-native-http-bridge",
     "react-native-network-info": "5.2.1",
     "react-native-zip-archive": "6.0.8",
     "uuidv4": "6.2.13"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": "1.17.4",
+    "react-native-http-bridge": "github:babeone/react-native-http-bridge",
+    "react-native-fs": "2.20.0",
+    "react-native-device-info": "8.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
