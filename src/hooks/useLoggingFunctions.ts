@@ -170,12 +170,13 @@ export function useLoggingFunctions(props: any, type: string) {
               componentName = `${componentName} ${type}`;
             }
             LogTracker.track({
-              description: `Text change on ${componentName} (#${props.testID}): ${newText}`,
+              description: `Text change on ${componentName} (#${props.testID})`,
               type: LogTypes.Text,
               params: {
                 testId: props.testID,
                 text: newText,
               },
+              isDataSensitive: props?.secureTextEntry,
             });
           }
         }
@@ -527,7 +528,7 @@ export function useLoggingFunctions(props: any, type: string) {
       if (propsCopy.hasOwnProperty(functionName)) {
         delete propsCopy[functionName];
         const currentFunction = loggingFunctions[functionName];
-        propsCopy = {...propsCopy, currentFunction};
+        propsCopy = {...propsCopy, [functionName]: currentFunction};
       }
     });
     return propsCopy;

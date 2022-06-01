@@ -13,6 +13,7 @@ import {zip} from 'react-native-zip-archive';
 import {DeviceConstantKeys} from '../DeviceInfo/types';
 
 const LOG_SESSION_KEY = 'log_session';
+const REDACTED_TEXT = '[REDACTED]';
 
 class LogTracker {
   deviceInfo = new DeviceInfo();
@@ -102,11 +103,38 @@ class LogTracker {
     });
   }
 
+  private redactData(data: any) {
+    Object.keys(data).map(prop => {
+      if (this.config?.sensitiveDataKeywords?.includes(prop)) {
+        data[prop] = REDACTED_TEXT;
+      } else if (typeof data[prop] === 'object') {
+        this.redactData(data[prop]);
+      } else if (Array.isArray(data)) {
+        data.forEach(item => {
+          this.redactData(data[item]);
+        });
+      }
+    });
+    return data;
+  }
+
+  private checkSensitiveData(logData: TrackInterface) {
+    if (!isEmpty(logData.params)) {
+      logData.params = this.redactData(logData.params);
+    }
+  }
+
   public track(logData: TrackInterface) {
     if (this.isTrackingDisabled) {
       return;
     }
     console.log('track: ', logData);
+    if (
+      this.config?.sensitiveDataKeywords?.length ||
+      logData?.isDataSensitive
+    ) {
+      this.checkSensitiveData(logData);
+    }
     this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};
     this.currentStoreId++;
   }
@@ -389,4 +417,5 @@ export default new LogTracker({
   writeFrequencyInSeconds: 5000,
   uploadLogs: uploaderFunction,
   clearStorageOnLogUpload: true,
+  sensitiveDataKeywords: ['password'],
 });

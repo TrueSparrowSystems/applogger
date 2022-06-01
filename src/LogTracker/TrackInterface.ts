@@ -4,4 +4,5 @@ export interface TrackInterface {
   type: string;
   params: any;
   ts?: number;
+  isDataSensitive?: boolean;
 }

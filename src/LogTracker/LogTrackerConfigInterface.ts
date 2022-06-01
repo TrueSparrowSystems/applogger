@@ -8,4 +8,5 @@ export interface LogTrackerConfigInterface {
   clearStorageOnLogUpload: boolean;
   disableTracking?: boolean;
   logRotateDurationInHours?: number;
+  sensitiveDataKeywords?: string[];
 }
