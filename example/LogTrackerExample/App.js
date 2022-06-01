@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StyleSheet, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {RefreshControl, useMountLogger, useWebServer} from 'applogger';
+import {useWebServer, useTracker} from 'applogger';
+import {NavigationContainer} from '@react-navigation/native';
+import RootNavigation from './src/components/RootNavigation/RootNavigation';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -18,28 +13,14 @@ function App() {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+  const {navigationRef, onNavigationStateChange} = useTracker();
 
-      <View
-        style={{
-          backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        }}>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => {
-                console.log('refreshing home');
-              }}
-              refreshing={false}
-              testID="homescreen_refresh"
-            />
-          }>
-          <View style={{width: 400, height: 900, backgroundColor: 'red'}} />
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+  return (
+    <NavigationContainer
+      ref={navigationRef}
+      onStateChange={onNavigationStateChange}>
+      <RootNavigation />
+    </NavigationContainer>
   );
 }
 
