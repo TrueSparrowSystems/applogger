@@ -10,7 +10,7 @@ function HelperMenu() {
     trackingControlText,
     enableUploadButtons,
     uploadCurrentSessionLogs,
-    uploadAllLogs,
+    uploadAllSessionLogs,
     shareUrl,
     deleteAllLogs,
     hideMenu,
@@ -90,7 +90,7 @@ function HelperMenu() {
               <TouchableOpacity
                 testID="upload_all_log"
                 style={optionWithBottomBorderStyle}
-                onPress={uploadAllLogs}
+                onPress={uploadAllSessionLogs}
                 activeOpacity={0.7}>
                 <Text style={optionsTextStyle}>Upload all log</Text>
               </TouchableOpacity>
