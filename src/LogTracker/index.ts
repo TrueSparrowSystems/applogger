@@ -268,35 +268,6 @@ class LogTracker {
       });
     });
   }
-  private zipAndUploadAllLogs(
-    sourceZipPath: string,
-    targetZipPath: string,
-    sessionIds: string[],
-  ) {
-    return new Promise<boolean>(resolve => {
-      this.getZipFile(sourceZipPath, targetZipPath).then(zipPath => {
-        this.uploadLogs?.(zipPath, () => {
-          RNFS.readDir(sourceZipPath).then(res => {
-            res.forEach(file => {
-              RNFS.unlink(file.path);
-            });
-          });
-
-          RNFS.unlink(zipPath);
-
-          if (this.clearStorageOnUpload) {
-            this.clearTrackingLogsOfSession(sessionIds);
-          }
-        })
-          .then(() => {
-            return resolve(true);
-          })
-          .catch(() => {
-            return resolve(false);
-          });
-      });
-    });
-  }
 
   uploadAllSessionLogs(): Promise<boolean> {
     return new Promise(resolve => {
