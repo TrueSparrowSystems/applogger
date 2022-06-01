@@ -1,5 +1,5 @@
 export interface UploaderFunctionInterface {
-  (zipFilePath: string, onUploadComplete: Function): Promise<boolean>;
+  (sessionLogFilePaths: string[], onUploadComplete: Function): Promise<boolean>;
 }
 
 export interface LogTrackerConfigInterface {
