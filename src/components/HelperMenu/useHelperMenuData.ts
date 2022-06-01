@@ -10,7 +10,7 @@ interface HelperMenuDataInterface {
   trackingControlText: string;
   enableUploadButtons: boolean;
   uploadCurrentSessionLogs: () => void;
-  uploadAllLogs: () => void;
+  uploadAllSessionLogs: () => void;
   shareUrl: () => void;
   hideMenu: () => void;
   deleteAllLogs: () => void;
@@ -55,8 +55,8 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   const uploadCurrentSessionLogs = useCallback(() => {
     LogTracker.uploadCurrentSessionLog();
   }, []);
-  const uploadAllLogs = useCallback(() => {
-    LogTracker.uploadAllLogs();
+  const uploadAllSessionLogs = useCallback(() => {
+    LogTracker.uploadAllSessionLogs();
   }, []);
 
   const deleteCurrentSessionLogs = useCallback(() => {
@@ -104,7 +104,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
       : 'Enable Tracking',
     enableUploadButtons: LogTracker.canUpload(),
     uploadCurrentSessionLogs,
-    uploadAllLogs,
+    uploadAllSessionLogs,
     deleteAllLogs,
     shareUrl,
     hideMenu,
