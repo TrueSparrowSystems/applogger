@@ -60,3 +60,11 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
+
+#example app node_modules and pod files
+example/*/node_modules/
+example/*/ios/Pods/
+
+#tarball
+tar
