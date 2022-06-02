@@ -6,4 +6,4 @@ export {TextInput} from './TextInput';
 export {TouchableHighlight} from './TouchableHighlight';
 export {TouchableOpacity} from './TouchableOpacity';
 export {TouchableWithoutFeedback} from './TouchableWithoutFeedback';
-export {LogTrackerContainer} from './LogTrackerContainer';
+export {LogTracker} from './LogTracker';
