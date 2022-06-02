@@ -4,6 +4,9 @@ import LogTracker from '../../LogTracker';
 import EventTypes from '../../services/local-event/EventTypes';
 import {LocalEvent} from '../../services/local-event/LocalEvent';
 
+/**
+ * @interface HelperMenuDataInterface
+ */
 interface HelperMenuDataInterface {
   isVisible: boolean;
   sessionControlText: string;
@@ -24,11 +27,19 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [isTrackingActive, setIsTrackingActive] = useState<boolean>(false);
 
-  const showMenu = useCallback(() => {
+  /**
+   * @function showMenu - Function to show menu.
+   * @returns {void}
+   */
+  const showMenu: () => void = useCallback(() => {
     setIsVisible(true);
   }, []);
 
-  const hideMenu = useCallback(() => {
+  /**
+   * @function hideMenu - Function to hide menu.
+   * @returns {void}
+   */
+  const hideMenu: () => void = useCallback(() => {
     setIsVisible(false);
   }, []);
 
@@ -48,18 +59,35 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const shareUrl = useCallback(() => {
+  /**
+   * @function shareUrl - Function to share url.
+   * @returns {void}
+   */
+  const shareUrl: () => void = useCallback(() => {
     WebServerHelper.shareUIUrl();
   }, []);
 
-  const uploadCurrentSessionLogs = useCallback(() => {
+  /**
+   * @function uploadCurrentSessionLogs - Function to upload current session logs.
+   * @returns {void}
+   */
+  const uploadCurrentSessionLogs: () => void = useCallback(() => {
     LogTracker.uploadCurrentSessionLog();
   }, []);
-  const uploadAllSessionLogs = useCallback(() => {
+
+  /**
+   * @function uploadAllSessionLogs - Function to upload all session logs.
+   * @returns {void}
+   */
+  const uploadAllSessionLogs: () => void = useCallback(() => {
     LogTracker.uploadAllSessionLogs();
   }, []);
 
-  const deleteCurrentSessionLogs = useCallback(() => {
+  /**
+   * @function deleteCurrentSessionLogs - Function to delete current session logs.
+   * @returns {void}
+   */
+  const deleteCurrentSessionLogs: () => void = useCallback(() => {
     const currentSessionId = LogTracker.getSessionId();
     LogTracker.clearTrackingLogsOfSession(currentSessionId)
       .then(() => {
@@ -68,7 +96,11 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
       .catch(() => {});
   }, []);
 
-  const deleteAllLogs = useCallback(() => {
+  /**
+   * @function deleteAllLogs - Function to delete all session logs.
+   * @returns {void}
+   */
+  const deleteAllLogs: () => void = useCallback(() => {
     LogTracker.deleteAllLogs()
       .then(() => {
         LogTracker.createNewSession();
@@ -76,7 +108,11 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
       .catch(() => {});
   }, []);
 
-  const handleTracking = useCallback(() => {
+  /**
+   * @function handleTracking - Function to toggle tracking state.
+   * @returns {void}
+   */
+  const handleTracking: () => void = useCallback(() => {
     if (isTrackingActive) {
       LogTracker.disableTracking();
       setIsTrackingActive(false);
@@ -86,7 +122,11 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
     }
   }, [isTrackingActive]);
 
-  const handleSession = useCallback(() => {
+  /**
+   * @function handleSession - Function to toggle session state.
+   * @returns {void}
+   */
+  const handleSession: () => void = useCallback(() => {
     if (isSessionActive) {
       LogTracker.stopSession();
       setIsSessionActive(false);
