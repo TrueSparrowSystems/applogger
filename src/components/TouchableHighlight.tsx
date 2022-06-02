@@ -6,7 +6,14 @@ import {
 import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
-export function TouchableHighlight(props: TouchableHighlightProps) {
+/**
+ * @function TouchableHighlight - Component for rendering the React Native TouchableHighlight component with tracking.
+ * @param {TouchableHighlightProps} props - Object containing TouchableHighlight properties.
+ * @returns {JSX} TouchableHighlight View.
+ */
+export function TouchableHighlight(
+  props: TouchableHighlightProps,
+): JSX.Element {
   const {filteredProps} = useLoggingFunctions(props, ComponentTypes.Button);
 
   return (
