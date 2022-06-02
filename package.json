@@ -13,7 +13,6 @@
     "eventemitter3": "4.0.7",
     "lodash": "4.17.21",
     "moment": "2.29.3",
-    "react-native-shake": "5.1.1",
     "react-native-network-info": "5.2.1",
     "uuidv4": "6.2.13"
   },
@@ -21,10 +20,12 @@
     "react": "17.0.2",
     "react-native": "0.68.2",
     "react-native-get-random-values": "1.8.0",
-    "@react-native-async-storage/async-storage": "1.17.4",
-    "react-native-http-bridge": "github:babeone/react-native-http-bridge",
     "react-native-fs": "2.20.0",
-    "react-native-device-info": "8.7.1"
+    "@react-native-async-storage/async-storage": "1.17.4",
+    "react-native-device-info": "8.7.1",
+    "react-native-http-bridge": "github:babeone/react-native-http-bridge",
+    "react-native-network-info": "5.2.1",
+    "react-native-shake": "5.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
