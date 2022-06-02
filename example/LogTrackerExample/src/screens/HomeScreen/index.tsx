@@ -1,17 +1,34 @@
 import {useNavigation} from '@react-navigation/native';
-import {TouchableHighlight, TouchableOpacity} from 'applogger';
-import React, {useCallback} from 'react';
+import {
+  Switch,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'applogger';
+import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
 
+  const [text, setText] = useState('');
   const onSearchByCityPressed = useCallback(() => {
     navigation.navigate('SearchScreen');
   }, [navigation]);
 
+  const [isSecureEntry, setIsSecureEntry] = useState(false);
+
   return (
     <View style={styles.container}>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>
+          1. Shake the device to open the helper menu.
+        </Text>
+        <Text style={styles.text}>
+          2. Open the logger UI using the link in the helper menu to observe the
+          generated logs.
+        </Text>
+      </View>
       <View style={styles.infoContainer}>
         <Text>TouchableOpacity Wrapper Example</Text>
         <TouchableOpacity
@@ -31,14 +48,26 @@ export default function HomeScreen() {
           <Text>Search By Zip Code</Text>
         </TouchableHighlight>
       </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>
-          1. Shake the device to open the helper menu.
-        </Text>
-        <Text style={styles.text}>
-          2. Open the logger UI using the link in the helper menu to observe the
-          generated logs.
-        </Text>
+      <View style={styles.infoContainer}>
+        <Text>TextInput Wrapper Example</Text>
+        <TextInput
+          testID="homescreen_text_input"
+          value={text}
+          secureTextEntry={isSecureEntry}
+          placeholder="Entered text will be logged."
+          style={styles.btnContainer}
+          onChangeText={newText => setText(newText)}
+        />
+        <View style={styles.switchContainer}>
+          <Switch
+            testID="homescreen_redact_text_switch"
+            value={isSecureEntry}
+            onValueChange={value => setIsSecureEntry(value)}
+          />
+          <Text style={{marginLeft: 16}}>
+            Flip to redact the text input in log.
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -68,6 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 16,
+    width: '100%',
   },
   textContainer: {
     justifyContent: 'center',
@@ -77,5 +107,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginTop: 8,
+  },
+  switchContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
