@@ -1,12 +1,12 @@
-export interface UploaderFunc {
-  (zipFilePath: string, onUploadComplete: Function): Promise<boolean>;
+export interface UploaderFunctionInterface {
+  (sessionLogFilePaths: string[], onUploadComplete: Function): Promise<boolean>;
 }
 
 export interface LogTrackerConfigInterface {
   writeFrequencyInSeconds: number;
-  uploadLogs: UploaderFunc;
+  uploadLogs: UploaderFunctionInterface;
   clearStorageOnLogUpload: boolean;
-  disableTracking?: boolean;
+  isTrackingDisabled?: boolean;
   logRotateDurationInHours?: number;
   sensitiveDataKeywords?: string[];
 }
