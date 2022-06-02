@@ -10,9 +10,9 @@ import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
 import * as RNFS from 'react-native-fs';
 import {DeviceConstantKeys} from '../DeviceInfo/types';
+import Constants from '../constants/Constants';
 
 const LOG_SESSION_KEY = 'log_session';
-const REDACTED_TEXT = '[REDACTED]';
 
 enum TrackingState {
   Enabled = 'Enabled',
@@ -205,7 +205,7 @@ class LogTracker {
   private redactData(data: any) {
     Object.keys(data).map(prop => {
       if (this.config?.sensitiveDataKeywords?.includes(prop)) {
-        data[prop] = REDACTED_TEXT;
+        data[prop] = Constants.REDACTED_TEXT;
       } else if (typeof data[prop] === 'object') {
         this.redactData(data[prop]);
       } else if (Array.isArray(data)) {
@@ -232,10 +232,7 @@ class LogTracker {
       return;
     }
     console.log('track: ', logData);
-    if (
-      this.config?.sensitiveDataKeywords?.length ||
-      logData?.isDataSensitive
-    ) {
+    if (this.config?.sensitiveDataKeywords?.length) {
       this.checkSensitiveData(logData);
     }
     this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};

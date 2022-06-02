@@ -1,5 +1,6 @@
 import {capitalize} from 'lodash';
 import {MutableRefObject, useCallback, useMemo, useRef} from 'react';
+import Constants from '../constants/Constants';
 import {LogTypes} from '../constants/LogTypes';
 import LogTracker from '../LogTracker';
 
@@ -182,9 +183,10 @@ export function useLoggingFunctions(props: any, type: string) {
               type: LogTypes.Text,
               params: {
                 testId: props.testID,
-                text: newText,
+                text: props?.secureTextEntry
+                  ? Constants.REDACTED_TEXT
+                  : newText,
               },
-              isDataSensitive: props?.secureTextEntry,
             });
           }
         }
