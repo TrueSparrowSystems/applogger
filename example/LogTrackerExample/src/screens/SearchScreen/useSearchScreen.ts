@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {OPEN_WEATHER_API_KEY} from '@env';
 export default function useSearchScreen() {
   const [toggleSearch, setToggleSearch] = useState('city');
@@ -7,6 +7,7 @@ export default function useSearchScreen() {
   const [lat, setLat] = useState(43.6532);
   const [long, setLong] = useState(-79.3832);
   const [weather, setWeather] = useState({});
+  const [isCelsius, setIsCelsius] = useState(false);
 
   const fetchLatLongHandler = () => {
     console.log('OPEN_WEATHER_API_KEY', OPEN_WEATHER_API_KEY);
@@ -22,7 +23,9 @@ export default function useSearchScreen() {
 
   useEffect(() => {
     fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=hourly,minutely&units=metric&appid=${OPEN_WEATHER_API_KEY}`,
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=hourly,minutely&units=${
+        !isCelsius ? 'imperial' : 'metric'
+      }&appid=${OPEN_WEATHER_API_KEY}`,
     )
       .then(res => res.json())
       .then(data => {
@@ -31,7 +34,7 @@ export default function useSearchScreen() {
       .catch(err => {
         console.log('error', err);
       });
-  }, [lat, long]);
+  }, [lat, long, isCelsius]);
 
   const fetchByPostalHandler = () => {
     fetch(
@@ -43,6 +46,13 @@ export default function useSearchScreen() {
         setLong(data.results[0].geometry.location.lng);
       });
   };
+
+  const getTemperatureText = useCallback(
+    (isCelsius?: boolean) => {
+      return isCelsius ? '°C' : '°F';
+    },
+    [isCelsius],
+  );
 
   return {
     city,
@@ -59,5 +69,8 @@ export default function useSearchScreen() {
     setToggleSearch,
     fetchLatLongHandler,
     fetchByPostalHandler,
+    isCelsius,
+    setIsCelsius,
+    getTemperatureText,
   };
 }

@@ -23,6 +23,9 @@ export default function SearchScreen() {
     setPostalCode,
     postalCode,
     weather,
+    isCelsius,
+    setIsCelsius,
+    getTemperatureText,
   } = useSearchScreen();
   return (
     <View style={styles.container}>
@@ -36,14 +39,25 @@ export default function SearchScreen() {
           fetchByPostalHandler={fetchByPostalHandler}
           setPostalCode={setPostalCode}
           postalCode={postalCode}
+          isCelsius={isCelsius}
+          setIsCelsius={setIsCelsius}
         />
-        <CurrentForecast currentWeather={weather} />
+        <CurrentForecast
+          currentWeather={weather}
+          temperatureText={getTemperatureText(isCelsius)}
+        />
         <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
           <View style={styles.futureForecastContainer}>
             {weather.daily ? (
               weather.daily.map((day, index) => {
                 if (index !== 0) {
-                  return <DailyForecast key={day.dt} day={day} index={index} />;
+                  return (
+                    <DailyForecast
+                      key={day.dt}
+                      day={day}
+                      temperatureText={getTemperatureText(isCelsius)}
+                    />
+                  );
                 }
               })
             ) : (

@@ -1,5 +1,14 @@
-import React from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Pressable,
+  Switch,
+} from 'react-native';
 
 const ForecastSearch = ({
   toggleSearch,
@@ -10,7 +19,10 @@ const ForecastSearch = ({
   fetchByPostalHandler,
   setPostalCode,
   postalCode,
+  isCelsius,
+  setIsCelsius,
 }) => {
+  const navigation = useNavigation();
   const handleSubmit = e => {
     if (toggleSearch === 'city') {
       //api call
@@ -29,24 +41,58 @@ const ForecastSearch = ({
     setToggleSearch('postal');
   };
 
+  const onTemperatureChange = useCallback(value => {
+    setIsCelsius(value);
+  }, []);
+
+  const onBackPress = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.searchBy}>
-        <Text style={styles.buttonLabel}>Search By</Text>
-        <Button
-          style={styles.buttons}
-          title="City"
-          color={toggleSearch === 'city' ? 'white' : 'rgba(255, 255, 255, 0.6)'}
-          accessibilityLabel="Search Weather By City"
-          onPress={setToggleByCity}
-        />
-        <Button
-          style={styles.buttons}
-          title="Postal Code/Zip"
-          color={toggleSearch === 'city' ? 'rgba(255, 255, 255, 0.6)' : 'white'}
-          accessibilityLabel="Search Weather By ZIP/Postal Code"
-          onPress={setToggleByPostal}
-        />
+        <Pressable onPress={() => onBackPress()}>
+          <Text style={styles.buttonLabel}>Back</Text>
+        </Pressable>
+        {toggleSearch == 'city' ? (
+          <Button
+            style={styles.buttons}
+            title="City"
+            color={
+              toggleSearch === 'city' ? 'white' : 'rgba(255, 255, 255, 0.6)'
+            }
+            accessibilityLabel="Search Weather By City"
+            onPress={setToggleByCity}
+          />
+        ) : (
+          <Button
+            style={styles.buttons}
+            title="Postal Code/Zip"
+            color={
+              toggleSearch === 'city' ? 'rgba(255, 255, 255, 0.6)' : 'white'
+            }
+            accessibilityLabel="Search Weather By ZIP/Postal Code"
+            onPress={setToggleByPostal}
+          />
+        )}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}>
+          <Text style={styles.buttonLabel}>°F</Text>
+          <Switch
+            trackColor={{false: '#767577', true: '#81b0ff'}}
+            thumbColor={isCelsius ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={onTemperatureChange}
+            value={isCelsius}
+          />
+          <Text style={styles.buttonLabel}>°C</Text>
+        </View>
       </View>
 
       <TextInput

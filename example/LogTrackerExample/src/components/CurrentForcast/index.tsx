@@ -2,8 +2,9 @@ import {useMountLogger} from 'applogger';
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 
-const CurrentForecast = ({currentWeather}) => {
+const CurrentForecast = ({currentWeather, temperatureText}) => {
   useMountLogger('current_forecast', {currentWeather});
+
   return (
     <View style={styles.currentView}>
       <Text style={styles.timeZone}>{currentWeather.timezone}</Text>
@@ -20,7 +21,7 @@ const CurrentForecast = ({currentWeather}) => {
           )}
           <Text style={styles.currentDegree}>
             {Math.round(currentWeather.current && currentWeather.current.temp)}
-            °C
+            {temperatureText}
           </Text>
         </View>
         <Text style={styles.description}>
@@ -35,7 +36,7 @@ const CurrentForecast = ({currentWeather}) => {
             <Text style={styles.details}>
               {currentWeather.current &&
                 Math.round(currentWeather.current.feels_like)}
-              °C
+              {temperatureText}
             </Text>
           </View>
           <View>
@@ -43,7 +44,7 @@ const CurrentForecast = ({currentWeather}) => {
             <Text style={styles.details}>
               {currentWeather.daily &&
                 Math.round(currentWeather.daily[0].temp.min)}
-              °C
+              {temperatureText}
             </Text>
           </View>
           <View>
@@ -51,7 +52,7 @@ const CurrentForecast = ({currentWeather}) => {
             <Text style={styles.details}>
               {currentWeather.daily &&
                 Math.round(currentWeather.daily[0].temp.max)}
-              °C
+              {temperatureText}
             </Text>
           </View>
         </View>
