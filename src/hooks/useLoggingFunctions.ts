@@ -17,12 +17,22 @@ export function useLoggingFunctions(props: any, type: string) {
     onChange: false,
   });
 
-  const isFunctionCallBlocked = useCallback(functionName => {
-    return callbackTimeoutMap.current[functionName];
+  /**
+   * @function isFunctionCallBlocked function to check whether function call is blocked
+   * @param  {string} functionName
+   * @returns boolean
+   */
+  const isFunctionCallBlocked = useCallback((functionName: string) => {
+    return !!callbackTimeoutMap.current[functionName];
   }, []);
 
+  /**
+   * @function blockFunctionCall function to block function call
+   * @param  {string} functionName
+   * @param  {number} timeout
+   */
   const blockFunctionCall = useCallback(
-    (functionName, timeout = CALLBACK_TIMEOUT) => {
+    (functionName: string, timeout = CALLBACK_TIMEOUT) => {
       if (callbackTimeoutMap.current[functionName]) {
         return;
       }

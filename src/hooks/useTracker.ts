@@ -57,8 +57,12 @@ export function useTracker() {
   const screenNameRef = useRef('');
   const navigationRef: any = useRef();
 
+  /**
+   * @function setRef function to set navigation ref
+   * @param  {any} (ref
+   */
   const setRef = useCallback(
-    ref => {
+    (ref: any) => {
       navigationRef.current = ref;
     },
     [navigationRef],
