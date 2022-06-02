@@ -7,6 +7,10 @@ import RNShake from 'react-native-shake';
 import LogTracker from '../LogTracker';
 import EventTypes from '../services/local-event/EventTypes';
 
+/**
+ * @function useWebServer Hook to start start and stop web server and RNShakeSubscription
+ * @param  {number} port? Optional parameter port on which the server should start
+ */
 export function useWebServer(port?: number) {
   useEffect(() => {
     deviceInfoModule.getIpAddress().then(ip => {

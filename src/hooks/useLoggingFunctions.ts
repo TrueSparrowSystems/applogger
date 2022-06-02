@@ -6,6 +6,12 @@ import LogTracker from '../LogTracker';
 
 const CALLBACK_TIMEOUT = 500;
 
+/**
+ * @function useLoggingFunctions Hook to get all common logging functions
+ * @param  {any} props props passed to the component
+ * @param  {string} type type of the component
+ * @returns {Object} object with all common logging functions
+ */
 export function useLoggingFunctions(props: any, type: string) {
   const callbackTimeoutMap: MutableRefObject<Record<string, boolean>> = useRef({
     onChange: false,
@@ -28,6 +34,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [],
   );
 
+  /**
+   * @function onPress Tracking  Function overriding onPress
+   * @param  {any} event onPress event
+   */
   const onPress = useCallback(
     (event: any) => {
       if (props.onPress) {
@@ -53,6 +63,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onLongPress Tracking  Function overriding onLongPress
+   * @param  {any} event onLongPress event
+   */
   const onLongPress = useCallback(
     (event: any) => {
       if (props.onLongPress) {
@@ -78,6 +92,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onPressIn Tracking  Function overriding onPressIn
+   * @param  {any} event onPressIn event
+   */
   const onPressIn = useCallback(
     (event: any) => {
       if (props.onPressIn) {
@@ -103,6 +121,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onPressOut Tracking  Function overriding onPressOut
+   * @param  {any} event onPressOut event
+   */
   const onPressOut = useCallback(
     (event: any) => {
       if (props.onPressOut) {
@@ -129,6 +151,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onChange Tracking  Function overriding onChange
+   * @param  {any} event onChange event
+   */
   const onChange = useCallback(
     (event: any) => {
       const functionName = 'onChange';
@@ -164,6 +190,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [blockFunctionCall, isFunctionCallBlocked, props, type],
   );
 
+  /**
+   * @function onChangeText Tracking  Function overriding onChangeText
+   * @param  {any} newText new text from input
+   */
   const onChangeText = useCallback(
     (newText: any) => {
       const functionName = 'onChangeText';
@@ -196,6 +226,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [blockFunctionCall, isFunctionCallBlocked, props, type],
   );
 
+  /**
+   * @function onContentSizeChange Tracking  Function overriding onContentSizeChange
+   * @param  {any} event onContentSizeChange event
+   */
   const onContentSizeChange = useCallback(
     (event: any) => {
       const functionName = 'onContentSizeChange';
@@ -234,6 +268,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [blockFunctionCall, isFunctionCallBlocked, props, type],
   );
 
+  /**
+   * @function onEndEditing Tracking  Function overriding onEndEditing
+   * @param  {any} event onEndEditing event
+   */
   const onEndEditing = useCallback(
     (event: any) => {
       if (props?.onEndEditing) {
@@ -260,6 +298,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onFocus Tracking  Function overriding onFocus
+   * @param  {any} event onFocus event
+   */
   const onFocus = useCallback(
     (event: any) => {
       if (props?.onFocus) {
@@ -286,6 +328,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onKeyPress Tracking  Function overriding onKeyPress
+   * @param  {any} event onKeyPress event
+   */
   const onKeyPress = useCallback(
     (event: any) => {
       const functionName = 'onKeyPress';
@@ -320,6 +366,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [blockFunctionCall, isFunctionCallBlocked, props, type],
   );
 
+  /**
+   * @function onLayout Tracking Function overriding onLayout
+   * @param  {any} event onLayout event
+   */
   const onLayout = useCallback(
     (event: any) => {
       const functionName = 'onLayout';
@@ -350,6 +400,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [blockFunctionCall, isFunctionCallBlocked, props, type],
   );
 
+  /**
+   * @function onScroll Tracking  Function overriding onScroll
+   * @param  {any} event onScroll event
+   */
   const onScroll = useCallback(
     (event: any) => {
       const functionName = 'onScroll';
@@ -385,6 +439,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [blockFunctionCall, isFunctionCallBlocked, props, type],
   );
 
+  /**
+   * @function onSelectionChange Tracking Function overriding onSelectionChange
+   * @param  {any} event onSelectionChange event
+   */
   const onSelectionChange = useCallback(
     (event: any) => {
       if (props?.onSelectionChange) {
@@ -419,6 +477,10 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onSubmitEditing Tracking  Function overriding onSubmitEditing
+   * @param  {any} event onSubmitEditing event
+   */
   const onSubmitEditing = useCallback(
     (event: any) => {
       if (props?.onSubmitEditing) {
@@ -448,6 +510,11 @@ export function useLoggingFunctions(props: any, type: string) {
     },
     [props, type],
   );
+
+  /**
+   * @function onValueChange Tracking  Function overriding onValueChange
+   * @param  {any} event onValueChange event
+   */
   const onValueChange = useCallback(
     (value: any) => {
       if (props.testID && props.onValueChange) {
@@ -471,6 +538,9 @@ export function useLoggingFunctions(props: any, type: string) {
     [props, type],
   );
 
+  /**
+   * @function onRefresh Tracking Function overriding onRefresh
+   */
   const onRefresh = useCallback(() => {
     const testId = props.testID;
     if (testId && props.onRefresh) {
