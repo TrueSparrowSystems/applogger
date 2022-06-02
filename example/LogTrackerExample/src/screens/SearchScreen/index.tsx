@@ -11,21 +11,23 @@ import DailyForecast from '../../components/DailyForecast';
 import ForecastSearch from '../../components/ForcastSearch';
 import {bgImage} from '../../assets/index';
 import useSearchScreen from './useSearchScreen';
+import {RefreshControl} from 'applogger';
 
 export default function SearchScreen() {
   const {
+    refreshing,
     city,
     setCity,
-    fetchLatLongHandler,
     toggleSearch,
+    fetchWeatherData,
     setToggleSearch,
-    fetchByPostalHandler,
     setPostalCode,
     postalCode,
     weather,
     isCelsius,
     setIsCelsius,
     getTemperatureText,
+    onRefresh,
   } = useSearchScreen();
   return (
     <View style={styles.container}>
@@ -33,10 +35,9 @@ export default function SearchScreen() {
         <ForecastSearch
           city={city}
           setCity={setCity}
-          fetchLatLongHandler={fetchLatLongHandler}
+          fetchWeatherData={fetchWeatherData}
           toggleSearch={toggleSearch}
           setToggleSearch={setToggleSearch}
-          fetchByPostalHandler={fetchByPostalHandler}
           setPostalCode={setPostalCode}
           postalCode={postalCode}
           isCelsius={isCelsius}
@@ -44,9 +45,18 @@ export default function SearchScreen() {
         />
         <CurrentForecast
           currentWeather={weather}
-          temperatureText={getTemperatureText(isCelsius)}
+          temperatureText={getTemperatureText()}
         />
-        <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              testID="daily_forecast_refresh"
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          contentContainerStyle={{flexGrow: 1}}
+          style={{flex: 1}}>
           <View style={styles.futureForecastContainer}>
             {weather.daily ? (
               weather.daily.map((day, index) => {
@@ -55,7 +65,7 @@ export default function SearchScreen() {
                     <DailyForecast
                       key={day.dt}
                       day={day}
-                      temperatureText={getTemperatureText(isCelsius)}
+                      temperatureText={getTemperatureText()}
                     />
                   );
                 }

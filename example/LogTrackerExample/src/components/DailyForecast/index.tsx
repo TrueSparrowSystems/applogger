@@ -14,7 +14,7 @@ const DailyForecast = ({day, temperatureText}) => {
         <Image
           style={styles.weatherIcon}
           source={{
-            uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
+            uri: `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
           }}
           resizeMode={'contain'} // cover or contain its upto you view look
         />

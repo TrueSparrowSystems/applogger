@@ -1,22 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  Pressable,
-  Switch,
-} from 'react-native';
+import {View, Text, Button, StyleSheet} from 'react-native';
+import {TextInput, Pressable, Switch} from 'applogger';
 
 const ForecastSearch = ({
   toggleSearch,
   setToggleSearch,
   city,
   setCity,
-  fetchLatLongHandler,
-  fetchByPostalHandler,
+  fetchWeatherData,
   setPostalCode,
   postalCode,
   isCelsius,
@@ -24,13 +16,7 @@ const ForecastSearch = ({
 }) => {
   const navigation = useNavigation();
   const handleSubmit = e => {
-    if (toggleSearch === 'city') {
-      //api call
-      fetchLatLongHandler();
-    }
-    if (toggleSearch === 'postal') {
-      fetchByPostalHandler();
-    }
+    fetchWeatherData();
   };
 
   const setToggleByCity = () => {
@@ -41,9 +27,12 @@ const ForecastSearch = ({
     setToggleSearch('postal');
   };
 
-  const onTemperatureChange = useCallback(value => {
-    setIsCelsius(value);
-  }, []);
+  const onTemperatureChange = useCallback(
+    value => {
+      setIsCelsius(value);
+    },
+    [setIsCelsius],
+  );
 
   const onBackPress = () => {
     navigation.goBack();
@@ -85,6 +74,7 @@ const ForecastSearch = ({
           }}>
           <Text style={styles.buttonLabel}>°F</Text>
           <Switch
+            testID={'temp_unit_change_switch'}
             trackColor={{false: '#767577', true: '#81b0ff'}}
             thumbColor={isCelsius ? '#f5dd4b' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
@@ -95,7 +85,9 @@ const ForecastSearch = ({
         </View>
       </View>
 
+      <Text style={{color: 'white'}}>Text Input Wrapper</Text>
       <TextInput
+        testID={'weather_search_text_field'}
         style={styles.searchCity}
         onChangeText={toggleSearch === 'city' ? setCity : setPostalCode}
         value={toggleSearch === 'city' ? city : postalCode}
@@ -133,7 +125,9 @@ const styles = StyleSheet.create({
   },
   searchCity: {
     height: 50,
-    margin: 12,
+    marginTop: 5,
+    marginHorizontal: 12,
+    marginBottom: 12,
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 10,

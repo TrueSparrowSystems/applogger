@@ -14,7 +14,7 @@ const CurrentForecast = ({currentWeather, temperatureText}) => {
             <Image
               style={styles.weatherIcon}
               source={{
-                uri: `http://openweathermap.org/img/wn/${currentWeather.current.weather[0].icon}@2x.png`,
+                uri: `https://openweathermap.org/img/wn/${currentWeather.current.weather[0].icon}@2x.png`,
               }}
               resizeMode={'contain'}
             />
