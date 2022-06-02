@@ -10,7 +10,13 @@ export default function RootNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen
+        name="SearchScreen"
+        options={{
+          headerShown: false,
+        }}
+        component={SearchScreen}
+      />
     </Stack.Navigator>
   );
 }
