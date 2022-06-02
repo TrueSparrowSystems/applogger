@@ -10,6 +10,7 @@ import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
 import * as RNFS from 'react-native-fs';
 import {DeviceConstantKeys} from '../DeviceInfo/types';
+import Constants from '../constants/Constants';
 
 const LOG_SESSION_KEY = 'log_session';
 
@@ -201,6 +202,27 @@ class LogTracker {
     });
   }
 
+  private redactData(data: any) {
+    Object.keys(data).map(prop => {
+      if (this.config?.sensitiveDataKeywords?.includes(prop)) {
+        data[prop] = Constants.REDACTED_TEXT;
+      } else if (typeof data[prop] === 'object') {
+        this.redactData(data[prop]);
+      } else if (Array.isArray(data)) {
+        data.forEach(item => {
+          this.redactData(data[item]);
+        });
+      }
+    });
+    return data;
+  }
+
+  private checkSensitiveData(logData: TrackInterface) {
+    if (!isEmpty(logData.params)) {
+      logData.params = this.redactData(logData.params);
+    }
+  }
+
   isTrackingDisabled() {
     return this.trackingState === TrackingState.Disabled;
   }
@@ -210,6 +232,9 @@ class LogTracker {
       return;
     }
     console.log('track: ', logData);
+    if (this.config?.sensitiveDataKeywords?.length) {
+      this.checkSensitiveData(logData);
+    }
     this.currentData[this.currentStoreId] = {...logData, ts: Date.now()};
     this.currentStoreId++;
   }
@@ -472,4 +497,5 @@ export default new LogTracker({
   writeFrequencyInSeconds: 5000,
   uploadLogs: uploaderFunction,
   clearStorageOnLogUpload: true,
+  sensitiveDataKeywords: ['password'],
 });

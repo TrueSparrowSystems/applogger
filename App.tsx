@@ -1,31 +1,27 @@
 import React from 'react';
-import {SafeAreaView, View, StatusBar, StyleSheet, Text} from 'react-native';
-
-import HelperMenu from './src/components/HelperMenu';
+import {SafeAreaView, View} from 'react-native';
+import {TextInput} from './src/components/TextInput';
 import {TouchableOpacity} from './src/components/TouchableOpacity';
 import {useWebServer} from './src/hooks/useWebServer';
 
 const App = () => {
   useWebServer();
-
   return (
     <SafeAreaView>
-      <StatusBar />
-      <View style={styles.container}>
-        <HelperMenu />
+      <View style={{height: '100%', width: '100%', backgroundColor: 'red'}}>
+        <TextInput
+          onChangeText={() => {}}
+          testID="text-input-test"
+          style={{height: 20, borderWidth: 1}}
+        />
         <TouchableOpacity
+          style={{height: 50, width: 50, backgroundColor: 'green'}}
+          testID="touchable-opacity-test"
           onPress={() => {}}
-          testID="Touchable Opacity"
-          style={{width: 100, height: 50, backgroundColor: 'green'}}>
-          <Text>Touchable</Text>
-        </TouchableOpacity>
+        />
       </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {height: '100%', width: '100%', backgroundColor: 'red'},
-});
 
 export default App;
