@@ -493,9 +493,22 @@ function uploaderFunction(
   });
 }
 
-export default new LogTracker({
-  writeFrequencyInSeconds: 5000,
-  uploadLogs: uploaderFunction,
-  clearStorageOnLogUpload: true,
-  sensitiveDataKeywords: ['password'],
-});
+let logTracker: LogTracker;
+export function createLogTrackerInstance(config?: LogTrackerConfigInterface) {
+  if (logTracker) {
+    return logTracker;
+  }
+  const defaultConfig = {
+    writeFrequencyInSeconds: 5000,
+    uploadLogs: uploaderFunction,
+    clearStorageOnLogUpload: true,
+    sensitiveDataKeywords: ['password'],
+  };
+  logTracker = new LogTracker(defaultConfig);
+}
+
+function getLogTrackerInstance() {
+  return logTracker;
+}
+
+export default getLogTrackerInstance();
