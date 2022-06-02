@@ -13,6 +13,7 @@ const ForecastSearch = ({
 }) => {
   const handleSubmit = e => {
     if (toggleSearch === 'city') {
+      //api call
       fetchLatLongHandler();
     }
     if (toggleSearch === 'postal') {

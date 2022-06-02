@@ -1,357 +1,63 @@
-const noop = () => {};
+import React, {useEffect, useState} from 'react';
+import {OPEN_WEATHER_API_KEY} from '@env';
 export default function useSearchScreen() {
+  const [toggleSearch, setToggleSearch] = useState('city');
+  const [city, setCity] = useState('Toronto');
+  const [postalCode, setPostalCode] = useState('L4W1S9');
+  const [lat, setLat] = useState(43.6532);
+  const [long, setLong] = useState(-79.3832);
+  const [weather, setWeather] = useState({});
+
+  const fetchLatLongHandler = () => {
+    console.log('OPEN_WEATHER_API_KEY', OPEN_WEATHER_API_KEY);
+    fetch(
+      `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${OPEN_WEATHER_API_KEY}`,
+    )
+      .then(res => res.json())
+      .then(data => {
+        setLat(data.coord.lat);
+        setLong(data.coord.lon);
+      });
+  };
+
+  useEffect(() => {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=hourly,minutely&units=metric&appid=${OPEN_WEATHER_API_KEY}`,
+    )
+      .then(res => res.json())
+      .then(data => {
+        setWeather(data);
+      })
+      .catch(err => {
+        console.log('error', err);
+      });
+  }, [lat, long]);
+
+  const fetchByPostalHandler = () => {
+    fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?key=${OPEN_WEATHER_API_KEY}&components=postal_code:${postalCode}`,
+    )
+      .then(res => res.json())
+      .then(data => {
+        setLat(data.results[0].geometry.location.lat);
+        setLong(data.results[0].geometry.location.lng);
+      });
+  };
+
   return {
-    city: 'surat',
-    setCity: noop,
-    fetchLatLongHandler: noop,
-    toggleSearch: noop,
-    setToggleSearch: noop,
-    fetchByPostalHandler: noop,
-    setPostalCode: noop,
-    postalCode: '395009',
-    weather: {
-      lat: 21.1702,
-      lon: 72.8311,
-      timezone: 'Asia/Kolkata',
-      timezone_offset: 19800,
-      current: {
-        dt: 1654155020,
-        sunrise: 1654129595,
-        sunset: 1654177618,
-        temp: 30.94,
-        feels_like: 36.29,
-        pressure: 1006,
-        humidity: 66,
-        dew_point: 23.84,
-        uvi: 7.92,
-        clouds: 40,
-        visibility: 6000,
-        wind_speed: 2.57,
-        wind_deg: 220,
-        weather: [
-          {
-            id: 802,
-            main: 'Clouds',
-            description: 'scattered clouds',
-            icon: '03d',
-          },
-        ],
-      },
-      daily: [
-        {
-          dt: 1654151400,
-          sunrise: 1654129595,
-          sunset: 1654177618,
-          moonrise: 1654136820,
-          moonset: 1654187100,
-          moon_phase: 0.09,
-          temp: {
-            day: 31.87,
-            min: 27.58,
-            max: 31.87,
-            night: 28.22,
-            eve: 31.35,
-            morn: 27.58,
-          },
-          feels_like: {
-            day: 36.19,
-            night: 32.82,
-            eve: 35.34,
-            morn: 31.47,
-          },
-          pressure: 1006,
-          humidity: 58,
-          dew_point: 22.58,
-          wind_speed: 7.71,
-          wind_deg: 220,
-          wind_gust: 11.78,
-          weather: [
-            {
-              id: 802,
-              main: 'Clouds',
-              description: 'scattered clouds',
-              icon: '03d',
-            },
-          ],
-          clouds: 35,
-          pop: 0,
-          uvi: 10.1,
-        },
-        {
-          dt: 1654237800,
-          sunrise: 1654215991,
-          sunset: 1654264042,
-          moonrise: 1654226340,
-          moonset: 1654276260,
-          moon_phase: 0.12,
-          temp: {
-            day: 33.58,
-            min: 27.39,
-            max: 35.1,
-            night: 28.69,
-            eve: 31.16,
-            morn: 27.39,
-          },
-          feels_like: {
-            day: 34.96,
-            night: 33.13,
-            eve: 35.19,
-            morn: 30.28,
-          },
-          pressure: 1006,
-          humidity: 41,
-          dew_point: 17.29,
-          wind_speed: 8.36,
-          wind_deg: 209,
-          wind_gust: 12.44,
-          weather: [
-            {
-              id: 803,
-              main: 'Clouds',
-              description: 'broken clouds',
-              icon: '04d',
-            },
-          ],
-          clouds: 71,
-          pop: 0,
-          uvi: 11.62,
-        },
-        {
-          dt: 1654324200,
-          sunrise: 1654302387,
-          sunset: 1654350465,
-          moonrise: 1654315980,
-          moonset: 1654365240,
-          moon_phase: 0.15,
-          temp: {
-            day: 32.52,
-            min: 27.57,
-            max: 33.79,
-            night: 28.27,
-            eve: 31.21,
-            morn: 27.57,
-          },
-          feels_like: {
-            day: 35.34,
-            night: 32.78,
-            eve: 35.83,
-            morn: 30.43,
-          },
-          pressure: 1006,
-          humidity: 50,
-          dew_point: 20.37,
-          wind_speed: 7.55,
-          wind_deg: 222,
-          wind_gust: 11.15,
-          weather: [
-            {
-              id: 802,
-              main: 'Clouds',
-              description: 'scattered clouds',
-              icon: '03d',
-            },
-          ],
-          clouds: 26,
-          pop: 0,
-          uvi: 11.6,
-        },
-        {
-          dt: 1654410600,
-          sunrise: 1654388784,
-          sunset: 1654436888,
-          moonrise: 1654405560,
-          moonset: 0,
-          moon_phase: 0.18,
-          temp: {
-            day: 32.47,
-            min: 27.58,
-            max: 33.81,
-            night: 28.44,
-            eve: 31.45,
-            morn: 27.58,
-          },
-          feels_like: {
-            day: 36.94,
-            night: 33.6,
-            eve: 36.1,
-            morn: 30.95,
-          },
-          pressure: 1006,
-          humidity: 56,
-          dew_point: 22.04,
-          wind_speed: 7.33,
-          wind_deg: 205,
-          wind_gust: 10.15,
-          weather: [
-            {
-              id: 802,
-              main: 'Clouds',
-              description: 'scattered clouds',
-              icon: '03d',
-            },
-          ],
-          clouds: 45,
-          pop: 0,
-          uvi: 11.91,
-        },
-        {
-          dt: 1654497000,
-          sunrise: 1654475182,
-          sunset: 1654523311,
-          moonrise: 1654495200,
-          moonset: 1654454040,
-          moon_phase: 0.21,
-          temp: {
-            day: 32.62,
-            min: 27.85,
-            max: 33.49,
-            night: 28.55,
-            eve: 31.46,
-            morn: 27.85,
-          },
-          feels_like: {
-            day: 37.58,
-            night: 34.1,
-            eve: 36.98,
-            morn: 31.87,
-          },
-          pressure: 1006,
-          humidity: 57,
-          dew_point: 22.57,
-          wind_speed: 7.51,
-          wind_deg: 222,
-          wind_gust: 11.13,
-          weather: [
-            {
-              id: 800,
-              main: 'Clear',
-              description: 'clear sky',
-              icon: '01d',
-            },
-          ],
-          clouds: 1,
-          pop: 0,
-          uvi: 12.05,
-        },
-        {
-          dt: 1654583400,
-          sunrise: 1654561581,
-          sunset: 1654609733,
-          moonrise: 1654584720,
-          moonset: 1654542600,
-          moon_phase: 0.25,
-          temp: {
-            day: 31.98,
-            min: 27.97,
-            max: 32.35,
-            night: 28.45,
-            eve: 30.76,
-            morn: 27.97,
-          },
-          feels_like: {
-            day: 37.03,
-            night: 33.44,
-            eve: 35.85,
-            morn: 32.33,
-          },
-          pressure: 1006,
-          humidity: 60,
-          dew_point: 22.87,
-          wind_speed: 8.49,
-          wind_deg: 223,
-          wind_gust: 11.01,
-          weather: [
-            {
-              id: 801,
-              main: 'Clouds',
-              description: 'few clouds',
-              icon: '02d',
-            },
-          ],
-          clouds: 17,
-          pop: 0,
-          uvi: 13,
-        },
-        {
-          dt: 1654669800,
-          sunrise: 1654647981,
-          sunset: 1654696154,
-          moonrise: 1654674360,
-          moonset: 1654631100,
-          moon_phase: 0.27,
-          temp: {
-            day: 31.85,
-            min: 27.9,
-            max: 32.63,
-            night: 28.51,
-            eve: 30.9,
-            morn: 27.9,
-          },
-          feels_like: {
-            day: 37.33,
-            night: 32.69,
-            eve: 35.92,
-            morn: 31.56,
-          },
-          pressure: 1006,
-          humidity: 62,
-          dew_point: 23.46,
-          wind_speed: 9.37,
-          wind_deg: 217,
-          wind_gust: 12.68,
-          weather: [
-            {
-              id: 500,
-              main: 'Rain',
-              description: 'light rain',
-              icon: '10d',
-            },
-          ],
-          clouds: 50,
-          pop: 0.2,
-          rain: 0.12,
-          uvi: 13,
-        },
-        {
-          dt: 1654756200,
-          sunrise: 1654734382,
-          sunset: 1654782575,
-          moonrise: 1654763940,
-          moonset: 1654719600,
-          moon_phase: 0.31,
-          temp: {
-            day: 31.92,
-            min: 27.75,
-            max: 32.54,
-            night: 28.46,
-            eve: 31.06,
-            morn: 27.75,
-          },
-          feels_like: {
-            day: 36.59,
-            night: 33.46,
-            eve: 36.02,
-            morn: 31.08,
-          },
-          pressure: 1004,
-          humidity: 59,
-          dew_point: 22.6,
-          wind_speed: 9.41,
-          wind_deg: 210,
-          wind_gust: 12.7,
-          weather: [
-            {
-              id: 801,
-              main: 'Clouds',
-              description: 'few clouds',
-              icon: '02d',
-            },
-          ],
-          clouds: 11,
-          pop: 0.09,
-          uvi: 13,
-        },
-      ],
-    },
+    city,
+    setCity,
+    postalCode,
+    setPostalCode,
+    lat,
+    setLat,
+    long,
+    setLong,
+    weather,
+    setWeather,
+    toggleSearch,
+    setToggleSearch,
+    fetchLatLongHandler,
+    fetchByPostalHandler,
   };
 }
