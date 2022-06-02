@@ -587,6 +587,19 @@ class LogTracker {
   getDeviceInfoByKeys(keys: DeviceConstantKeys[]): DeviceConstants {
     return this.deviceInfo.getByKeys(keys);
   }
+
+  /**
+   * @param  {string} sessionId
+   * @param  {boolean} bool
+   * @returns Promise
+   */
+  public flagSession(sessionId: string, bool: boolean) {
+    sessionId;
+    bool;
+    return new Promise(resolve => {
+      resolve(true);
+    });
+  }
 }
 
 function uploaderFunction(
@@ -600,9 +613,10 @@ function uploaderFunction(
   });
 }
 
-export default new LogTracker({
+const logTracker = new LogTracker({
   writeFrequencyInSeconds: 5000,
   uploadLogs: uploaderFunction,
   clearStorageOnLogUpload: true,
   sensitiveDataKeywords: ['password'],
 });
+export default logTracker;
