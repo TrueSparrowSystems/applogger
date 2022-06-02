@@ -9,7 +9,7 @@ import {isEmpty} from 'lodash';
 import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
 import {TrackInterface} from './TrackInterface';
 import * as RNFS from 'react-native-fs';
-import {DeviceConstantKeys} from '../DeviceInfo/types';
+import {DeviceConstantKeys, DeviceConstants} from '../DeviceInfo/types';
 import Constants from '../constants/Constants';
 
 const LOG_SESSION_KEY = 'log_session';
@@ -36,6 +36,11 @@ class LogTracker {
     : TrackingState.Disabled;
   sessionState: SessionState = SessionState.Active;
 
+  /**
+   * This class maintains sessions, and tracks, stores and deletes session logs
+   * @constructor
+   * @param  {LogTrackerConfigInterface} privateconfig
+   */
   constructor(private config: LogTrackerConfigInterface) {
     this.bind();
 
@@ -53,7 +58,9 @@ class LogTracker {
 
     this.createNewSession();
   }
-
+  /**
+   * @private function to bind all the class functions
+   */
   private bind() {
     this.store.bind(this);
     this.track.bind(this);
@@ -80,20 +87,36 @@ class LogTracker {
     this.deleteSessionLogFiles.bind(this);
   }
 
-  canUpload(): boolean {
+  /**
+   * @public function to get whether upload functionality is enabled
+   * @returns boolean
+   */
+  public canUpload(): boolean {
     return !!this.uploadLogs;
   }
 
+  /**
+   * @public function to get whether session is active
+   * @returns boolean
+   */
   public isSessionActive(): boolean {
     return this.sessionState === SessionState.Active;
   }
 
+  /**
+   * @private function to reset all the logs
+   * @returns void
+   */
   private resetLogger() {
     this.currentStoreId = 0;
     this.sessionData = [];
     this.currentData = {};
   }
 
+  /**
+   * @public function to create a new session
+   * @returns void
+   */
   public createNewSession() {
     this.resetLogger();
     this.sessionId = uuidv4();
@@ -109,27 +132,42 @@ class LogTracker {
       this.store();
     }, this.config.writeFrequencyInSeconds);
   }
-
-  public getSessionId() {
+  /**
+   * @public function to get current session Id
+   * @returns string
+   */
+  public getSessionId(): string {
     return this.sessionId;
   }
-
-  public stopSession() {
+  /**
+   * @public function to stop current session
+   * @returns void
+   */
+  public stopSession(): void {
     this.sessionState = SessionState.InActive;
   }
-
-  public enableTracking() {
+  /**
+   * @public function to enable/resume tracking
+   * @returns void
+   */
+  public enableTracking(): void {
     this.trackingState = TrackingState.Enabled;
     setTimeout(() => {
       this.store();
     }, this.config.writeFrequencyInSeconds);
   }
-
+  /**
+   * @public function to disable/stop tracking
+   * @returns void
+   */
   public disableTracking() {
     this.trackingState = TrackingState.Disabled;
   }
-
-  private removeOldTrackingLogs() {
+  /**
+   * @private function to remove old logs before the logRotateDurationInHours value from config
+   * @returns void
+   */
+  private removeOldTrackingLogs(): void {
     let allSessionData: any = {};
     this.getAllSessions().then(data => {
       allSessionData = data;
@@ -148,7 +186,11 @@ class LogTracker {
     });
   }
 
-  public deleteAllLogs() {
+  /**
+   * @public function to delete all logs
+   * @returns Promise
+   */
+  public deleteAllLogs(): Promise<object> {
     return new Promise((resolve, reject) => {
       this.getAllSessions()
         .then((data: any) => {
@@ -167,6 +209,11 @@ class LogTracker {
     });
   }
 
+  /**
+   * @public function to clear tracking logs of session/sessions
+   * @param  {string|string[]} sessionId
+   * @returns Promise
+   */
   public clearTrackingLogsOfSession(sessionId: string | string[]) {
     return new Promise((resolve, reject) => {
       this.getAllSessions()
@@ -201,8 +248,12 @@ class LogTracker {
         });
     });
   }
-
-  private redactData(data: any) {
+  /**
+   * @private function to return data after redaction of sensitive data
+   * @param  {any} data
+   * @returns any
+   */
+  private redactData(data: any): any {
     Object.keys(data).map(prop => {
       if (this.config?.sensitiveDataKeywords?.includes(prop)) {
         data[prop] = Constants.REDACTED_TEXT;
@@ -216,17 +267,28 @@ class LogTracker {
     });
     return data;
   }
-
-  private checkSensitiveData(logData: TrackInterface) {
+  /**
+   * @private function to check and call redact function for sensitive data
+   * @param  {TrackInterface} logData
+   * @returns void
+   */
+  private checkSensitiveData(logData: TrackInterface): void {
     if (!isEmpty(logData.params)) {
       logData.params = this.redactData(logData.params);
     }
   }
-
-  isTrackingDisabled() {
+  /**
+   * @public function to get whether tracking is disabled or not
+   * @returns boolean
+   */
+  public isTrackingDisabled(): boolean {
     return this.trackingState === TrackingState.Disabled;
   }
 
+  /**
+   * @public function to track session logs
+   * @param  {TrackInterface} logData
+   */
   public track(logData: TrackInterface) {
     if (this.isTrackingDisabled() || !this.isSessionActive()) {
       return;
@@ -239,6 +301,13 @@ class LogTracker {
     this.currentStoreId++;
   }
 
+  /**
+   * @private Function to write the log file in the directory provided
+   * @param  {string} content
+   * @param  {string} filename
+   * @param  {string} dir
+   * @returns Promise
+   */
   private getJsonLogFile(
     content: string,
     filename: string,
@@ -261,14 +330,21 @@ class LogTracker {
         });
     });
   }
-
+  /**
+   * @private function to delete session log files
+   * @param  {string[]} sessionLogFilePaths
+   */
   private deleteSessionLogFiles(sessionLogFilePaths: string[]) {
     sessionLogFilePaths.forEach((sessionLogFile: string) => {
       RNFS.unlink(sessionLogFile);
     });
   }
 
-  uploadCurrentSessionLog(): Promise<boolean> {
+  /**
+   * @public function to upload logs of current session
+   * @returns Promise
+   */
+  public uploadCurrentSessionLog(): Promise<boolean> {
     return new Promise(resolve => {
       this.getSessionDetailsAsJson(this.sessionId).then(data => {
         if (data) {
@@ -294,7 +370,11 @@ class LogTracker {
     });
   }
 
-  uploadAllSessionLogs(): Promise<boolean> {
+  /**
+   * @public function to upload logs of all sessions
+   * @returns Promise
+   */
+  public uploadAllSessionLogs(): Promise<boolean> {
     return new Promise(resolve => {
       AsyncStorage.getItem(LOG_SESSION_KEY).then(jsonData => {
         if (jsonData) {
@@ -335,7 +415,9 @@ class LogTracker {
       });
     });
   }
-
+  /**
+   * @private function to store session id with current timeStamp in async store
+   */
   private storeSessionId() {
     if (this.isTrackingDisabled() || !this.isSessionActive()) {
       return;
@@ -366,7 +448,9 @@ class LogTracker {
         console.error('Error while getting the log session', err);
       });
   }
-
+  /**
+   * @private function to store to session log data in async store
+   */
   private store() {
     const data = this.currentData;
     console.log('store called ', data);
@@ -405,7 +489,12 @@ class LogTracker {
     }
   }
 
-  getSessionDetails(sessionId: string) {
+  /**
+   * @public function to get session logs of particular session
+   * @param  {string} sessionId
+   * @returns Promise
+   */
+  getSessionDetails(sessionId: string): Promise<object> {
     return new Promise(resolve => {
       AsyncStorage.getItem(sessionId)
         .then(jsonData => {
@@ -428,6 +517,11 @@ class LogTracker {
     });
   }
 
+  /**
+   * @public function to get session logs in json format of particular session
+   * @param  {string} sessionId
+   * @returns Promise
+   */
   getSessionDetailsAsJson(sessionId: string): Promise<string> {
     return new Promise(resolve => {
       AsyncStorage.getItem(sessionId)
@@ -450,7 +544,11 @@ class LogTracker {
     });
   }
 
-  getAllSessions() {
+  /**
+   * @public function to get session log data of all sessions
+   * @returns Promise
+   */
+  getAllSessions(): Promise<object> {
     return new Promise(resolve => {
       AsyncStorage.getItem(LOG_SESSION_KEY)
         .then(jsonData => {
@@ -473,11 +571,20 @@ class LogTracker {
     });
   }
 
-  getDeviceInfo() {
+  /**
+   * @public function to get device info
+   * @returns DeviceConstants
+   */
+  getDeviceInfo(): DeviceConstants {
     return this.deviceInfo.get();
   }
 
-  getDeviceInfoByKeys(keys: DeviceConstantKeys[]) {
+  /**
+   * @public function to get device info based on the keys provided
+   * @param  {DeviceConstantKeys[]} keys
+   * @returns DeviceConstants
+   */
+  getDeviceInfoByKeys(keys: DeviceConstantKeys[]): DeviceConstants {
     return this.deviceInfo.getByKeys(keys);
   }
 }
