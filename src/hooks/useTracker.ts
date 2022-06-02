@@ -3,6 +3,9 @@ import {AppState, Keyboard} from 'react-native';
 import {LogTypes} from '../constants/LogTypes';
 import LogTracker from '../LogTracker/index';
 
+/**
+ * @function useTracker Hook to track changes in navigation, keyboard activity and app states
+ */
 export function useTracker() {
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -61,6 +64,10 @@ export function useTracker() {
     [navigationRef],
   );
 
+  /**
+   * @function onNavigationStateChange to handle navigation state changes
+   * @param  {} (
+   */
   const onNavigationStateChange = useCallback(() => {
     const previousScreenName = screenNameRef.current;
     const currentScreenName = navigationRef.current?.getCurrentRoute()?.name;

@@ -12,7 +12,7 @@ export const DEFAULT_SERVER_PORT = 5561;
 class WebServerHelper {
   port: number | undefined;
   /**
-   * Function which starts a web server on a given `port`.
+   * @public Function which starts a web server on a given `port`.
    * @param port Port on which the web server will start.
    */
   startWebServer(port: number = DEFAULT_SERVER_PORT) {
@@ -23,14 +23,14 @@ class WebServerHelper {
   }
 
   /**
-   * Function to stop the running web server.
+   * @public Function to stop the running web server.
    */
   stopWebServer() {
     httpBridge.stop();
   }
 
   /**
-   * Function which prepares the Log tracker UI URL.
+   * @public Function which prepares the Log tracker UI URL.
    * @returns {Promise<string>} A promise which resolves to URL string.
    */
   getUIUrl(): Promise<string> {
@@ -46,7 +46,7 @@ class WebServerHelper {
   }
 
   /**
-   * Function which opens the native share dialog.
+   * @public Function which opens the native share dialog.
    */
   shareUIUrl() {
     this.getUIUrl().then((url: string) => {
@@ -64,6 +64,10 @@ class WebServerHelper {
     });
   }
 
+  /**
+   * @public Function which runs on webserver start
+   * @param  {any} request object
+   */
   onStart(request: any) {
     console.log('request: ', request);
     console.log('split: ', request.url.split('/'));
