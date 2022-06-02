@@ -2,13 +2,13 @@ import React from 'react';
 import {StyleSheet, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {useWebServer, useTracker} from 'applogger';
+import {useTracker} from 'applogger';
 import {NavigationContainer} from '@react-navigation/native';
 import RootNavigation from './src/components/RootNavigation/RootNavigation';
+import {LogTrackerContainer} from 'applogger';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-  useWebServer();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -19,7 +19,9 @@ function App() {
     <NavigationContainer
       ref={navigationRef}
       onStateChange={onNavigationStateChange}>
-      <RootNavigation />
+      <LogTrackerContainer>
+        <RootNavigation />
+      </LogTrackerContainer>
     </NavigationContainer>
   );
 }
