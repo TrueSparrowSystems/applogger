@@ -17,7 +17,7 @@ class WebServerHelper {
     this.logTracker = getLogTracker();
   }
   /**
-   * Function which starts a web server on a given `port`.
+   * @public Function which starts a web server on a given `port`.
    * @param port Port on which the web server will start.
    */
   startWebServer(port: number = DEFAULT_SERVER_PORT) {
@@ -28,14 +28,14 @@ class WebServerHelper {
   }
 
   /**
-   * Function to stop the running web server.
+   * @public Function to stop the running web server.
    */
   stopWebServer() {
     httpBridge.stop();
   }
 
   /**
-   * Function which prepares the Log tracker UI URL.
+   * @public Function which prepares the Log tracker UI URL.
    * @returns {Promise<string>} A promise which resolves to URL string.
    */
   getUIUrl(): Promise<string> {
@@ -51,7 +51,7 @@ class WebServerHelper {
   }
 
   /**
-   * Function which opens the native share dialog.
+   * @public Function which opens the native share dialog.
    */
   shareUIUrl() {
     this.getUIUrl().then((url: string) => {
@@ -69,77 +69,17 @@ class WebServerHelper {
     });
   }
 
+  /**
+   * @public Function which runs on webserver start
+   * @param  {any} request object
+   */
   onStart(request: any) {
     console.log('request: ', request);
     console.log('split: ', request.url.split('/'));
 
     const requestUrlComponents = request.url.split('/');
 
-    if (request.type === 'POST' && requestUrlComponents[1] === 'flag') {
-      if (requestUrlComponents.length >= 3) {
-        const sessionId = requestUrlComponents[2];
-        this.logTracker
-          .flagSession(sessionId, true)
-          .then(() => {
-            httpBridge.respond(
-              request.requestId,
-              200,
-              'application/json',
-              '{"message": "success"}',
-            );
-          })
-          .catch(() => {
-            httpBridge.respond(
-              request.requestId,
-              500,
-              'application/json',
-              '{"message": "Bad Request"}',
-            );
-          });
-      } else {
-        httpBridge.respond(
-          request.requestId,
-          404,
-          'application/json',
-          '{"message": "Bad Request"}',
-        );
-      }
-    } else if (
-      request.type === 'POST' &&
-      requestUrlComponents[1] === 'unflag'
-    ) {
-      if (requestUrlComponents.length >= 3) {
-        const sessionId = requestUrlComponents[2];
-        this.logTracker
-          .flagSession(sessionId, false)
-          .then(() => {
-            httpBridge.respond(
-              request.requestId,
-              200,
-              'application/json',
-              '{"message": "success"}',
-            );
-          })
-          .catch(() => {
-            httpBridge.respond(
-              request.requestId,
-              500,
-              'application/json',
-              '{"message": "Bad Request"}',
-            );
-          });
-      } else {
-        httpBridge.respond(
-          request.requestId,
-          404,
-          'application/json',
-          '{"message": "Bad Request"}',
-        );
-      }
-    } else if (
-      request.type === 'POST' &&
-      requestUrlComponents[3] === 'download'
-    ) {
+    if (request.type === 'POST' && requestUrlComponents[3] === 'download') {
       this.logTracker
         .getSessionDetails(requestUrlComponents[2])
         .then(res => {
@@ -214,7 +154,6 @@ class WebServerHelper {
                     <div class="div-table-col2"><div class="text">${moment(
                       ts,
                     ).format('DD MMM YYYY hh:mm:ss')}</div></div>
-                    <div class="div-table-col3"><div class="text"><input type="checkbox"/></div></div>
                     
                   </div>
 

@@ -99,7 +99,7 @@ export const sessionDash = `<!DOCTYPE html>
         margin-bottom: 7px;
       }
       .div-table-col1 {
-        width: 40%;
+        width: 50%;
         float: left; /* fix for  buggy browsers */
         display: table-column;
         background-color: transparent;
@@ -108,15 +108,7 @@ export const sessionDash = `<!DOCTYPE html>
         color: #b5bccd;
       }
       .div-table-col2 {
-        width: 30%;
-        float: left; /* fix for  buggy browsers */
-        display: table-column;
-        background-color: transparent;
-        border-bottom: 2px solid #36415f;
-        color: #b5bccd;
-      }
-      .div-table-col3 {
-        width: 30%;
+        width: 50%;
         float: left; /* fix for  buggy browsers */
         display: table-column;
         background-color: transparent;
@@ -154,9 +146,6 @@ export const sessionDash = `<!DOCTYPE html>
           </div>
           <div class="div-table-col2">
             <div class="div-table-col-header-text">Session Start Time</div>
-          </div>
-          <div class="div-table-col3">
-            <div class="div-table-col-header-text">Flag Session</div>
           </div>
         </div>
         {{session_data}}

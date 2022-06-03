@@ -1,8 +1,12 @@
 import {Animated, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {TouchableOpacity} from '../TouchableOpacity';
 import useHelperMenuData from './useHelperMenuData';
 
+/**
+ * @function HelperMenu - Component for rendering the helper menu.
+ * @returns {JSX} HelperMenu View.
+ */
 function HelperMenu() {
   const {
     isVisible,
@@ -19,7 +23,12 @@ function HelperMenu() {
     handleTracking,
   } = useHelperMenuData();
 
-  const yOffset = new Animated.Value(500);
+  /**
+   * @constant {Animated.Value} yOffset Animated value to control y position of the container.
+   */
+  const yOffset: Animated.Value = useMemo(() => {
+    return new Animated.Value(500);
+  }, []);
 
   useEffect(() => {
     if (isVisible) {
@@ -32,7 +41,7 @@ function HelperMenu() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible]);
 
-  const closeMenu = () => {
+  const closeMenu: () => void = useCallback(() => {
     Animated.timing(yOffset, {
       duration: 500,
       toValue: 500,
@@ -40,23 +49,26 @@ function HelperMenu() {
     }).start(() => {
       hideMenu();
     });
-  };
+  }, [hideMenu, yOffset]);
 
-  const cancelButtonTextStyle = useMemo(
+  const cancelButtonTextStyle: Record<string, any>[] = useMemo(
     () => [styles.optionText, {color: 'red'}],
     [],
   );
-  const optionsTextStyle = useMemo(
+
+  const optionsTextStyle: Record<string, any>[] = useMemo(
     () => [styles.optionText, {color: '#6798D4'}],
     [],
   );
-  const optionWithBottomBorderStyle = useMemo(
+
+  const optionWithBottomBorderStyle: Record<string, any>[] = useMemo(
     () => [
       styles.optionButton,
       {borderBottomWidth: 1, borderColor: '#A8BEC466'},
     ],
     [],
   );
+
   return isVisible ? (
     <View style={styles.container}>
       <Animated.View

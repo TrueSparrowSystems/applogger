@@ -7,7 +7,7 @@ import {ComponentTypes} from '../constants/ComponentTypes';
 import {useLoggingFunctions} from '../hooks/useLoggingFunctions';
 
 /**
- * Wrapper component for Refresh Control.
+ * @function RefreshControl - Component for rendering the React Native Refresh Control component with tracking.
  * @param {RefreshControlProps} props Properties for refresh control.
  * @returns {JSX.Element} Refresh Control Component.
  */

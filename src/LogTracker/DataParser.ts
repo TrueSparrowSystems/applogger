@@ -1,7 +1,12 @@
 import {TrackInterface} from './TrackInterface';
 
 export class DataParser {
-  static getUserActionData(sessionLogs: any) {
+  /**
+   * @static function to get user action data of a session as HTML table
+   * @param  {any} sessionLogs
+   * @returns string
+   */
+  static getUserActionData(sessionLogs: any): string {
     const steps: string[] = [];
     let stepCount = 0;
     for (let index = 0; index < sessionLogs.length; index++) {
@@ -26,7 +31,12 @@ export class DataParser {
     return steps.join('');
   }
 
-  static getDevLogs(sessionLogs: any) {
+  /**
+   * @static function to get dev logs of a session as HTML table
+   * @param  {any} sessionLogs
+   * @returns string
+   */
+  static getDevLogs(sessionLogs: any): string {
     const steps: string[] = [];
     let stepCount = 0;
 
