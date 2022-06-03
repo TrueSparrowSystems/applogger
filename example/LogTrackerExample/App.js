@@ -10,8 +10,8 @@ function App() {
     <NavigationContainer
       ref={navigationRef}
       onStateChange={onNavigationStateChange}>
-      <HelperMenu />
       <RootNavigation />
+      <HelperMenu />
     </NavigationContainer>
   );
 }

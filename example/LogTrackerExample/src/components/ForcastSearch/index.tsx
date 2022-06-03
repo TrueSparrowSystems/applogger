@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
-import {TextInput, Pressable, Switch} from 'applogger';
+import {View, Text, StyleSheet} from 'react-native';
+import {TextInput, Pressable, Switch, Button} from 'applogger';
 
 const ForecastSearch = ({
   toggleSearch,
@@ -47,22 +47,22 @@ const ForecastSearch = ({
         {toggleSearch == 'city' ? (
           <Button
             style={styles.buttons}
-            title="City"
+            title="Postal Code/Zip"
             color={
-              toggleSearch === 'city' ? 'white' : 'rgba(255, 255, 255, 0.6)'
+              toggleSearch === 'city' ? 'rgba(255, 255, 255, 0.6)' : 'black'
             }
-            accessibilityLabel="Search Weather By City"
-            onPress={setToggleByCity}
+            accessibilityLabel="Search Weather By ZIP/Postal Code"
+            onPress={setToggleByPostal}
           />
         ) : (
           <Button
             style={styles.buttons}
-            title="Postal Code/Zip"
+            title="City"
             color={
-              toggleSearch === 'city' ? 'rgba(255, 255, 255, 0.6)' : 'white'
+              toggleSearch === 'city' ? 'black' : 'rgba(255, 255, 255, 0.6)'
             }
-            accessibilityLabel="Search Weather By ZIP/Postal Code"
-            onPress={setToggleByPostal}
+            accessibilityLabel="Search Weather By City"
+            onPress={setToggleByCity}
           />
         )}
         <View
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
   },
   buttons: {
     color: 'black',
-    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'red',
   },
   searchBy: {
     flexDirection: 'row',
