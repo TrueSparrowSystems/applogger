@@ -465,8 +465,8 @@ export function useLoggingFunctions(props: any, type: string) {
             testID: props.testID,
           },
         });
-        props.onValueChange(value);
       }
+      props.onValueChange?.(value);
     },
     [props, type],
   );
@@ -488,8 +488,8 @@ export function useLoggingFunctions(props: any, type: string) {
           testId: testId,
         },
       });
-      props.onRefresh();
     }
+    props.onRefresh?.();
   }, [props, type]);
 
   const loggingFunctions: Record<string, (event: any) => void> = useMemo(

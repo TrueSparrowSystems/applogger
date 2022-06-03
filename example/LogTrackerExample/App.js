@@ -2,10 +2,9 @@ import React from 'react';
 import {StyleSheet, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {useTracker} from 'applogger';
+import {AppLogTracker, useTracker} from 'applogger';
 import {NavigationContainer} from '@react-navigation/native';
 import RootNavigation from './src/components/RootNavigation/RootNavigation';
-import {LogTracker} from 'applogger';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -19,7 +18,7 @@ function App() {
     <NavigationContainer
       ref={navigationRef}
       onStateChange={onNavigationStateChange}>
-      <LogTracker />
+      <AppLogTracker />
       <RootNavigation />
     </NavigationContainer>
   );
