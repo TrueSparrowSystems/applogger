@@ -12,14 +12,14 @@ export function useMountLogger(componentId: string, params: any) {
   const logTracker = getLogTracker();
   useEffect(() => {
     logTracker.track({
-      description: `mounting ${componentId}.`,
+      description: `Mounting (#${componentId}).`,
       type: LogTypes.Mount,
       params: params,
     });
 
     return () => {
       logTracker.track({
-        description: `unmounting ${componentId}.`,
+        description: `Unmounting (#${componentId}).`,
         type: LogTypes.Mount,
         params: params,
       });
