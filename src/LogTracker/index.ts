@@ -39,7 +39,7 @@ class LogTracker {
   /**
    * This class maintains sessions, and tracks, stores and deletes session logs
    * @constructor
-   * @param  {LogTrackerConfigInterface} privateconfig
+   * @param  {LogTrackerConfigInterface} config configurations for the class
    */
   constructor(private config: LogTrackerConfigInterface) {
     this.bind();
@@ -59,7 +59,7 @@ class LogTracker {
     this.createNewSession();
   }
   /**
-   * @private function to bind all the class functions
+   * @function bind function to bind all the class functions
    */
   private bind() {
     this.store.bind(this);
@@ -88,23 +88,23 @@ class LogTracker {
   }
 
   /**
-   * @public function to get whether upload functionality is enabled
-   * @returns boolean
+   * @function canUpload function to get whether upload functionality is enabled
+   * @returns boolean whether upload is possible
    */
   public canUpload(): boolean {
     return !!this.uploadLogs;
   }
 
   /**
-   * @public function to get whether session is active
-   * @returns boolean
+   * @function isSessionActive function to get whether session is active
+   * @returns boolean whether session is active
    */
   public isSessionActive(): boolean {
     return this.sessionState === SessionState.Active;
   }
 
   /**
-   * @private function to reset all the logs
+   * @function resetLogger function to reset all the logs
    * @returns void
    */
   private resetLogger() {
@@ -114,7 +114,7 @@ class LogTracker {
   }
 
   /**
-   * @public function to create a new session
+   * @function createNewSession function to create a new session
    * @returns void
    */
   public createNewSession() {
@@ -133,21 +133,21 @@ class LogTracker {
     }, this.config.writeFrequencyInSeconds);
   }
   /**
-   * @public function to get current session Id
-   * @returns string
+   * @function getSessionId function to get current session Id
+   * @returns string current session Id
    */
   public getSessionId(): string {
     return this.sessionId;
   }
   /**
-   * @public function to stop current session
+   * @function stopSession function to stop current session
    * @returns void
    */
   public stopSession(): void {
     this.sessionState = SessionState.InActive;
   }
   /**
-   * @public function to enable/resume tracking
+   * @function enableTracking function to enable/resume tracking
    * @returns void
    */
   public enableTracking(): void {
@@ -157,14 +157,14 @@ class LogTracker {
     }, this.config.writeFrequencyInSeconds);
   }
   /**
-   * @public function to disable/stop tracking
+   * @function disableTracking function to disable/stop tracking
    * @returns void
    */
   public disableTracking() {
     this.trackingState = TrackingState.Disabled;
   }
   /**
-   * @private function to remove old logs before the logRotateDurationInHours value from config
+   * @function removeOldTrackingLogs function to remove old logs before the logRotateDurationInHours value from config
    * @returns void
    */
   private removeOldTrackingLogs(): void {
@@ -187,8 +187,8 @@ class LogTracker {
   }
 
   /**
-   * @public function to delete all logs
-   * @returns Promise
+   * @function deleteAllLogs function to delete all logs
+   * @returns Promise<object> A promise to specify delete was successful
    */
   public deleteAllLogs(): Promise<object> {
     return new Promise((resolve, reject) => {
@@ -210,9 +210,9 @@ class LogTracker {
   }
 
   /**
-   * @public function to clear tracking logs of session/sessions
-   * @param  {string|string[]} sessionId
-   * @returns Promise
+   * @function clearTrackingLogsOfSession function to clear tracking logs of session/sessions
+   * @param  {string|string[]} sessionId Array of sessionIds or sessionId for which log is to be deleted
+   * @returns Promise A promise to specify tracking logs cleared
    */
   public clearTrackingLogsOfSession(sessionId: string | string[]) {
     return new Promise((resolve, reject) => {
@@ -249,9 +249,9 @@ class LogTracker {
     });
   }
   /**
-   * @private function to return data after redaction of sensitive data
-   * @param  {any} data
-   * @returns any
+   * @function redactData function to return data after redaction of sensitive data
+   * @param  {any} data object on which redaction is to be applied
+   * @returns any object with redacted sensitive data
    */
   private redactData(data: any): any {
     Object.keys(data).map(prop => {
@@ -267,9 +267,10 @@ class LogTracker {
     });
     return data;
   }
+
   /**
-   * @private function to check and call redact function for sensitive data
-   * @param  {TrackInterface} logData
+   * @function checkSensitiveData function to check and call redact function for sensitive data
+   * @param  {TrackInterface} logData object whose sensitive data is to be redacted
    * @returns void
    */
   private checkSensitiveData(logData: TrackInterface): void {
@@ -277,17 +278,18 @@ class LogTracker {
       logData.params = this.redactData(logData.params);
     }
   }
+
   /**
-   * @public function to get whether tracking is disabled or not
-   * @returns boolean
+   * @function isTrackingDisabled function to get whether tracking is disabled or not
+   * @returns boolean whether tracking is disabled
    */
   public isTrackingDisabled(): boolean {
     return this.trackingState === TrackingState.Disabled;
   }
 
   /**
-   * @public function to track session logs
-   * @param  {TrackInterface} logData
+   * @function track function to track session logs
+   * @param  {TrackInterface} logData object whose logs are to be tracked
    */
   public track(logData: TrackInterface) {
     if (this.isTrackingDisabled() || !this.isSessionActive()) {
@@ -302,11 +304,11 @@ class LogTracker {
   }
 
   /**
-   * @private Function to write the log file in the directory provided
-   * @param  {string} content
-   * @param  {string} filename
-   * @param  {string} dir
-   * @returns Promise
+   * @function getJsonLogFile Function to write the log file in the directory provided and return filePath
+   * @param  {string} content Data to be added in log file
+   * @param  {string} filename name of the log file
+   * @param  {string} dir directory path in which the log file is to be written
+   * @returns Promise<string> A promise with path of log file
    */
   private getJsonLogFile(
     content: string,
@@ -331,7 +333,7 @@ class LogTracker {
     });
   }
   /**
-   * @private function to delete session log files
+   * @function deleteSessionLogFiles function to delete session log files
    * @param  {string[]} sessionLogFilePaths
    */
   private deleteSessionLogFiles(sessionLogFilePaths: string[]) {
@@ -341,8 +343,8 @@ class LogTracker {
   }
 
   /**
-   * @public function to upload logs of current session
-   * @returns Promise
+   * @function uploadCurrentSessionLog function to upload logs of current session
+   * @returns Promise<boolean> A promise whether upload was successful
    */
   public uploadCurrentSessionLog(): Promise<boolean> {
     return new Promise(resolve => {
@@ -371,8 +373,8 @@ class LogTracker {
   }
 
   /**
-   * @public function to upload logs of all sessions
-   * @returns Promise
+   * @function uploadAllSessionLogs function to upload logs of all sessions
+   * @returns Promise<boolean> A promise whether upload was successful
    */
   public uploadAllSessionLogs(): Promise<boolean> {
     return new Promise(resolve => {
@@ -416,7 +418,7 @@ class LogTracker {
     });
   }
   /**
-   * @private function to store session id with current timeStamp in async store
+   * @function storeSessionId function to store session id with current timeStamp in async store
    */
   private storeSessionId() {
     if (this.isTrackingDisabled() || !this.isSessionActive()) {
@@ -449,7 +451,7 @@ class LogTracker {
       });
   }
   /**
-   * @private function to store to session log data in async store
+   * @function store function to store to session log data in async store
    */
   private store() {
     const data = this.currentData;
@@ -490,9 +492,9 @@ class LogTracker {
   }
 
   /**
-   * @public function to get session logs of particular session
-   * @param  {string} sessionId
-   * @returns Promise
+   * @function getSessionDetails function to get session logs of particular session
+   * @param  {string} sessionId Id of the session whose details are required
+   * @returns Promise<object> A promise with the session detail object
    */
   getSessionDetails(sessionId: string): Promise<object> {
     return new Promise(resolve => {
@@ -518,9 +520,9 @@ class LogTracker {
   }
 
   /**
-   * @public function to get session logs in json format of particular session
-   * @param  {string} sessionId
-   * @returns Promise
+   * @function getSessionDetailsAsJson function to get session logs in json format of particular session
+   * @param  {string} sessionId Id of the session whose details are required
+   * @returns Promise<string> A promise with the session detail as json
    */
   getSessionDetailsAsJson(sessionId: string): Promise<string> {
     return new Promise(resolve => {
@@ -545,8 +547,8 @@ class LogTracker {
   }
 
   /**
-   * @public function to get session log data of all sessions
-   * @returns Promise
+   * @function getAllSessions function to get session log data of all sessions
+   * @returns Promise<object> A promise with the session detail object for all sessions
    */
   getAllSessions(): Promise<object> {
     return new Promise(resolve => {
@@ -572,33 +574,20 @@ class LogTracker {
   }
 
   /**
-   * @public function to get device info
-   * @returns DeviceConstants
+   * @function getDeviceInfo function to get device info
+   * @returns DeviceConstants Object with device info
    */
   getDeviceInfo(): DeviceConstants {
     return this.deviceInfo.get();
   }
 
   /**
-   * @public function to get device info based on the keys provided
-   * @param  {DeviceConstantKeys[]} keys
-   * @returns DeviceConstants
+   * @function getDeviceInfoByKeys function to get device info based on the keys provided
+   * @param  {DeviceConstantKeys[]} keys whose device info is required
+   * @returns DeviceConstants Object with device info for specified keys
    */
   getDeviceInfoByKeys(keys: DeviceConstantKeys[]): DeviceConstants {
     return this.deviceInfo.getByKeys(keys);
-  }
-
-  /**
-   * @param  {string} sessionId
-   * @param  {boolean} bool
-   * @returns Promise
-   */
-  public flagSession(sessionId: string, bool: boolean) {
-    sessionId;
-    bool;
-    return new Promise(resolve => {
-      resolve(true);
-    });
   }
 }
 

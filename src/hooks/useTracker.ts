@@ -86,6 +86,11 @@ export function useTracker() {
     }
     screenNameRef.current = currentScreenName;
   }, []);
+
+  /**
+   * @function setRef function to set navigation ref
+   * @function onNavigationStateChange to handle navigation state changes
+   */
   return {
     navigationRef: setRef,
     onNavigationStateChange,
