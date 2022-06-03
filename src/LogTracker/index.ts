@@ -498,11 +498,10 @@ function createLogTrackerInstance() {
 }
 
 export function getLogTracker(): LogTracker {
-  if (logTracker) {
-    return logTracker;
-  } else {
-    return createLogTrackerInstance();
+  if (!logTracker) {
+    logTracker = createLogTrackerInstance();
   }
+  return logTracker;
 }
 
 export function setConfig(config?: LogTrackerConfigInterface) {
