@@ -1,19 +1,20 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {AppState, Keyboard} from 'react-native';
 import {LogTypes} from '../constants/LogTypes';
-import LogTracker from '../LogTracker/index';
+import {getLogTracker} from '../LogTracker/index';
 
 export function useTracker() {
+  const logTracker = getLogTracker();
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      LogTracker.track({
+      logTracker.track({
         description: 'Keyboard Shown',
         type: LogTypes.KeyboardState,
         params: {state: 'shown'},
       });
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      LogTracker.track({
+      logTracker.track({
         description: 'Keyboard Hidden',
         type: LogTypes.KeyboardState,
         params: {state: 'hidden'},
@@ -24,7 +25,7 @@ export function useTracker() {
       showSubscription.remove();
       hideSubscription.remove();
     };
-  }, []);
+  }, [logTracker]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -39,7 +40,7 @@ export function useTracker() {
 
       // appState.current = nextAppState;
 
-      LogTracker.track({
+      logTracker.track({
         description: `App state changed to ${nextAppState}`,
         type: LogTypes.AppState,
         params: {appState: nextAppState},
@@ -49,7 +50,7 @@ export function useTracker() {
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [logTracker]);
 
   const screenNameRef = useRef('');
   const navigationRef: any = useRef();
@@ -67,14 +68,14 @@ export function useTracker() {
     console.log({previousScreenName, currentScreenName});
     if (currentScreenName && previousScreenName !== currentScreenName) {
       console.log('currentScreenName is ', currentScreenName, 'now track this');
-      LogTracker.track({
+      logTracker.track({
         description: `Navigate to ${currentScreenName} screen`,
         type: LogTypes.Navigation,
         params: {currentScreenName, previousScreenName},
       });
     }
     screenNameRef.current = currentScreenName;
-  }, []);
+  }, [logTracker]);
   return {
     navigationRef: setRef,
     onNavigationStateChange,
