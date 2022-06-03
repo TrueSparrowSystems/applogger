@@ -33,7 +33,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPress) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -58,7 +58,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onLongPress) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -83,7 +83,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPressIn) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -108,7 +108,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPressOut) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -137,7 +137,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -173,7 +175,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -205,7 +209,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -239,7 +245,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onEndEditing) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -265,7 +271,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onFocus) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -294,7 +300,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -329,7 +337,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -359,7 +369,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -390,7 +402,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onSelectionChange) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -424,7 +436,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onSubmitEditing) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -452,7 +464,7 @@ export function useLoggingFunctions(props: any, type: string) {
   const onValueChange = useCallback(
     (value: any) => {
       if (props.testID && props.onValueChange) {
-        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
         console.log('componentName: ', componentName);
 
         if (componentName.toLowerCase().trim().endsWith(type)) {
@@ -475,7 +487,7 @@ export function useLoggingFunctions(props: any, type: string) {
   const onRefresh = useCallback(() => {
     const testId = props.testID;
     if (testId && props.onRefresh) {
-      let componentName = capitalize(props.testID.replaceAll('_', ' '));
+      let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
       console.log('componentName: ', componentName);
 
       if (!componentName.toLowerCase().trim().endsWith(type)) {
