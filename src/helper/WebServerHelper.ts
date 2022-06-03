@@ -74,69 +74,7 @@ class WebServerHelper {
 
     const requestUrlComponents = request.url.split('/');
 
-    if (request.type === 'POST' && requestUrlComponents[1] === 'flag') {
-      if (requestUrlComponents.length >= 3) {
-        const sessionId = requestUrlComponents[2];
-        LogTracker.flagSession(sessionId, true)
-          .then(() => {
-            httpBridge.respond(
-              request.requestId,
-              200,
-              'application/json',
-              '{"message": "success"}',
-            );
-          })
-          .catch(() => {
-            httpBridge.respond(
-              request.requestId,
-              500,
-              'application/json',
-              '{"message": "Bad Request"}',
-            );
-          });
-      } else {
-        httpBridge.respond(
-          request.requestId,
-          404,
-          'application/json',
-          '{"message": "Bad Request"}',
-        );
-      }
-    } else if (
-      request.type === 'POST' &&
-      requestUrlComponents[1] === 'unflag'
-    ) {
-      if (requestUrlComponents.length >= 3) {
-        const sessionId = requestUrlComponents[2];
-        LogTracker.flagSession(sessionId, false)
-          .then(() => {
-            httpBridge.respond(
-              request.requestId,
-              200,
-              'application/json',
-              '{"message": "success"}',
-            );
-          })
-          .catch(() => {
-            httpBridge.respond(
-              request.requestId,
-              500,
-              'application/json',
-              '{"message": "Bad Request"}',
-            );
-          });
-      } else {
-        httpBridge.respond(
-          request.requestId,
-          404,
-          'application/json',
-          '{"message": "Bad Request"}',
-        );
-      }
-    } else if (
-      request.type === 'POST' &&
-      requestUrlComponents[3] === 'download'
-    ) {
+    if (request.type === 'POST' && requestUrlComponents[3] === 'download') {
       LogTracker.getSessionDetails(requestUrlComponents[2])
         .then(res => {
           console.log('session data', res);
@@ -210,7 +148,6 @@ class WebServerHelper {
                     <div class="div-table-col2"><div class="text">${moment(
                       ts,
                     ).format('DD MMM YYYY hh:mm:ss')}</div></div>
-                    <div class="div-table-col3"><div class="text"><input type="checkbox"/></div></div>
                     
                   </div>
 
