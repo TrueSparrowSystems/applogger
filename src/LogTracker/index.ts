@@ -602,10 +602,30 @@ class LogTracker {
   }
 }
 
+// example for uploading single log file
+// function uploadFile(filePath: string): Promise<boolean> {
+//   return new Promise((resolve, reject) => {
+//     s3.upload(filePath).then(() => {
+//       resolve(true);
+//     }).catch(() => {
+//       reject();
+//     });
+//   });
+// }
+
 function uploaderFunction(
   sessionLogFilePaths: string[],
   onLogUploadComplete: Function,
 ): Promise<boolean> {
+  // sessionLogFilePaths.forEach((singleSessionLogFilePath, index) => {
+  //   uploadFile(singleSessionLogFilePath).then(() => {
+  //     if (index == sessionLogFilePaths.length - 1) {
+  //       // Calling this function to delete log files from local app storage
+  //       onLogUploadComplete();
+  //     }
+  //   });
+  // });
+
   onLogUploadComplete();
 
   return new Promise(resolve => {
@@ -619,4 +639,5 @@ const logTracker = new LogTracker({
   clearStorageOnLogUpload: true,
   sensitiveDataKeywords: ['password'],
 });
+
 export default logTracker;
