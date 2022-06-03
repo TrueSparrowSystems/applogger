@@ -4,7 +4,7 @@ export interface UploaderFunctionInterface {
 
 export interface LogTrackerConfigInterface {
   writeFrequencyInSeconds: number;
-  uploadLogs: UploaderFunctionInterface;
+  uploadLogs?: UploaderFunctionInterface;
   clearStorageOnLogUpload: boolean;
   isTrackingDisabled?: boolean;
   logRotateDurationInHours?: number;

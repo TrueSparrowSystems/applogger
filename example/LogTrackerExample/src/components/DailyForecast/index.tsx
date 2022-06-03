@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 import moment from 'moment';
 
-const DailyForecast = ({day, index}) => {
+const DailyForecast = ({day, temperatureText}) => {
   return (
     <View style={styles.dayContainer}>
       <View style={styles.dateContainer}>
@@ -14,16 +14,20 @@ const DailyForecast = ({day, index}) => {
         <Image
           style={styles.weatherIcon}
           source={{
-            uri: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
+            uri: `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
           }}
           resizeMode={'contain'} // cover or contain its upto you view look
         />
         <Text>{day.weather[0].description}</Text>
       </View>
       <View style={styles.degreeView}>
-        <Text style={styles.degree}>{Math.round(day.temp.max)}°C</Text>
+        <Text style={styles.degree}>
+          {Math.round(day.temp.max)}
+          {temperatureText}
+        </Text>
         <Text style={styles.feelsLike}>
-          Feels {Math.round(day.feels_like.day)}°C
+          Feels {Math.round(day.feels_like.day)}
+          {temperatureText}
         </Text>
       </View>
     </View>

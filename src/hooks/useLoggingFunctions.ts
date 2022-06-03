@@ -2,7 +2,7 @@ import {capitalize} from 'lodash';
 import {MutableRefObject, useCallback, useMemo, useRef} from 'react';
 import Constants from '../constants/Constants';
 import {LogTypes} from '../constants/LogTypes';
-import LogTracker from '../LogTracker';
+import {getLogTracker} from '../LogTracker';
 
 const CALLBACK_TIMEOUT = 500;
 
@@ -13,6 +13,7 @@ const CALLBACK_TIMEOUT = 500;
  * @returns {Object} object with all common logging functions
  */
 export function useLoggingFunctions(props: any, type: string) {
+  const logTracker = getLogTracker();
   const callbackTimeoutMap: MutableRefObject<Record<string, boolean>> = useRef({
     onChange: false,
   });
@@ -52,14 +53,14 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPress) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
             componentName = `${componentName} ${type}`;
           }
 
-          LogTracker.track({
+          logTracker.track({
             description: `Tap on ${componentName} (#${props.testID})`,
             type: LogTypes.Tap,
             params: {
@@ -70,7 +71,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onPress(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -81,14 +82,14 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onLongPress) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
             componentName = `${componentName} ${type}`;
           }
 
-          LogTracker.track({
+          logTracker.track({
             description: `LongPress on ${componentName} (#${props.testID})`,
             type: LogTypes.Tap,
             params: {
@@ -99,7 +100,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onLongPress(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -110,14 +111,14 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPressIn) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
             componentName = `${componentName} ${type}`;
           }
 
-          LogTracker.track({
+          logTracker.track({
             description: `Press In on ${componentName} (#${props.testID})`,
             type: LogTypes.Tap,
             params: {
@@ -128,7 +129,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onPressIn(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -139,14 +140,14 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPressOut) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
             componentName = `${componentName} ${type}`;
           }
 
-          LogTracker.track({
+          logTracker.track({
             description: `Press Out on ${componentName} (#${props.testID})`,
             type: LogTypes.Tap,
             params: {
@@ -158,7 +159,7 @@ export function useLoggingFunctions(props: any, type: string) {
 
       props.onPressOut(event);
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -172,7 +173,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -183,7 +186,7 @@ export function useLoggingFunctions(props: any, type: string) {
               nativeEvent: {eventCount, text},
             } = event;
 
-            LogTracker.track({
+            logTracker.track({
               description: '',
               type: LogTypes.Text,
               params: {
@@ -197,7 +200,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onChange(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, props, type],
+    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
   );
 
   /**
@@ -212,13 +215,15 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
               componentName = `${componentName} ${type}`;
             }
-            LogTracker.track({
+            logTracker.track({
               description: `Text change on ${componentName} (#${props.testID})`,
               type: LogTypes.Text,
               params: {
@@ -233,7 +238,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onChangeText(newText);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, props, type],
+    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
   );
 
   /**
@@ -248,7 +253,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -261,7 +268,7 @@ export function useLoggingFunctions(props: any, type: string) {
               },
             } = event;
 
-            LogTracker.track({
+            logTracker.track({
               description: '',
               type: LogTypes.Layout,
               params: {
@@ -275,7 +282,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onContentSizeChange(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, props, type],
+    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
   );
 
   /**
@@ -286,14 +293,14 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onEndEditing) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
             componentName = `${componentName} ${type}`;
           }
 
-          LogTracker.track({
+          logTracker.track({
             description: `Editing ended on ${componentName} (#${props.testID})`,
             type: LogTypes.Text,
             params: {
@@ -305,7 +312,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onEndEditing(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -316,14 +323,14 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onFocus) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
             componentName = `${componentName} ${type}`;
           }
 
-          LogTracker.track({
+          logTracker.track({
             description: `Focus on ${componentName} (#${props.testID})`,
             type: LogTypes.Layout,
             params: {
@@ -335,7 +342,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onFocus(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -349,7 +356,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -360,7 +369,7 @@ export function useLoggingFunctions(props: any, type: string) {
               nativeEvent: {key},
             } = event;
 
-            LogTracker.track({
+            logTracker.track({
               description: '',
               type: LogTypes.Tap,
               params: {
@@ -373,7 +382,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onKeyPress(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, props, type],
+    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
   );
 
   /**
@@ -388,14 +397,16 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
               componentName = `${componentName} ${type}`;
             }
 
-            LogTracker.track({
+            logTracker.track({
               description: `Layout on ${componentName} (#${props.testID})`,
               type: LogTypes.Layout,
               params: {
@@ -407,7 +418,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onLayout(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, props, type],
+    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
   );
 
   /**
@@ -422,7 +433,9 @@ export function useLoggingFunctions(props: any, type: string) {
         if (!isFunctionCallBlocked(functionName)) {
           blockFunctionCall(functionName);
           if (props.testID) {
-            let componentName = capitalize(props.testID.replaceAll('_', ' '));
+            let componentName = capitalize(
+              props.testID?.replaceAll?.('_', ' '),
+            );
             console.log('componentName: ', componentName);
 
             if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -433,7 +446,7 @@ export function useLoggingFunctions(props: any, type: string) {
               nativeEvent: {contentOffset},
             } = event;
 
-            LogTracker.track({
+            logTracker.track({
               description: '',
               type: LogTypes.Scroll,
               params: {
@@ -446,7 +459,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onScroll(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, props, type],
+    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
   );
 
   /**
@@ -457,7 +470,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onSelectionChange) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -470,7 +483,7 @@ export function useLoggingFunctions(props: any, type: string) {
             },
           } = event;
 
-          LogTracker.track({
+          logTracker.track({
             description: `Text input selection change on ${componentName} (#${props.testID})`,
             type: LogTypes.TextSelection,
             params: {
@@ -484,7 +497,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onSelectionChange(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -495,7 +508,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onSubmitEditing) {
         if (props.testID) {
-          let componentName = capitalize(props.testID.replaceAll('_', ' '));
+          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
           console.log('componentName: ', componentName);
 
           if (!componentName.toLowerCase().trim().endsWith(type)) {
@@ -505,7 +518,7 @@ export function useLoggingFunctions(props: any, type: string) {
             nativeEvent: {text},
           } = event;
 
-          LogTracker.track({
+          logTracker.track({
             description: `Text input submit on ${componentName} (#${props.testID})`,
             type: LogTypes.Text,
             params: {
@@ -518,7 +531,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onSubmitEditing(event);
       }
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -528,24 +541,24 @@ export function useLoggingFunctions(props: any, type: string) {
   const onValueChange = useCallback(
     (value: any) => {
       if (props.testID && props.onValueChange) {
-        let componentName = capitalize(props.testID.replaceAll('_', ' '));
+        let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
         console.log('componentName: ', componentName);
 
         if (componentName.toLowerCase().trim().endsWith(type)) {
           componentName = `${componentName} ${type}`;
         }
 
-        LogTracker.track({
+        logTracker.track({
           description: `Value change to ${value} for ${componentName} - (#${props.testID})`,
           type: LogTypes.Tap,
           params: {
             testID: props.testID,
           },
         });
-        props.onValueChange(value);
       }
+      props.onValueChange?.(value);
     },
-    [props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -554,23 +567,23 @@ export function useLoggingFunctions(props: any, type: string) {
   const onRefresh = useCallback(() => {
     const testId = props.testID;
     if (testId && props.onRefresh) {
-      let componentName = capitalize(props.testID.replaceAll('_', ' '));
+      let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
       console.log('componentName: ', componentName);
 
       if (!componentName.toLowerCase().trim().endsWith(type)) {
         componentName = `${componentName} ${type}`;
       }
 
-      LogTracker.track({
+      logTracker.track({
         description: `on Refresh called for ${componentName} (#${testId})`,
         type: LogTypes.Refresh,
         params: {
           testId: testId,
         },
       });
-      props.onRefresh();
     }
-  }, [props, type]);
+    props.onRefresh?.();
+  }, [logTracker, props, type]);
 
   const loggingFunctions: Record<string, (event: any) => void> = useMemo(
     () => ({

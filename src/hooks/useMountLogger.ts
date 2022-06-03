@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect} from 'react';
 import {LogTypes} from '../constants/LogTypes';
-import LogTracker from '../LogTracker';
+import {getLogTracker} from '../LogTracker';
 
 /**
  * @function useMountLogger Hook to log the mounting and unmounting of a component.
@@ -9,16 +9,17 @@ import LogTracker from '../LogTracker';
  * @param params Additional parameter to log.
  */
 export function useMountLogger(componentId: string, params: any) {
+  const logTracker = getLogTracker();
   useEffect(() => {
-    LogTracker.track({
-      description: `mounting ${componentId}.`,
+    logTracker.track({
+      description: `Mounting (#${componentId}).`,
       type: LogTypes.Mount,
       params: params,
     });
 
     return () => {
-      LogTracker.track({
-        description: `unmounting ${componentId}.`,
+      logTracker.track({
+        description: `Unmounting (#${componentId}).`,
         type: LogTypes.Mount,
         params: params,
       });

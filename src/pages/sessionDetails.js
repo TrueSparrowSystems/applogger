@@ -58,7 +58,6 @@ export const sessionDetails = `<!DOCTYPE html>
       }
       .div-table-row {
         width: 100%;
-        display: table-row;
         clear: both;
         border-bottom: 2px solid #36415f;
       }
@@ -109,7 +108,6 @@ export const sessionDetails = `<!DOCTYPE html>
         display: table-column;
         background-color: transparent;
         vertical-align: middle;
-        border-bottom: 2px solid #36415f;
         color: #b5bccd;
       }
       .div-table-col2 {
@@ -117,15 +115,6 @@ export const sessionDetails = `<!DOCTYPE html>
         float: left; /* fix for  buggy browsers */
         display: table-column;
         background-color: transparent;
-        border-bottom: 2px solid #36415f;
-        color: #b5bccd;
-      }
-      .div-table-col3 {
-        width: 30%;
-        float: left; /* fix for  buggy browsers */
-        display: table-column;
-        background-color: transparent;
-        border-bottom: 2px solid #36415f;
         color: #b5bccd;
       }
 
@@ -256,6 +245,9 @@ export const sessionDetails = `<!DOCTYPE html>
     async function downloadZipFile(filename, content) {
       const zip = new JSZip();
       zip.file("Log.txt", content);
+      zip.file("Log.json", content);
+      const htmlData=encodeURIComponent(document.documentElement.outerHTML)
+      zip.file("Log.html", htmlData);
   
       zip.generateAsync({
               type: "blob"

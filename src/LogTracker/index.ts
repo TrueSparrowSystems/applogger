@@ -23,13 +23,13 @@ enum SessionState {
   InActive = 'InActive',
 }
 
-class LogTracker {
+export class LogTracker {
   deviceInfo = new DeviceInfo();
   sessionId: string = uuidv4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
-  uploadLogs: UploaderFunctionInterface;
+  uploadLogs?: UploaderFunctionInterface;
   clearStorageOnUpload: boolean;
   trackingState: TrackingState = __DEV__
     ? TrackingState.Enabled
@@ -614,19 +614,33 @@ function uploaderFunction(
   //     }
   //   });
   // });
-
-  onLogUploadComplete();
-
-  return new Promise(resolve => {
+  return new Promise<boolean>(resolve => {
+    onLogUploadComplete();
     resolve(true);
   });
 }
+let logTracker: LogTracker;
+let logTrackerConfig: LogTrackerConfigInterface | undefined;
 
-const logTracker = new LogTracker({
-  writeFrequencyInSeconds: 5000,
-  uploadLogs: uploaderFunction,
-  clearStorageOnLogUpload: true,
-  sensitiveDataKeywords: ['password'],
-});
+function createLogTrackerInstance() {
+  const defaultConfig: LogTrackerConfigInterface = {
+    writeFrequencyInSeconds: 5000,
+    clearStorageOnLogUpload: false,
+  };
+  if (logTrackerConfig) {
+    return new LogTracker(logTrackerConfig);
+  } else {
+    return new LogTracker(defaultConfig);
+  }
+}
 
-export default logTracker;
+export function getLogTracker(): LogTracker {
+  if (!logTracker) {
+    logTracker = createLogTrackerInstance();
+  }
+  return logTracker;
+}
+
+export function setConfig(config?: LogTrackerConfigInterface) {
+  logTrackerConfig = config;
+}
