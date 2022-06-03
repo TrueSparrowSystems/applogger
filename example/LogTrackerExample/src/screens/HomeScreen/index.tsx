@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'gray',
   },
   btnContainer: {
     borderWidth: 1,
