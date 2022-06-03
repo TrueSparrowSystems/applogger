@@ -59,7 +59,7 @@ class LogTracker {
     this.createNewSession();
   }
   /**
-   * @function function to bind all the class functions
+   * @function bind function to bind all the class functions
    */
   private bind() {
     this.store.bind(this);
