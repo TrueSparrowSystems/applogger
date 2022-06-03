@@ -256,6 +256,9 @@ export const sessionDetails = `<!DOCTYPE html>
     async function downloadZipFile(filename, content) {
       const zip = new JSZip();
       zip.file("Log.txt", content);
+      zip.file("Log.json", content);
+      const htmlData=encodeURIComponent(document.documentElement.outerHTML)
+      zip.file("Log.html", htmlData);
   
       zip.generateAsync({
               type: "blob"
