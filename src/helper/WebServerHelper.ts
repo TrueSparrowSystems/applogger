@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {Share} from 'react-native';
 import deviceInfoModule from 'react-native-device-info';
-import LogTracker from '../LogTracker';
+import {getLogTracker} from '../LogTracker';
 import {DataParser} from '../LogTracker/DataParser';
 import {sessionDash} from '../pages/sessionDashboard';
 import {sessionDetails} from '../pages/sessionDetails';
@@ -11,6 +11,11 @@ var httpBridge = require('react-native-http-bridge');
 export const DEFAULT_SERVER_PORT = 5561;
 class WebServerHelper {
   port: number | undefined;
+  logTracker;
+
+  constructor() {
+    this.logTracker = getLogTracker();
+  }
   /**
    * Function which starts a web server on a given `port`.
    * @param port Port on which the web server will start.
@@ -73,7 +78,8 @@ class WebServerHelper {
     if (request.type === 'POST' && requestUrlComponents[1] === 'flag') {
       if (requestUrlComponents.length >= 3) {
         const sessionId = requestUrlComponents[2];
-        LogTracker.flagSession(sessionId, true)
+        this.logTracker
+          .flagSession(sessionId, true)
           .then(() => {
             httpBridge.respond(
               request.requestId,
@@ -104,7 +110,8 @@ class WebServerHelper {
     ) {
       if (requestUrlComponents.length >= 3) {
         const sessionId = requestUrlComponents[2];
-        LogTracker.flagSession(sessionId, false)
+        this.logTracker
+          .flagSession(sessionId, false)
           .then(() => {
             httpBridge.respond(
               request.requestId,
@@ -133,7 +140,8 @@ class WebServerHelper {
       request.type === 'POST' &&
       requestUrlComponents[3] === 'download'
     ) {
-      LogTracker.getSessionDetails(requestUrlComponents[2])
+      this.logTracker
+        .getSessionDetails(requestUrlComponents[2])
         .then(res => {
           console.log('session data', res);
           return httpBridge.respond(
@@ -157,9 +165,10 @@ class WebServerHelper {
     // you can use request.url, request.type and request.postData here
     else if (request.type === 'GET' && requestUrlComponents[1] === 'session') {
       if (requestUrlComponents.length >= 3) {
-        LogTracker.getSessionDetails(requestUrlComponents[2]).then(
-          sessionData => {
-            const deviceInfo: any = LogTracker.getDeviceInfo();
+        this.logTracker
+          .getSessionDetails(requestUrlComponents[2])
+          .then(sessionData => {
+            const deviceInfo: any = this.logTracker.getDeviceInfo();
             const deviceInfoData: string[] = [];
             if (deviceInfo) {
               for (const key in deviceInfo) {
@@ -190,11 +199,10 @@ class WebServerHelper {
               'text/html',
               responseHtml.replace('{{device_info}}', deviceInfoData.join('')),
             );
-          },
-        );
+          });
       } else {
         const sessionData: string[] = [];
-        LogTracker.getAllSessions().then((allSessions: any) => {
+        this.logTracker.getAllSessions().then((allSessions: any) => {
           if (allSessions) {
             for (const key in allSessions) {
               if (Object.prototype.hasOwnProperty.call(allSessions, key)) {

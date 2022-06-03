@@ -23,13 +23,13 @@ enum SessionState {
   InActive = 'InActive',
 }
 
-class LogTracker {
+export class LogTracker {
   deviceInfo = new DeviceInfo();
   sessionId: string = uuidv4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
-  uploadLogs: UploaderFunctionInterface;
+  uploadLogs?: UploaderFunctionInterface;
   clearStorageOnUpload: boolean;
   trackingState: TrackingState = __DEV__
     ? TrackingState.Enabled
@@ -482,33 +482,29 @@ class LogTracker {
   }
 }
 
-function uploaderFunction(
-  sessionLogFilePaths: string[],
-  onLogUploadComplete: Function,
-): Promise<boolean> {
-  onLogUploadComplete();
+let logTracker: LogTracker;
+let logTrackerConfig: LogTrackerConfigInterface | undefined;
 
-  return new Promise(resolve => {
-    resolve(true);
-  });
+function createLogTrackerInstance() {
+  const defaultConfig: LogTrackerConfigInterface = {
+    writeFrequencyInSeconds: 5000,
+    clearStorageOnLogUpload: false,
+  };
+  if (logTrackerConfig) {
+    return new LogTracker(logTrackerConfig);
+  } else {
+    return new LogTracker(defaultConfig);
+  }
 }
 
-let logTracker: LogTracker;
-export function createLogTrackerInstance(config?: LogTrackerConfigInterface) {
+export function getLogTracker(): LogTracker {
   if (logTracker) {
     return logTracker;
+  } else {
+    return createLogTrackerInstance();
   }
-  const defaultConfig = {
-    writeFrequencyInSeconds: 5000,
-    uploadLogs: uploaderFunction,
-    clearStorageOnLogUpload: true,
-    sensitiveDataKeywords: ['password'],
-  };
-  logTracker = new LogTracker(defaultConfig);
 }
 
-function getLogTrackerInstance() {
-  return logTracker;
+export function setConfig(config?: LogTrackerConfigInterface) {
+  logTrackerConfig = config;
 }
-
-export default getLogTrackerInstance();

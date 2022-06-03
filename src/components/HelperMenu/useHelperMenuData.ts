@@ -1,6 +1,6 @@
 import {useCallback, useState, useEffect} from 'react';
 import WebServerHelper from '../../helper/WebServerHelper';
-import LogTracker from '../../LogTracker';
+import {getLogTracker} from '../../LogTracker';
 import EventTypes from '../../services/local-event/EventTypes';
 import {LocalEvent} from '../../services/local-event/LocalEvent';
 
@@ -23,6 +23,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [isTrackingActive, setIsTrackingActive] = useState<boolean>(false);
+  const logTracker = getLogTracker();
 
   const showMenu = useCallback(() => {
     setIsVisible(true);
@@ -33,10 +34,10 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   }, []);
 
   useEffect(() => {
-    const sessionStatus: boolean = LogTracker.isSessionActive();
+    const sessionStatus: boolean = logTracker.isSessionActive();
     setIsSessionActive(sessionStatus);
 
-    const trackingStatus: boolean = LogTracker.isTrackingDisabled();
+    const trackingStatus: boolean = logTracker.isTrackingDisabled();
     setIsTrackingActive(!trackingStatus);
 
     LocalEvent.on(EventTypes.UI.HelperMenu.Show, showMenu);
@@ -53,48 +54,50 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   }, []);
 
   const uploadCurrentSessionLogs = useCallback(() => {
-    LogTracker.uploadCurrentSessionLog();
-  }, []);
+    logTracker.uploadCurrentSessionLog();
+  }, [logTracker]);
   const uploadAllSessionLogs = useCallback(() => {
-    LogTracker.uploadAllSessionLogs();
-  }, []);
+    logTracker.uploadAllSessionLogs();
+  }, [logTracker]);
 
   const deleteCurrentSessionLogs = useCallback(() => {
-    const currentSessionId = LogTracker.getSessionId();
-    LogTracker.clearTrackingLogsOfSession(currentSessionId)
+    const currentSessionId = logTracker.getSessionId();
+    logTracker
+      .clearTrackingLogsOfSession(currentSessionId)
       .then(() => {
-        LogTracker.createNewSession();
+        logTracker.createNewSession();
       })
       .catch(() => {});
-  }, []);
+  }, [logTracker]);
 
   const deleteAllLogs = useCallback(() => {
-    LogTracker.deleteAllLogs()
+    logTracker
+      .deleteAllLogs()
       .then(() => {
-        LogTracker.createNewSession();
+        logTracker.createNewSession();
       })
       .catch(() => {});
-  }, []);
+  }, [logTracker]);
 
   const handleTracking = useCallback(() => {
     if (isTrackingActive) {
-      LogTracker.disableTracking();
+      logTracker.disableTracking();
       setIsTrackingActive(false);
     } else {
-      LogTracker.enableTracking();
+      logTracker.enableTracking();
       setIsTrackingActive(true);
     }
-  }, [isTrackingActive]);
+  }, [logTracker, isTrackingActive]);
 
   const handleSession = useCallback(() => {
     if (isSessionActive) {
-      LogTracker.stopSession();
+      logTracker.stopSession();
       setIsSessionActive(false);
     } else {
-      LogTracker.createNewSession();
+      logTracker.createNewSession();
       setIsSessionActive(true);
     }
-  }, [isSessionActive]);
+  }, [logTracker, isSessionActive]);
 
   return {
     isVisible,
@@ -102,7 +105,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
     trackingControlText: isTrackingActive
       ? 'Disable Tracking'
       : 'Enable Tracking',
-    enableUploadButtons: LogTracker.canUpload(),
+    enableUploadButtons: logTracker.canUpload(),
     uploadCurrentSessionLogs,
     uploadAllSessionLogs,
     deleteAllLogs,

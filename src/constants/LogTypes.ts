@@ -10,5 +10,4 @@ export enum LogTypes {
   Navigation = 'Navigation',
   Shake = 'Shake',
   Scroll = 'Scroll',
-  Shake = 'Shake',
 }
