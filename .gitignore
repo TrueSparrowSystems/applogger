@@ -68,3 +68,6 @@ example/*/ios/Pods/
 
 #tarball
 tar
+
+#docs
+docs
