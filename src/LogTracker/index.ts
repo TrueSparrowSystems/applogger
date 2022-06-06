@@ -1,9 +1,6 @@
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
-import {
-  LogTrackerConfigInterface,
-  UploaderFunctionInterface,
-} from './LogTrackerConfigInterface';
+import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import {DeviceInfo} from '../DeviceInfo/DeviceInfo';
@@ -29,7 +26,10 @@ export class LogTracker {
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
-  uploadLogs?: UploaderFunctionInterface;
+  uploadLogs?: (
+    sessionLogFilePaths: string[],
+    onUploadComplete: Function,
+  ) => Promise<boolean>;
   clearStorageOnUpload: boolean;
   trackingState: TrackingState = __DEV__
     ? TrackingState.Enabled
@@ -43,6 +43,8 @@ export class LogTracker {
    */
   constructor(private config: LogTrackerConfigInterface) {
     this.bind();
+
+    this.config.writeFrequencyInSeconds *= 1000;
 
     if (this.config.hasOwnProperty('isTrackingDisabled')) {
       this.trackingState = this.config?.isTrackingDisabled
@@ -624,7 +626,7 @@ let logTrackerConfig: LogTrackerConfigInterface | undefined;
 
 function createLogTrackerInstance() {
   const defaultConfig: LogTrackerConfigInterface = {
-    writeFrequencyInSeconds: 5000,
+    writeFrequencyInSeconds: 5,
     clearStorageOnLogUpload: false,
   };
   if (logTrackerConfig) {
