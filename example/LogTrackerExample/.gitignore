@@ -63,3 +63,6 @@ buck-out/
 
 # env files
 *.env
+
+#Keystore
+android/keystore
