@@ -89,12 +89,13 @@ interface LogTrackerConfigInterface {
 ```
 
 Right now we can configure only below mentioned parameters:
-`writeFrequencyInSeconds` - frequency in which logs should be written in storage, default value is `5`.
-`uploadLogs` - Function to upload the logs to any third party storage serivce like s3. Upload will not work unless developer provides a function for it.
-`clearStorageOnLogUpload` - Boolean to clear the storage when logs are uploaded.
-`isTrackingDisabled` - Flag to disable log tracking. Default values - for production env : true, for dev env : false.
-`logRotateDurationInHours` - Flag to clear the logs after certain intervals.
-`sensitiveDataKeywords` - Array containing sensitive keywords which when encountered in params will be redacted.
+
+- `writeFrequencyInSeconds` - frequency in which logs should be written in storage, default value is `5`.
+- `uploadLogs` - Function to upload the logs to any third party storage serivce like s3. Upload will not work unless developer provides a function for it.
+- `clearStorageOnLogUpload` - Boolean to clear the storage when logs are uploaded.
+- `isTrackingDisabled` - Flag to disable log tracking. Default values - for production env : true, for dev env : false.
+- `logRotateDurationInHours` - Flag to clear the logs after certain intervals.
+- `sensitiveDataKeywords` - Array containing sensitive keywords which when encountered in params will be redacted.
 
 Here is a code snippet to configure `applogger` on port 8000.
 
@@ -102,7 +103,6 @@ Here is a code snippet to configure `applogger` on port 8000.
 import {useAppLogger, HelperMenu} from 'applogger';
 
 function App() {
-    // This function will upload the log to 3rd party server, for eg s3
       const uploadFile = filePath => {
         return new Promise((resolve, reject) => {
           s3.upload(filePath)
@@ -262,3 +262,12 @@ import {ComponentWrapper} from ‘applogger’;
     <Component3 testID="component3_test_id" {...props}/>
 </ComponentWrapper>
 ```
+
+## Contributors
+
+- [Deepesh Kumar Nath](https://github.com/deepesh-kn)
+- [Daksh Bhardwaj](https://github.com/dakshbhardwaj)
+- [Dhruv Tailor](https://github.com/dhruvtailor7)
+- [Mohit Charkha](https://github.com/mohitcharkha)
+- [Harsh Siriah](https://github.com/harshsiri110)
+- [Vinay Harwani](https://github.com/vinayharwani13)
