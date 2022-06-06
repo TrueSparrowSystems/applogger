@@ -7,3 +7,4 @@ export {TouchableHighlight} from './TouchableHighlight';
 export {TouchableOpacity} from './TouchableOpacity';
 export {TouchableWithoutFeedback} from './TouchableWithoutFeedback';
 export {default as HelperMenu} from './HelperMenu';
+export {ComponentWrapper} from './LogTrackingComponentWrapper';
