@@ -44,7 +44,7 @@ const ForecastSearch = ({
         <Pressable onPress={() => onBackPress()}>
           <Text style={styles.buttonLabel}>Back</Text>
         </Pressable>
-        {toggleSearch == 'city' ? (
+        {/* {toggleSearch == 'city' ? (
           <Button
             style={styles.buttons}
             title="Postal Code/Zip"
@@ -64,7 +64,7 @@ const ForecastSearch = ({
             accessibilityLabel="Search Weather By City"
             onPress={setToggleByCity}
           />
-        )}
+        )} */}
         <View
           style={{
             flex: 1,
@@ -92,7 +92,8 @@ const ForecastSearch = ({
         onChangeText={toggleSearch === 'city' ? setCity : setPostalCode}
         value={toggleSearch === 'city' ? city : postalCode}
         placeholder={
-          toggleSearch === 'city' ? 'Search By City' : 'Search By Postal Code'
+          'Enter City Name'
+          // toggleSearch === 'city' ? 'Search By City' : 'Search By Postal Code'
         }
         onSubmitEditing={handleSubmit}
       />

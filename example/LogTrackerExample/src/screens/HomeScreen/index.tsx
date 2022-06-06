@@ -38,7 +38,7 @@ export default function HomeScreen() {
           <Text>Search By City Name</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.infoContainer}>
+      {/* <View style={styles.infoContainer}>
         <Text>TouchableHighlight Wrapper Example</Text>
         <TouchableHighlight
           style={styles.btnContainer}
@@ -47,7 +47,7 @@ export default function HomeScreen() {
           onPress={onSearchByCityPressed}>
           <Text>Search By Zip Code</Text>
         </TouchableHighlight>
-      </View>
+      </View> */}
       <View style={styles.infoContainer}>
         <Text>TextInput Wrapper Example</Text>
         <TextInput
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'gray',
+    backgroundColor: '#FFFFFF',
   },
   btnContainer: {
     borderWidth: 1,
