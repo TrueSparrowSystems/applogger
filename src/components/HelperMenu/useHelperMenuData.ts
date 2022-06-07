@@ -1,4 +1,6 @@
 import {useCallback, useState, useEffect} from 'react';
+import {Alert} from 'react-native';
+import {LogTypes} from '../../constants';
 import WebServerHelper from '../../helper/WebServerHelper';
 import {getLogTracker} from '../../LogTracker';
 import EventTypes from '../../services/local-event/EventTypes';
@@ -8,6 +10,7 @@ import {LocalEvent} from '../../services/local-event/LocalEvent';
  * @interface HelperMenuDataInterface
  */
 interface HelperMenuDataInterface {
+  showActivityIndicator: boolean;
   isVisible: boolean;
   sessionControlText: string;
   trackingControlText: string;
@@ -26,6 +29,8 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [isTrackingActive, setIsTrackingActive] = useState<boolean>(false);
+  const [showActivityIndicator, setShowActivityIndicator] =
+    useState<boolean>(false);
   const logTracker = getLogTracker();
 
   /**
@@ -69,53 +74,107 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   }, []);
 
   /**
+   * @function showAlert - Function to show completion alert on helper menu actions
+   * @param  {string} message - message to be shown in alert
+   */
+  const showAlert = useCallback((message: string) => {
+    Alert.alert(message);
+  }, []);
+
+  /**
    * @function uploadCurrentSessionLogs - Function to upload current session logs.
    * @returns {void}
    */
   const uploadCurrentSessionLogs: () => void = useCallback(() => {
-    logTracker.uploadCurrentSessionLog();
-  }, [logTracker]);
+    setShowActivityIndicator(true);
+    logTracker
+      .uploadCurrentSessionLog()
+      .then(status => {
+        if (status) {
+          showAlert('Current session log uploaded');
+        } else {
+          showAlert('Could not upload current session logs');
+        }
+      })
+      .finally(() => {
+        setShowActivityIndicator(false);
+      });
+  }, [logTracker, showAlert]);
 
   /**
    * @function uploadAllSessionLogs - Function to upload all session logs.
    * @returns {void}
    */
   const uploadAllSessionLogs: () => void = useCallback(() => {
-    logTracker.uploadAllSessionLogs();
-  }, [logTracker]);
+    setShowActivityIndicator(true);
+    logTracker
+      .uploadAllSessionLogs()
+      .then(status => {
+        if (status) {
+          showAlert('All session logs uploaded');
+        } else {
+          showAlert('Could not upload all session logs');
+        }
+      })
+      .finally(() => {
+        setShowActivityIndicator(false);
+      });
+  }, [logTracker, showAlert]);
 
   /**
    * @function deleteCurrentSessionLogs - Function to delete current session logs.
    * @returns {void}
    */
   const deleteCurrentSessionLogs: () => void = useCallback(() => {
+    setShowActivityIndicator(true);
     const currentSessionId = logTracker.getSessionId();
     logTracker
       .clearTrackingLogsOfSession(currentSessionId)
       .then(() => {
         logTracker.createNewSession();
+        showAlert('Current session logs deleted successfully.');
       })
-      .catch(() => {});
-  }, [logTracker]);
+      .catch(() => {
+        showAlert('Could not delete current session logs.');
+      })
+      .finally(() => {
+        setShowActivityIndicator(false);
+      });
+  }, [logTracker, showAlert]);
 
   /**
    * @function deleteAllLogs - Function to delete all session logs.
    * @returns {void}
    */
   const deleteAllLogs: () => void = useCallback(() => {
+    setShowActivityIndicator(true);
     logTracker
       .deleteAllLogs()
       .then(() => {
         logTracker.createNewSession();
+        showAlert('All session logs deleted successfully.');
       })
-      .catch(() => {});
-  }, [logTracker]);
+      .catch(() => {
+        showAlert('Could not delete all session logs.');
+      })
+      .finally(() => {
+        setShowActivityIndicator(false);
+      });
+  }, [logTracker, showAlert]);
 
   /**
    * @function handleTracking - Function to toggle tracking state.
    * @returns {void}
    */
   const handleTracking: () => void = useCallback(() => {
+    logTracker.track({
+      description: 'Tap on Tracking Control Button (#tracking_control)',
+      type: LogTypes.Tap,
+      params: {
+        testId: 'tracking_control',
+        trackingState: isTrackingActive ? 'disabled' : 'enabled',
+      },
+    });
     if (isTrackingActive) {
       logTracker.disableTracking();
       setIsTrackingActive(false);
@@ -130,6 +189,17 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
    * @returns {void}
    */
   const handleSession: () => void = useCallback(() => {
+    logTracker.track({
+      description: 'Tap on Session control Button (#session_control)',
+      type: LogTypes.Tap,
+      params: {
+        testId: 'session_control',
+        sessionState: isSessionActive
+          ? 'stopped session'
+          : 'started new session',
+      },
+    });
+
     if (isSessionActive) {
       logTracker.stopSession();
       setIsSessionActive(false);
@@ -140,6 +210,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
   }, [logTracker, isSessionActive]);
 
   return {
+    showActivityIndicator,
     isVisible,
     sessionControlText: isSessionActive ? 'Stop session' : 'Start new session',
     trackingControlText: isTrackingActive

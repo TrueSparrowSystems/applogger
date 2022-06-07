@@ -126,7 +126,7 @@ export class LogTracker {
 
     this.sessionState = SessionState.Active;
 
-    this.trackingState = TrackingState.Enabled;
+    // this.trackingState = TrackingState.Enabled;
 
     this.storeSessionId();
 

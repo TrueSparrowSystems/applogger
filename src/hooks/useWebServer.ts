@@ -6,6 +6,7 @@ import WebServerHelper from '../helper/WebServerHelper';
 import RNShake from 'react-native-shake';
 import EventTypes from '../services/local-event/EventTypes';
 import {getLogTracker} from '../LogTracker';
+import {useAppStateListener} from './useAppStateListener';
 
 /**
  * @function useWebServer Hook to start start and stop web server and RNShakeSubscription
@@ -13,11 +14,16 @@ import {getLogTracker} from '../LogTracker';
  */
 export function useWebServer(port?: number) {
   const logTracker = getLogTracker();
+  const {isAppInBackground} = useAppStateListener();
+
   useEffect(() => {
     deviceInfoModule.getIpAddress().then(ip => {
       console.log('-------------> ip address: ', ip);
     });
     const RnShakeSubscription = RNShake.addListener(() => {
+      if (isAppInBackground) {
+        return;
+      }
       LocalEvent.emit(EventTypes.UI.HelperMenu.Show);
       logTracker.track({
         description: 'Opening helper menu',
@@ -31,5 +37,5 @@ export function useWebServer(port?: number) {
       WebServerHelper.stopWebServer();
       RnShakeSubscription.remove();
     };
-  }, [logTracker, port]);
+  }, [isAppInBackground, logTracker, port]);
 }

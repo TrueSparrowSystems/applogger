@@ -74,6 +74,10 @@ export function useTracker() {
    * @param  {} (
    */
   const onNavigationStateChange = useCallback(() => {
+    if (!screenNameRef.current) {
+      screenNameRef.current =
+        navigationRef.current?.getRootState()?.routeNames?.[0];
+    }
     const previousScreenName = screenNameRef.current;
     const currentScreenName = navigationRef.current?.getCurrentRoute()?.name;
     console.log({previousScreenName, currentScreenName});

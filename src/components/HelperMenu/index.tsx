@@ -1,4 +1,10 @@
-import {Animated, StyleSheet, Text, View} from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {TouchableOpacity} from '../TouchableOpacity';
 import useHelperMenuData from './useHelperMenuData';
@@ -9,6 +15,7 @@ import useHelperMenuData from './useHelperMenuData';
  */
 function HelperMenu() {
   const {
+    showActivityIndicator,
     isVisible,
     sessionControlText,
     trackingControlText,
@@ -83,6 +90,11 @@ function HelperMenu() {
           },
         ]}>
         <View style={styles.optionButtonContainer}>
+          {showActivityIndicator ? (
+            <View style={styles.activityIndicator}>
+              <ActivityIndicator size="large" color="black" />
+            </View>
+          ) : null}
           <TouchableOpacity
             testID="share_server_url"
             style={optionWithBottomBorderStyle}
@@ -123,14 +135,12 @@ function HelperMenu() {
             <Text style={optionsTextStyle}>Delete all logs</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            testID="tracking_control"
             style={optionWithBottomBorderStyle}
             onPress={handleTracking}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>{trackingControlText}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            testID="session_control"
             style={styles.optionButton}
             onPress={handleSession}
             activeOpacity={0.7}>
@@ -192,5 +202,15 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  activityIndicator: {
+    borderWidth: 1,
+    justifyContent: 'center',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
