@@ -35,12 +35,12 @@ export default function HomeScreen() {
         </Text>
       </View>
       <View style={styles.infoContainer}>
-        <Text>TouchableOpacity Wrapper Example</Text>
+        <Text style={styles.smallText}>TouchableOpacity Wrapper Example</Text>
         <TouchableOpacity
           testID="homescreen_search_by_city_name"
           onPress={onSearchByCityPressed}
           style={styles.btnContainer}>
-          <Text>Search By City Name</Text>
+          <Text style={styles.smallText}>Search By City Name</Text>
         </TouchableOpacity>
       </View>
       {/* <View style={styles.infoContainer}>
@@ -54,7 +54,7 @@ export default function HomeScreen() {
         </TouchableHighlight>
       </View> */}
       <View style={styles.infoContainer}>
-        <Text>TextInput Wrapper Example</Text>
+        <Text style={styles.smallText}>TextInput Wrapper Example</Text>
         <TextInput
           testID="homescreen_text_input"
           value={text}
@@ -69,7 +69,7 @@ export default function HomeScreen() {
             value={isSecureEntry}
             onValueChange={value => setIsSecureEntry(value)}
           />
-          <Text style={{marginLeft: 16}}>
+          <Text style={styles.flipText}>
             Flip to redact the text input in log.
           </Text>
         </View>
@@ -120,6 +120,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginTop: 8,
+    color: 'black',
+  },
+  smallText: {
+    fontSize: 14,
+    marginTop: 8,
+    color: 'black',
+  },
+  flipText: {
+    marginLeft: 16,
+    fontSize: 14,
+    marginTop: 8,
+    color: 'black',
   },
   switchContainer: {
     width: '100%',
