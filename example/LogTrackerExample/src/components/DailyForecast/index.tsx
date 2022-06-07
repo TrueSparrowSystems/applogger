@@ -18,7 +18,7 @@ const DailyForecast = ({day, temperatureText}) => {
           }}
           resizeMode={'contain'} // cover or contain its upto you view look
         />
-        <Text>{day.weather[0].description}</Text>
+        <Text style={styles.descriptionText}>{day.weather[0].description}</Text>
       </View>
       <View style={styles.degreeView}>
         <Text style={styles.degree}>
@@ -51,9 +51,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   weekDay: {
+    color: 'black',
     fontSize: 24,
     textAlign: 'center',
     margin: 3,
+  },
+  descriptionText: {
+    color: 'black',
   },
   iconTempView: {
     textAlign: 'center',
@@ -70,9 +74,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   degree: {
+    color: 'black',
     fontSize: 24,
   },
   feelsLike: {
+    color: 'black',
     fontSize: 14,
   },
 });

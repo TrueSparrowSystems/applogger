@@ -60,6 +60,7 @@ export default function HomeScreen() {
           value={text}
           secureTextEntry={isSecureEntry}
           placeholder="Entered text will be logged."
+          placeholderTextColor="gray"
           style={styles.btnContainer}
           onChangeText={newText => setText(newText)}
         />
@@ -79,7 +80,9 @@ export default function HomeScreen() {
         testID="homescreen_crash_button"
         underlayColor={'darkgrey'}
         onPress={onCrashButtonPress}>
-        <Text>Click on the button to crash the application</Text>
+        <Text style={styles.smallText}>
+          Click on the button to crash the application
+        </Text>
       </TouchableHighlight>
     </View>
   );

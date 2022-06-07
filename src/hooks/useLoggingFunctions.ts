@@ -15,22 +15,27 @@ const DEBOUNCE_TIMEOUT = 500;
  */
 export function useLoggingFunctions(props: any, type: string) {
   const logTracker = getLogTracker();
-  const callbackTimeoutMap: MutableRefObject<Record<string, ReturnType<typeof setTimeout>>> = useRef({});
+  const callbackTimeoutMap: MutableRefObject<
+    Record<string, ReturnType<typeof setTimeout>>
+  > = useRef({});
 
- /**
+  /**
    * @function getComponentName Function which generates the name of the component being tracked.
    * @param {string} testID Test id of the component being tracked.
    * @returns {string} Name of the component being tracked.
    */
-  const getComponentName = useCallback((testID: string) => {
-    let componentName = capitalize(testID.replaceAll?.('_', ' '));
-    console.log('componentName: ', componentName);
+  const getComponentName = useCallback(
+    (testID: string) => {
+      let componentName = capitalize(testID.replaceAll?.('_', ' '));
+      console.log('componentName: ', componentName);
 
-    if (!componentName.toLowerCase().trim().endsWith(type)) {
-      componentName = `${componentName} ${type}`;
-    }
-    return componentName;
-  }, []);
+      if (!componentName.toLowerCase().trim().endsWith(type)) {
+        componentName = `${componentName} ${type}`;
+      }
+      return componentName;
+    },
+    [type],
+  );
 
   /**
    * @function debouncedLog Function which limits the call the `logTracker.track` function once per `CALLBACK_TIMEOUT`.
@@ -39,15 +44,15 @@ export function useLoggingFunctions(props: any, type: string) {
    */
   const debouncedLog = useCallback(
     (functionName: string, logData: TrackInterface) => {
-      const timeoutId = callbackTimeoutMap.current[functionName]
-      if(callbackTimeoutMap.current[functionName]){
+      const timeoutId = callbackTimeoutMap.current[functionName];
+      if (callbackTimeoutMap.current[functionName]) {
         clearTimeout(timeoutId);
       }
       callbackTimeoutMap.current[functionName] = setTimeout(() => {
         logTracker.track(logData);
       }, DEBOUNCE_TIMEOUT);
     },
-    [],
+    [logTracker],
   );
 
   /**
@@ -70,7 +75,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onPress(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -94,7 +99,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onLongPress(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -118,7 +123,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onPressIn(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -143,7 +148,7 @@ export function useLoggingFunctions(props: any, type: string) {
 
       props.onPressOut(event);
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -176,7 +181,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onChange(event);
       }
     },
-    [logTracker, props, type],
+    [debouncedLog, getComponentName, props],
   );
 
   /**
@@ -187,7 +192,6 @@ export function useLoggingFunctions(props: any, type: string) {
     (newText: any) => {
       const functionName = 'onChangeText';
       if (props?.onChangeText) {
-        
         if (props.testID) {
           const componentName = getComponentName(props.testID);
           const logData: TrackInterface = {
@@ -203,7 +207,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onChangeText(newText);
       }
     },
-    [logTracker, props, type],
+    [debouncedLog, getComponentName, props],
   );
 
   /**
@@ -212,8 +216,6 @@ export function useLoggingFunctions(props: any, type: string) {
    */
   const onContentSizeChange = useCallback(
     (event: any) => {
-      const functionName = 'onContentSizeChange';
-
       if (props?.onContentSizeChange) {
         if (props.testID) {
           const componentName = getComponentName(props.testID);
@@ -237,7 +239,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onContentSizeChange(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -262,7 +264,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onEndEditing(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -287,7 +289,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onFocus(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -317,7 +319,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onKeyPress(event);
       }
     },
-    [logTracker, props, type],
+    [debouncedLog, getComponentName, props],
   );
 
   /**
@@ -343,7 +345,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onLayout(event);
       }
     },
-    [logTracker, props, type],
+    [debouncedLog, getComponentName, props],
   );
 
   /**
@@ -374,7 +376,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onScroll(event);
       }
     },
-    [logTracker, props, type],
+    [debouncedLog, getComponentName, props],
   );
 
   /**
@@ -407,7 +409,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onSelectionChange(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -436,7 +438,7 @@ export function useLoggingFunctions(props: any, type: string) {
         props.onSubmitEditing(event);
       }
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -458,7 +460,7 @@ export function useLoggingFunctions(props: any, type: string) {
       }
       props.onValueChange?.(value);
     },
-    [logTracker, props, type],
+    [getComponentName, logTracker, props],
   );
 
   /**
@@ -478,7 +480,7 @@ export function useLoggingFunctions(props: any, type: string) {
       });
     }
     props.onRefresh?.();
-  }, [logTracker, props, type]);
+  }, [getComponentName, logTracker, props]);
 
   const loggingFunctions: Record<string, (event: any) => void> = useMemo(
     () => ({
