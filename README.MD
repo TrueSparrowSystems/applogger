@@ -1,6 +1,6 @@
 # applogger
 
-## Overview:
+## Overview
 
 `applogger` is an application framework that helps minimise QA issue reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's ip address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
 
@@ -27,6 +27,12 @@ The developer can access the app sessions including the steps and associated log
 - Upload Logs - the user can use the helper menu to upload logs for the current or all sessions. In order to use this feature, the developer must provide an upload function.
 - Delete Logs - from the helper menu user can delete logs of the current or all sessions.
 - Maintain session - From the helper menu, the user can also stop the session, start a new one, and disable or enable tracking in the current one.
+
+## Sample App
+
+Sample implementation for reference.
+
+- [Example App](https://github.com/PLG-Works/app-logger/tree/master/example/LogTrackerExample)
 
 # Installation
 
@@ -241,7 +247,7 @@ function CustomTrackingDemo() {
 }
 ```
 
-## How to use Generic component:
+## How to use Generic component
 
 The generic component from `appLogger` can be used to integrate app logger with any other component other than those specified above. The only difference would be that the developer would need to wrap the component or list of components in a `ComponentWrapper`. Apart from that, the wrapped components' logic stays unchanged; the developer needs to add the `testID` to the component to which he wishes to add log tracking. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
 
