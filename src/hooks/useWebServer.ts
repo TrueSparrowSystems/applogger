@@ -7,6 +7,8 @@ import RNShake from 'react-native-shake';
 import EventTypes from '../services/local-event/EventTypes';
 import {getLogTracker} from '../LogTracker';
 import {useAppStateListener} from './useAppStateListener';
+import Cache from '../services/Cache';
+import {CacheKey} from '../services/Cache/CacheKey';
 
 /**
  * @function useWebServer Hook to start start and stop web server and RNShakeSubscription
@@ -24,12 +26,15 @@ export function useWebServer(port?: number) {
       if (isAppInBackground) {
         return;
       }
-      LocalEvent.emit(EventTypes.UI.HelperMenu.Show);
-      logTracker.track({
-        description: 'Opening helper menu',
-        type: LogTypes.Shake,
-        params: {},
-      });
+
+      if (!Cache.getValue(CacheKey.isHelperMenuOpen)) {
+        LocalEvent.emit(EventTypes.UI.HelperMenu.Show);
+        logTracker.track({
+          description: 'Opening helper menu',
+          type: LogTypes.Shake,
+          params: {},
+        });
+      }
     });
 
     WebServerHelper.startWebServer(port);
