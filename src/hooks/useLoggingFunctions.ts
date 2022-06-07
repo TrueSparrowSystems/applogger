@@ -3,8 +3,9 @@ import {MutableRefObject, useCallback, useMemo, useRef} from 'react';
 import Constants from '../constants/Constants';
 import {LogTypes} from '../constants/LogTypes';
 import {getLogTracker} from '../LogTracker';
+import {TrackInterface} from '../LogTracker/TrackInterface';
 
-const CALLBACK_TIMEOUT = 500;
+const DEBOUNCE_TIMEOUT = 500;
 
 /**
  * @function useLoggingFunctions Hook to get all common logging functions
@@ -14,33 +15,41 @@ const CALLBACK_TIMEOUT = 500;
  */
 export function useLoggingFunctions(props: any, type: string) {
   const logTracker = getLogTracker();
-  const callbackTimeoutMap: MutableRefObject<Record<string, boolean>> = useRef({
-    onChange: false,
-  });
+  const callbackTimeoutMap: MutableRefObject<Record<string, ReturnType<typeof setTimeout>>> = useRef({});
 
-  /**
-   * @function isFunctionCallBlocked function to check whether function call is blocked
-   * @param  {string} functionName
-   * @returns boolean
+ /**
+   * @function
+   * Function which generates the name of the component being tracked.
+   * @name getComponentName 
+   * @param {string} testID Test id of the component being tracked.
+   * @returns {string} Name of the component being tracked.
    */
-  const isFunctionCallBlocked = useCallback((functionName: string) => {
-    return !!callbackTimeoutMap.current[functionName];
+  const getComponentName = useCallback((testID: string) => {
+    let componentName = capitalize(testID.replaceAll?.('_', ' '));
+    console.log('componentName: ', componentName);
+
+    if (!componentName.toLowerCase().trim().endsWith(type)) {
+      componentName = `${componentName} ${type}`;
+    }
+    return componentName;
   }, []);
 
   /**
-   * @function blockFunctionCall function to block function call
-   * @param  {string} functionName
-   * @param  {number} timeout
+   * @function
+   * Function which limits the call the `logTracker.track` function once per `CALLBACK_TIMEOUT`.
+   * @name debouncedLog 
+   * @param {string} functionName Name of the function being called.
+   * @param {TrackInterface} logData Data to be logged.
    */
-  const blockFunctionCall = useCallback(
-    (functionName: string, timeout = CALLBACK_TIMEOUT) => {
-      if (callbackTimeoutMap.current[functionName]) {
-        return;
+  const debouncedLog = useCallback(
+    (functionName: string, logData: TrackInterface) => {
+      const timeoutId = callbackTimeoutMap.current[functionName]
+      if(callbackTimeoutMap.current[functionName]){
+        clearTimeout(timeoutId);
       }
-      callbackTimeoutMap.current[functionName] = true;
-      setTimeout(() => {
-        callbackTimeoutMap.current[functionName] = false;
-      }, timeout);
+      callbackTimeoutMap.current[functionName] = setTimeout(() => {
+        logTracker.track(logData);
+      }, DEBOUNCE_TIMEOUT);
     },
     [],
   );
@@ -53,13 +62,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPress) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
-
+          const componentName = getComponentName(props.testID);
           logTracker.track({
             description: `Tap on ${componentName} (#${props.testID})`,
             type: LogTypes.Tap,
@@ -82,12 +85,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onLongPress) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          let componentName = getComponentName(props.testID);
 
           logTracker.track({
             description: `LongPress on ${componentName} (#${props.testID})`,
@@ -111,12 +109,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPressIn) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          let componentName = getComponentName(props.testID);
 
           logTracker.track({
             description: `Press In on ${componentName} (#${props.testID})`,
@@ -140,12 +133,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props.onPressOut) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          let componentName = getComponentName(props.testID);
 
           logTracker.track({
             description: `Press Out on ${componentName} (#${props.testID})`,
@@ -170,37 +158,29 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       const functionName = 'onChange';
       if (props?.onChange) {
-        if (!isFunctionCallBlocked(functionName)) {
-          blockFunctionCall(functionName);
-          if (props.testID) {
-            let componentName = capitalize(
-              props.testID?.replaceAll?.('_', ' '),
-            );
-            console.log('componentName: ', componentName);
+        if (props.testID) {
+          let componentName = getComponentName(props.testID);
 
-            if (!componentName.toLowerCase().trim().endsWith(type)) {
-              componentName = `${componentName} ${type}`;
-            }
+          const {
+            nativeEvent: {eventCount, text},
+          } = event;
 
-            const {
-              nativeEvent: {eventCount, text},
-            } = event;
+          const logData: TrackInterface = {
+            description: `on Change called for ${componentName} (#${props.testID})`,
+            type: LogTypes.Event,
+            params: {
+              testId: props.testID,
+              eventCount,
+              text,
+            },
+          };
 
-            logTracker.track({
-              description: '',
-              type: LogTypes.Text,
-              params: {
-                testId: props.testID,
-                eventCount,
-                text,
-              },
-            });
-          }
+          debouncedLog(functionName, logData);
         }
         props.onChange(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -210,35 +190,24 @@ export function useLoggingFunctions(props: any, type: string) {
   const onChangeText = useCallback(
     (newText: any) => {
       const functionName = 'onChangeText';
-
       if (props?.onChangeText) {
-        if (!isFunctionCallBlocked(functionName)) {
-          blockFunctionCall(functionName);
-          if (props.testID) {
-            let componentName = capitalize(
-              props.testID?.replaceAll?.('_', ' '),
-            );
-            console.log('componentName: ', componentName);
-
-            if (!componentName.toLowerCase().trim().endsWith(type)) {
-              componentName = `${componentName} ${type}`;
-            }
-            logTracker.track({
-              description: `Text change on ${componentName} (#${props.testID})`,
-              type: LogTypes.Text,
-              params: {
-                testId: props.testID,
-                text: props?.secureTextEntry
-                  ? Constants.REDACTED_TEXT
-                  : newText,
-              },
-            });
-          }
+        
+        if (props.testID) {
+          const componentName = getComponentName(props.testID);
+          const logData: TrackInterface = {
+            description: `Text change on ${componentName} (#${props.testID})`,
+            type: LogTypes.Text,
+            params: {
+              testId: props.testID,
+              text: props?.secureTextEntry ? Constants.REDACTED_TEXT : newText,
+            },
+          };
+          debouncedLog(functionName, logData);
         }
         props.onChangeText(newText);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -250,39 +219,29 @@ export function useLoggingFunctions(props: any, type: string) {
       const functionName = 'onContentSizeChange';
 
       if (props?.onContentSizeChange) {
-        if (!isFunctionCallBlocked(functionName)) {
-          blockFunctionCall(functionName);
-          if (props.testID) {
-            let componentName = capitalize(
-              props.testID?.replaceAll?.('_', ' '),
-            );
-            console.log('componentName: ', componentName);
+        if (props.testID) {
+          const componentName = getComponentName(props.testID);
 
-            if (!componentName.toLowerCase().trim().endsWith(type)) {
-              componentName = `${componentName} ${type}`;
-            }
+          const {
+            nativeEvent: {
+              contentSize: {width, height},
+            },
+          } = event;
 
-            const {
-              nativeEvent: {
-                contentSize: {width, height},
-              },
-            } = event;
-
-            logTracker.track({
-              description: '',
-              type: LogTypes.Layout,
-              params: {
-                testId: props.testID,
-                width,
-                height,
-              },
-            });
-          }
+          logTracker.track({
+            description: `on Content Size Change called for ${componentName} (#${props.testID})`,
+            type: LogTypes.Layout,
+            params: {
+              testId: props.testID,
+              width,
+              height,
+            },
+          });
         }
         props.onContentSizeChange(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -293,12 +252,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onEndEditing) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          const componentName = getComponentName(props.testID);
 
           logTracker.track({
             description: `Editing ended on ${componentName} (#${props.testID})`,
@@ -323,12 +277,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onFocus) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          const componentName = getComponentName(props.testID);
 
           logTracker.track({
             description: `Focus on ${componentName} (#${props.testID})`,
@@ -353,36 +302,26 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       const functionName = 'onKeyPress';
       if (props?.onKeyPress) {
-        if (!isFunctionCallBlocked(functionName)) {
-          blockFunctionCall(functionName);
-          if (props.testID) {
-            let componentName = capitalize(
-              props.testID?.replaceAll?.('_', ' '),
-            );
-            console.log('componentName: ', componentName);
+        if (props.testID) {
+          const componentName = getComponentName(props.testID);
 
-            if (!componentName.toLowerCase().trim().endsWith(type)) {
-              componentName = `${componentName} ${type}`;
-            }
+          const {
+            nativeEvent: {key},
+          } = event;
 
-            const {
-              nativeEvent: {key},
-            } = event;
-
-            logTracker.track({
-              description: '',
-              type: LogTypes.Tap,
-              params: {
-                testId: props.testID,
-                keyPressed: key,
-              },
-            });
-          }
+          debouncedLog(functionName, {
+            description: `on Key Press called for ${componentName} (#${props.testID})`,
+            type: LogTypes.Tap,
+            params: {
+              testId: props.testID,
+              keyPressed: key,
+            },
+          });
         }
         props.onKeyPress(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -394,31 +333,21 @@ export function useLoggingFunctions(props: any, type: string) {
       const functionName = 'onLayout';
 
       if (props?.onLayout) {
-        if (!isFunctionCallBlocked(functionName)) {
-          blockFunctionCall(functionName);
-          if (props.testID) {
-            let componentName = capitalize(
-              props.testID?.replaceAll?.('_', ' '),
-            );
-            console.log('componentName: ', componentName);
+        if (props.testID) {
+          const componentName = getComponentName(props.testID);
 
-            if (!componentName.toLowerCase().trim().endsWith(type)) {
-              componentName = `${componentName} ${type}`;
-            }
-
-            logTracker.track({
-              description: `Layout on ${componentName} (#${props.testID})`,
-              type: LogTypes.Layout,
-              params: {
-                testId: props.testID,
-              },
-            });
-          }
+          debouncedLog(functionName, {
+            description: `Layout on ${componentName} (#${props.testID})`,
+            type: LogTypes.Layout,
+            params: {
+              testId: props.testID,
+            },
+          });
         }
         props.onLayout(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -430,36 +359,26 @@ export function useLoggingFunctions(props: any, type: string) {
       const functionName = 'onScroll';
 
       if (props?.onScroll) {
-        if (!isFunctionCallBlocked(functionName)) {
-          blockFunctionCall(functionName);
-          if (props.testID) {
-            let componentName = capitalize(
-              props.testID?.replaceAll?.('_', ' '),
-            );
-            console.log('componentName: ', componentName);
+        if (props.testID) {
+          const componentName = getComponentName(props.testID);
 
-            if (!componentName.toLowerCase().trim().endsWith(type)) {
-              componentName = `${componentName} ${type}`;
-            }
+          const {
+            nativeEvent: {contentOffset},
+          } = event;
 
-            const {
-              nativeEvent: {contentOffset},
-            } = event;
-
-            logTracker.track({
-              description: '',
-              type: LogTypes.Scroll,
-              params: {
-                testId: props.testID,
-                contentOffset,
-              },
-            });
-          }
+          debouncedLog(functionName, {
+            description: `on Scroll called for ${componentName} (#${props.testID})`,
+            type: LogTypes.Scroll,
+            params: {
+              testId: props.testID,
+              contentOffset,
+            },
+          });
         }
         props.onScroll(event);
       }
     },
-    [blockFunctionCall, isFunctionCallBlocked, logTracker, props, type],
+    [logTracker, props, type],
   );
 
   /**
@@ -470,12 +389,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onSelectionChange) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          const componentName = getComponentName(props.testID);
 
           const {
             nativeEvent: {
@@ -508,12 +422,7 @@ export function useLoggingFunctions(props: any, type: string) {
     (event: any) => {
       if (props?.onSubmitEditing) {
         if (props.testID) {
-          let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-          console.log('componentName: ', componentName);
-
-          if (!componentName.toLowerCase().trim().endsWith(type)) {
-            componentName = `${componentName} ${type}`;
-          }
+          const componentName = getComponentName(props.testID);
           const {
             nativeEvent: {text},
           } = event;
@@ -541,12 +450,7 @@ export function useLoggingFunctions(props: any, type: string) {
   const onValueChange = useCallback(
     (value: any) => {
       if (props.testID && props.onValueChange) {
-        let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-        console.log('componentName: ', componentName);
-
-        if (componentName.toLowerCase().trim().endsWith(type)) {
-          componentName = `${componentName} ${type}`;
-        }
+        const componentName = getComponentName(props.testID);
 
         logTracker.track({
           description: `Value change to ${value} for ${componentName} - (#${props.testID})`,
@@ -567,12 +471,7 @@ export function useLoggingFunctions(props: any, type: string) {
   const onRefresh = useCallback(() => {
     const testId = props.testID;
     if (testId && props.onRefresh) {
-      let componentName = capitalize(props.testID?.replaceAll?.('_', ' '));
-      console.log('componentName: ', componentName);
-
-      if (!componentName.toLowerCase().trim().endsWith(type)) {
-        componentName = `${componentName} ${type}`;
-      }
+      const componentName = getComponentName(testId);
 
       logTracker.track({
         description: `on Refresh called for ${componentName} (#${testId})`,

@@ -9,15 +9,15 @@
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "patch-package",
-    "build-android-debug":  "npx jetify && cd android && source ./keystore/keys/app-logger-debug.sh && ./gradlew clean && ./gradlew app:assembleDebug",
-    "build-android-release":  "npx jetify && cd android && source ./keystore/keys/app-logger-release.sh && ./gradlew clean && ./gradlew app:assembleRelease",
+    "build-android-debug": "npx jetify && cd android && source ./keystore/keys/app-logger-debug.sh && ./gradlew clean && ./gradlew app:assembleDebug",
+    "build-android-release": "npx jetify && cd android && source ./keystore/keys/app-logger-release.sh && ./gradlew clean && ./gradlew app:assembleRelease",
     "generate-keystore": "sh ./android/keystore/sample/generate_keystore.sh "
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.4",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
-    "applogger": "../../tar/applogger-0.0.1.tgz",
+    "applogger": "file:../../tar/applogger-0.0.1.tgz",
     "eventemitter3": "4.0.7",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
