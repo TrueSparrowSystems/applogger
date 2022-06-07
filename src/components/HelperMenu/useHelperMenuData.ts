@@ -1,4 +1,5 @@
 import {useCallback, useState, useEffect} from 'react';
+import {LogTypes} from '../../constants';
 import WebServerHelper from '../../helper/WebServerHelper';
 import {getLogTracker} from '../../LogTracker';
 import EventTypes from '../../services/local-event/EventTypes';
@@ -116,6 +117,14 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
    * @returns {void}
    */
   const handleTracking: () => void = useCallback(() => {
+    logTracker.track({
+      description: 'Tap on Tracking Control Button (#tracking_control)',
+      type: LogTypes.Tap,
+      params: {
+        testId: 'tracking_control',
+        trackingState: isTrackingActive ? 'disabled' : 'enabled',
+      },
+    });
     if (isTrackingActive) {
       logTracker.disableTracking();
       setIsTrackingActive(false);
@@ -130,6 +139,17 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
    * @returns {void}
    */
   const handleSession: () => void = useCallback(() => {
+    logTracker.track({
+      description: 'Tap on Session control Button (#session_control)',
+      type: LogTypes.Tap,
+      params: {
+        testId: 'session_control',
+        sessionState: isSessionActive
+          ? 'stopped session'
+          : 'started new session',
+      },
+    });
+
     if (isSessionActive) {
       logTracker.stopSession();
       setIsSessionActive(false);
