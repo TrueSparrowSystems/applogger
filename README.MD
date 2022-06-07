@@ -2,8 +2,6 @@
 
 ## Overview
 
----
-
 `applogger` is an application framework that helps minimise QA issue reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's ip address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
 
 ### Some of the functionalities which the framework provides are:
@@ -13,8 +11,6 @@
 - Upload, download or delete session logs.
 
 ## Why App Logger?
-
----
 
 Given the current workflows, anytime QA reports a problem, they must repeat the identical processes and record them in order to log the issue. They must also submit some data to developers in relation to the reported issue. In the case of random testing, finding out the steps becomes a time-consuming effort, and reproducing the issue can take a long time.
 
@@ -34,15 +30,11 @@ The developer can access the app sessions including the steps and associated log
 
 ## Sample App
 
----
-
 Sample implementation for reference.
 
 - [Example App](https://github.com/PLG-Works/app-logger/tree/master/example/LogTrackerExample)
 
 # Installation
-
----
 
 ### Add Dependencies
 
@@ -73,8 +65,6 @@ pod install
 ```
 
 # Usage
-
----
 
 To get started, you'll need to call the `useAppLogger` hook in your project's root file. This hook allows you to start and stop the web server, which is necessary for viewing the logs.
 
@@ -173,8 +163,6 @@ export default App;
 
 ## Components provided by `applogger`
 
----
-
 Following are some of the react native components that applogger provides with tracking.
 
 - Button
@@ -198,8 +186,6 @@ import {TouchableWithoutFeedback} from 'applogger';
 
 ## Supported functions list
 
----
-
 Following are few functions that have log tracking enabled in them.
 
 - onChange
@@ -222,8 +208,6 @@ Following are few functions that have log tracking enabled in them.
 How to use these functions ? - No change, you can write it as you would normally do and the `applogger` will take care of the rest, provided your component is imported from `applogger`.
 
 ## Custom Tracking
-
----
 
 You can use tracking for any other function that you choose, in addition to the ones listed above. `applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
 
@@ -265,8 +249,6 @@ function CustomTrackingDemo() {
 
 ## How to use Generic component
 
----
-
 The generic component from `appLogger` can be used to integrate app logger with any other component other than those specified above. The only difference would be that the developer would need to wrap the component or list of components in a `ComponentWrapper`. Apart from that, the wrapped components' logic stays unchanged; the developer needs to add the `testID` to the component to which he wishes to add log tracking. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
 
 Some snippets showing the usage of component wrapper:
@@ -288,8 +270,6 @@ import {ComponentWrapper} from ‘applogger’;
 ```
 
 ## Contributors
-
----
 
 - [Deepesh Kumar Nath](https://github.com/deepesh-kn)
 - [Daksh Bhardwaj](https://github.com/dakshbhardwaj)
