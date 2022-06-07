@@ -16,6 +16,11 @@ export default function HomeScreen() {
     navigation.navigate('SearchScreen');
   }, [navigation]);
 
+  const onCrashButtonPress = useCallback(() => {
+    const test: any = {};
+    console.log(test.should.crash);
+  }, []);
+
   const [isSecureEntry, setIsSecureEntry] = useState(false);
 
   return (
@@ -69,6 +74,13 @@ export default function HomeScreen() {
           </Text>
         </View>
       </View>
+      <TouchableHighlight
+        style={styles.btnContainer}
+        testID="homescreen_crash_button"
+        underlayColor={'darkgrey'}
+        onPress={onCrashButtonPress}>
+        <Text>Click on the button to crash the application</Text>
+      </TouchableHighlight>
     </View>
   );
 }
