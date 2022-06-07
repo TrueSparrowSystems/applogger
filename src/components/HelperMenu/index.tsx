@@ -123,14 +123,12 @@ function HelperMenu() {
             <Text style={optionsTextStyle}>Delete all logs</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            testID="tracking_control"
             style={optionWithBottomBorderStyle}
             onPress={handleTracking}
             activeOpacity={0.7}>
             <Text style={optionsTextStyle}>{trackingControlText}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            testID="session_control"
             style={styles.optionButton}
             onPress={handleSession}
             activeOpacity={0.7}>
