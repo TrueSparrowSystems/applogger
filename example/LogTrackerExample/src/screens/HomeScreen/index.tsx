@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'center',
     width: '100%',
+    color: 'black',
   },
   btn: {
     borderWidth: 1,
