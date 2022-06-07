@@ -262,6 +262,25 @@ import {ComponentWrapper} from ‘applogger’;
     <Component3 testID="component3_test_id" {...props}/>
 </ComponentWrapper>
 ```
+## DEMO
+
+<img width="1102" alt="Screenshot 2022-06-07 at 1 15 53 PM" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
+<img width="1516" alt="Screenshot 2022-06-07 at 1 15 17 PM" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
+
+<table>
+<tr>
+  <td>
+<img width="300" src="https://user-images.githubusercontent.com/87412080/172326209-0a63342b-83ef-4e60-8483-435661ba2615.png">
+      </td>
+    <td>
+<img width="300" src="https://user-images.githubusercontent.com/87412080/172326232-66f36f17-770c-4a9b-849d-910bb87b24ac.png">
+        </td>
+    <td>
+<img width="300" src="https://user-images.githubusercontent.com/87412080/172326351-c0a94882-c626-434e-a604-bace4e8dd70a.png">
+        </td>
+  </tr>
+  </table>
+
 
 ## Contributors
 
