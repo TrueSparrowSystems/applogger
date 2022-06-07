@@ -18,9 +18,7 @@ export function useLoggingFunctions(props: any, type: string) {
   const callbackTimeoutMap: MutableRefObject<Record<string, ReturnType<typeof setTimeout>>> = useRef({});
 
  /**
-   * @function
-   * Function which generates the name of the component being tracked.
-   * @name getComponentName 
+   * @function getComponentName Function which generates the name of the component being tracked.
    * @param {string} testID Test id of the component being tracked.
    * @returns {string} Name of the component being tracked.
    */
@@ -35,9 +33,7 @@ export function useLoggingFunctions(props: any, type: string) {
   }, []);
 
   /**
-   * @function
-   * Function which limits the call the `logTracker.track` function once per `CALLBACK_TIMEOUT`.
-   * @name debouncedLog 
+   * @function debouncedLog Function which limits the call the `logTracker.track` function once per `CALLBACK_TIMEOUT`.
    * @param {string} functionName Name of the function being called.
    * @param {TrackInterface} logData Data to be logged.
    */

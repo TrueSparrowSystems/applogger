@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
   },
   smallText: {
     fontSize: 14,
-    marginTop: 8,
     color: 'black',
   },
   flipText: {
