@@ -95,6 +95,7 @@ const ForecastSearch = ({
           'Enter City Name'
           // toggleSearch === 'city' ? 'Search By City' : 'Search By Postal Code'
         }
+        placeholderTextColor="gray"
         onSubmitEditing={handleSubmit}
       />
     </View>

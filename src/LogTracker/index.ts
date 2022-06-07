@@ -126,7 +126,7 @@ export class LogTracker {
 
     this.sessionState = SessionState.Active;
 
-    this.trackingState = TrackingState.Enabled;
+    // this.trackingState = TrackingState.Enabled;
 
     this.storeSessionId();
 
@@ -423,9 +423,6 @@ export class LogTracker {
    * @function storeSessionId function to store session id with current timeStamp in async store
    */
   private storeSessionId() {
-    if (this.isTrackingDisabled() || !this.isSessionActive()) {
-      return;
-    }
     console.log('Tracker storeSessionId called: ', this.sessionId);
     AsyncStorage.getItem(LOG_SESSION_KEY)
       .then(jsonData => {
