@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
+    color: 'black',
   },
   details: {
     color: 'black',
