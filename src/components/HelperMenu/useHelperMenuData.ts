@@ -3,6 +3,8 @@ import {Alert} from 'react-native';
 import {LogTypes} from '../../constants';
 import WebServerHelper from '../../helper/WebServerHelper';
 import {getLogTracker} from '../../LogTracker';
+import Cache from '../../services/Cache';
+import {CacheKey} from '../../services/Cache/CacheKey';
 import EventTypes from '../../services/local-event/EventTypes';
 import {LocalEvent} from '../../services/local-event/LocalEvent';
 
@@ -38,6 +40,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
    * @returns {void}
    */
   const showMenu: () => void = useCallback(() => {
+    Cache.setValue(CacheKey.isHelperMenuOpen, true);
     setIsVisible(true);
   }, []);
 
@@ -46,6 +49,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
    * @returns {void}
    */
   const hideMenu: () => void = useCallback(() => {
+    Cache.setValue(CacheKey.isHelperMenuOpen, false);
     setIsVisible(false);
   }, []);
 
