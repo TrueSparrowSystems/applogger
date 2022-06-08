@@ -465,7 +465,7 @@ export class LogTracker {
       if (isEmpty(data)) {
         console.log('Data is empty will do nothing');
         if (this.isTrackingDisabled() || !this.isSessionActive()) {
-          return;
+          return resolve();
         }
         setTimeout(() => {
           this.store();
@@ -489,7 +489,7 @@ export class LogTracker {
             resolve();
             console.log('scheduling for ', this.config.writeFrequencyInSeconds);
             if (this.isTrackingDisabled() || !this.isSessionActive()) {
-              return;
+              return resolve();
             }
             setTimeout(() => {
               this.store();
