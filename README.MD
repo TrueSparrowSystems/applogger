@@ -70,7 +70,7 @@ To get started, you'll need to call the `useAppLogger` hook in your project's ro
 
 `useAppLogger` hook requires a prop of type `appLoggerParams` as mentioned below.
 
-```
+```typescript
 type appLoggerParams = {
   port?: number;
   loggerConfig?: LogTrackerConfigInterface;
@@ -80,7 +80,7 @@ type appLoggerParams = {
 `port` is an optional prop on which the server should start, default port is `5561`.
 `loggerConfig` is an object of type `LogTrackerConfigInterface`. It's used to configure `applogger`. If not provided, it will use default configuration.
 
-```sh
+```typescript
 interface LogTrackerConfigInterface {
   writeFrequencyInSeconds: number;
   uploadLogs?: (
@@ -105,7 +105,7 @@ Right now we can configure only below mentioned parameters:
 
 Here is a code snippet to configure `applogger` on port 8000.
 
-```sh
+```javascript
 import {useAppLogger, HelperMenu} from 'applogger';
 
 function App() {
@@ -178,7 +178,7 @@ How to use these components ? - Just import these components from `applogger` in
 
 Eg - To import TouchableWithoutFeedback :
 
-```sh
+```javascript
 import {TouchableWithoutFeedback} from 'applogger';
 
 <TouchableWithoutFeedback testID={'some_test_id'} />
@@ -211,7 +211,7 @@ How to use these functions ? - No change, you can write it as you would normally
 
 You can use tracking for any other function that you choose, in addition to the ones listed above. `applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
 
-```sh
+```typescript
 interface TrackInterface {
   id?: string;
   description?: string;
@@ -223,7 +223,7 @@ interface TrackInterface {
 
 Here is an example for custom tracking using `applogger`. Consider keeping track of any error that occurs when loading the image. It's implementation could be as follows.
 
-```sh
+```javascript
 import {useCallback} from 'react';
 import {Image} from 'react-native';
 import {getLogTracker} from 'applogger';
@@ -253,7 +253,7 @@ The generic component from `appLogger` can be used to integrate app logger with 
 
 Some snippets showing the usage of component wrapper:
 
-```sh
+```javascript
 import {ComponentWrapper} from ‘applogger’;
 
 <ComponentWrapper>
@@ -261,7 +261,7 @@ import {ComponentWrapper} from ‘applogger’;
 </ComponentWrapper>
 ```
 
-```sh
+```javascript
 <ComponentWrapper>
     <Component1 testID="component1_test_id" {...props}/>
     <Component2 testID="component2_test_id" {...props}/>
