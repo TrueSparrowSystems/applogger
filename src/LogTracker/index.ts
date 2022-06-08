@@ -66,6 +66,7 @@ export class LogTracker {
   private bind() {
     this.store.bind(this);
     this.track.bind(this);
+    this.trackAndStore.bind(this);
     this.storeSessionId.bind(this);
     this.createNewSession.bind(this);
     this.getSessionId.bind(this);
@@ -305,6 +306,11 @@ export class LogTracker {
     this.currentStoreId++;
   }
 
+  public trackAndStore(logData: TrackInterface) {
+    this.track(logData);
+    return this.store();
+  }
+
   /**
    * @function getJsonLogFile Function to write the log file in the directory provided and return filePath
    * @param  {string} content Data to be added in log file
@@ -453,41 +459,44 @@ export class LogTracker {
    * @function store function to store to session log data in async store
    */
   private store() {
-    const data = this.currentData;
-    console.log('store called ', data);
-    if (isEmpty(data)) {
-      console.log('Data is empty will do nothing');
-      if (this.isTrackingDisabled() || !this.isSessionActive()) {
-        return;
+    return new Promise<void>(resolve => {
+      const data = this.currentData;
+      console.log('store called ', data);
+      if (isEmpty(data)) {
+        console.log('Data is empty will do nothing');
+        if (this.isTrackingDisabled() || !this.isSessionActive()) {
+          return;
+        }
+        setTimeout(() => {
+          this.store();
+        }, this.config.writeFrequencyInSeconds);
+      } else {
+        console.log('Data exists');
+        this.currentData = {};
+        this.currentStoreId = 0;
+
+        this.sessionData.push(data);
+
+        console.log('storing ', JSON.stringify(this.sessionData));
+        AsyncStorage.setItem(this.sessionId, JSON.stringify(this.sessionData))
+          .then(() => {
+            console.log('Successfully stored the logs');
+          })
+          .catch(err => {
+            console.error('Error while storing the logs', err);
+          })
+          .finally(() => {
+            resolve();
+            console.log('scheduling for ', this.config.writeFrequencyInSeconds);
+            if (this.isTrackingDisabled() || !this.isSessionActive()) {
+              return;
+            }
+            setTimeout(() => {
+              this.store();
+            }, this.config.writeFrequencyInSeconds);
+          });
       }
-      setTimeout(() => {
-        this.store();
-      }, this.config.writeFrequencyInSeconds);
-    } else {
-      console.log('Data exists');
-      this.currentData = {};
-      this.currentStoreId = 0;
-
-      this.sessionData.push(data);
-
-      console.log('storing ', JSON.stringify(this.sessionData));
-      AsyncStorage.setItem(this.sessionId, JSON.stringify(this.sessionData))
-        .then(() => {
-          console.log('Successfully stored the logs');
-        })
-        .catch(err => {
-          console.error('Error while storing the logs', err);
-        })
-        .finally(() => {
-          console.log('scheduling for ', this.config.writeFrequencyInSeconds);
-          if (this.isTrackingDisabled() || !this.isSessionActive()) {
-            return;
-          }
-          setTimeout(() => {
-            this.store();
-          }, this.config.writeFrequencyInSeconds);
-        });
-    }
+    });
   }
 
   /**
@@ -601,23 +610,24 @@ export class LogTracker {
 //   });
 // }
 
-function uploaderFunction(
-  sessionLogFilePaths: string[],
-  onLogUploadComplete: Function,
-): Promise<boolean> {
-  // sessionLogFilePaths.forEach((singleSessionLogFilePath, index) => {
-  //   uploadFile(singleSessionLogFilePath).then(() => {
-  //     if (index == sessionLogFilePaths.length - 1) {
-  //       // Calling this function to delete log files from local app storage
-  //       onLogUploadComplete();
-  //     }
-  //   });
-  // });
-  return new Promise<boolean>(resolve => {
-    onLogUploadComplete();
-    resolve(true);
-  });
-}
+// function uploaderFunction(
+//   sessionLogFilePaths: string[],
+//   onLogUploadComplete: Function,
+// ): Promise<boolean> {
+// sessionLogFilePaths.forEach((singleSessionLogFilePath, index) => {
+//   uploadFile(singleSessionLogFilePath).then(() => {
+//     if (index == sessionLogFilePaths.length - 1) {
+//       // Calling this function to delete log files from local app storage
+//       onLogUploadComplete();
+//     }
+//   });
+// });
+// return new Promise<boolean>(resolve => {
+//   onLogUploadComplete();
+//   resolve(true);
+// });
+// }
+
 let logTracker: LogTracker;
 let logTrackerConfig: LogTrackerConfigInterface | undefined;
 
