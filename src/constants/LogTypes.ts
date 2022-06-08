@@ -11,4 +11,5 @@ export enum LogTypes {
   Shake = 'Shake',
   Scroll = 'Scroll',
   Event = 'Event',
+  Crash = 'Crash',
 }
