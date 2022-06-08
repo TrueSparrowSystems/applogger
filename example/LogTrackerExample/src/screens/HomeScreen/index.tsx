@@ -6,7 +6,14 @@ import {
   TouchableOpacity,
 } from 'applogger';
 import React, {useCallback, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  Platform,
+  ScrollView,
+  KeyboardAvoidingView,
+  View,
+  Text,
+  StyleSheet,
+} from 'react-native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -24,26 +31,30 @@ export default function HomeScreen() {
   const [isSecureEntry, setIsSecureEntry] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>
-          1. Shake the device to open the helper menu.
-        </Text>
-        <Text style={styles.text}>
-          2. Open the logger UI using the link in the helper menu to observe the
-          generated logs.
-        </Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.smallText}>TouchableOpacity Wrapper Example</Text>
-        <TouchableOpacity
-          testID="homescreen_search_by_city_name"
-          onPress={onSearchByCityPressed}
-          style={styles.btnContainer}>
-          <Text style={styles.smallText}>Search By City Name</Text>
-        </TouchableOpacity>
-      </View>
-      {/* <View style={styles.infoContainer}>
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={80}
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>
+            1. Shake the device to open the helper menu.
+          </Text>
+          <Text style={styles.text}>
+            2. Open the logger UI using the link in the helper menu to observe
+            the generated logs.
+          </Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.smallText}>TouchableOpacity Wrapper Example</Text>
+          <TouchableOpacity
+            testID="homescreen_search_by_city_name"
+            onPress={onSearchByCityPressed}
+            style={styles.btnContainer}>
+            <Text style={styles.smallText}>Search By City Name</Text>
+          </TouchableOpacity>
+        </View>
+        {/* <View style={styles.infoContainer}>
         <Text>TouchableHighlight Wrapper Example</Text>
         <TouchableHighlight
           style={styles.btnContainer}
@@ -53,38 +64,39 @@ export default function HomeScreen() {
           <Text>Search By Zip Code</Text>
         </TouchableHighlight>
       </View> */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.smallText}>TextInput Wrapper Example</Text>
-        <TextInput
-          testID="homescreen_text_input"
-          value={text}
-          secureTextEntry={isSecureEntry}
-          placeholder="Entered text will be logged."
-          placeholderTextColor="gray"
-          style={styles.btnContainer}
-          onChangeText={newText => setText(newText)}
-        />
-        <View style={styles.switchContainer}>
-          <Switch
-            testID="homescreen_redact_text_switch"
-            value={isSecureEntry}
-            onValueChange={value => setIsSecureEntry(value)}
+        <View style={styles.infoContainer}>
+          <Text style={styles.smallText}>TextInput Wrapper Example</Text>
+          <TextInput
+            testID="homescreen_text_input"
+            value={text}
+            secureTextEntry={isSecureEntry}
+            placeholder="Entered text will be logged."
+            placeholderTextColor="gray"
+            style={styles.btnContainer}
+            onChangeText={newText => setText(newText)}
           />
-          <Text style={styles.flipText}>
-            Flip to redact the text input in log.
-          </Text>
+          <View style={styles.switchContainer}>
+            <Switch
+              testID="homescreen_redact_text_switch"
+              value={isSecureEntry}
+              onValueChange={value => setIsSecureEntry(value)}
+            />
+            <Text style={styles.flipText}>
+              Flip to redact the text input in log.
+            </Text>
+          </View>
         </View>
-      </View>
-      <TouchableHighlight
-        style={styles.btnContainer}
-        testID="homescreen_crash_button"
-        underlayColor={'darkgrey'}
-        onPress={onCrashButtonPress}>
-        <Text style={styles.smallText}>
-          Click on the button to crash the application
-        </Text>
-      </TouchableHighlight>
-    </View>
+        <TouchableHighlight
+          style={styles.btnContainer}
+          testID="homescreen_crash_button"
+          underlayColor={'darkgrey'}
+          onPress={onCrashButtonPress}>
+          <Text style={styles.smallText}>
+            Click on the button to crash the application
+          </Text>
+        </TouchableHighlight>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -92,6 +104,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  scrollViewContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',

@@ -1,4 +1,4 @@
-import {capitalize} from 'lodash';
+import {capitalize, unescape} from 'lodash';
 import {MutableRefObject, useCallback, useMemo, useRef} from 'react';
 import Constants from '../constants/Constants';
 import {LogTypes} from '../constants/LogTypes';
@@ -199,7 +199,9 @@ export function useLoggingFunctions(props: any, type: string) {
             type: LogTypes.Text,
             params: {
               testId: props.testID,
-              text: props?.secureTextEntry ? Constants.REDACTED_TEXT : newText,
+              text: props?.secureTextEntry
+                ? Constants.REDACTED_TEXT
+                : unescape(newText),
             },
           };
           debouncedLog(functionName, logData);

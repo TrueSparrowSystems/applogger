@@ -1,6 +1,7 @@
 export const sessionDetails = `<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <style>
       html,
       body {
