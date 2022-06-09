@@ -6,7 +6,7 @@
 
 ## Why App Logger?
 
-Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix the issue. A lot of time, finding out these reproducible steps becomes a time-consuming effort, and can take a long time.
+Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix the issue. A lot of time, finding out these reproducible steps becomes a time-consuming effort.
 
 On the developer side, QA data isn't always appropriate for replicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
 
@@ -262,24 +262,26 @@ function CustomTrackingDemo() {
 }
 ```
 
-## Screenshots
+## Screenshots 
 
-<img width="1102" alt="Screenshot 2022-06-07 at 1 15 53 PM" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
-<img width="1516" alt="Screenshot 2022-06-07 at 1 15 17 PM" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
-
+### Sample App
 <table>
 <tr>
   <td>
 <img width="300" src="https://user-images.githubusercontent.com/87412080/172326209-0a63342b-83ef-4e60-8483-435661ba2615.png">
       </td>
-    <td>
+     <td>
+<img width="300" src="https://user-images.githubusercontent.com/86604753/172822891-ffe2ca97-ff86-4997-b3f9-c4cba7c4eac7.png">
+       </td>
+   <td>
 <img width="300" src="https://user-images.githubusercontent.com/87412080/172326232-66f36f17-770c-4a9b-849d-910bb87b24ac.png">
-        </td>
-    <td>
-<img width="300" src="https://user-images.githubusercontent.com/87412080/172326351-c0a94882-c626-434e-a604-bace4e8dd70a.png">
         </td>
   </tr>
   </table>
+  
+### Web Interface
+<img width="1102" alt="Screenshot 2022-06-07 at 1 15 53 PM" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
+<img width="1516" alt="Screenshot 2022-06-07 at 1 15 17 PM" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
 
 ## Contributors
 
