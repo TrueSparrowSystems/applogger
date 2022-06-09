@@ -1,8 +1,16 @@
 {
   "name": "@plgworks/applogger",
-  "version": "1.0.0-beta.1",
-  "description": "an application that helps minimize QA issue reporting time and developer debugging time",
+  "version": "1.0.0-beta.2",
+  "description": "An application that helps minimize QA issue reporting time and developer debugging time.",
   "private": false,
+  "main": "lib/index.js",
+  "types": "lib/index.d.js",
+  "files": [
+    "lib/**/*",
+    "package.json",
+    "README.md"
+  ],
+  "license": "LGPL-3.0",
   "author": "PLG Works",
   "repository": {
     "type": "git",
