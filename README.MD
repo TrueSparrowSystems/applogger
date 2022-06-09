@@ -2,49 +2,40 @@
 
 ## Overview
 
-`applogger` is an application framework that helps minimise QA issue reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's ip address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
-
-### Some of the functionalities which the framework provides are:
-
-- Track the steps performed by user and generate logs
-- Maintain tracking sessions.
-- Upload, download or delete session logs.
+`applogger` is an application framework that helps minimise QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
 
 ## Why App Logger?
 
-Given the current workflows, anytime QA reports a problem, they must repeat the identical processes and record them in order to log the issue. They must also submit some data to developers in relation to the reported issue. In the case of random testing, finding out the steps becomes a time-consuming effort, and reproducing the issue can take a long time.
+Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix the issue. A lot of time, finding out these reproducible steps becomes a time-consuming effort, and can take a long time.
 
-On the developer side, QA data isn't always appropriate for duplicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
-To solve these problems, we need session vise tracking of the steps taken and logs of those steps as soon as a user takes an action.
+On the developer side, QA data isn't always appropriate for replicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
 
-`applogger` framework is made up of a few react native components with customised tracking code and a general wrapper that can wrap around any component. A simple track function can be used by developers to provide tracking logic to custom methods.
+To solve these problems, we need to track the user actions and application state and allow them to be shared easily.
 
-The developer can access the app sessions including the steps and associated logs via the web interface using the user's IP address. The web interface includes a session dashboard with a list of sessions and a session details page for each session that includes device information as well as user action and developer logs.
+`applogger` provides React Native components with customized tracking to minimize the integration effort in any existing or a new application. It also provides a generic wrapper that can be used with any React Native component. A simple `track` function can be used by developers to provide tracking logic to custom methods.
 
-### Other features of the app logger:
+The developer can access the app sessions including the steps and associated logs via the web interface using the device's IP address. The web interface includes a session dashboard with a list of sessions and a session details page that includes device information as well as user action and developer logs.
 
-- Download Logs - the developer can download session logs in html or json format from web interface.
-- Upload Logs - the user can use the helper menu to upload logs for the current or all sessions. In order to use this feature, the developer must provide an upload function.
-- Delete Logs - from the helper menu user can delete logs of the current or all sessions.
-- Maintain session - From the helper menu, the user can also stop the session, start a new one, and disable or enable tracking in the current one.
+### Other features of the applogger:
+
+- Session management - from the helper menu, the user can stop the current session, start a new one, and can temporarily disable tracking in the current session.
+- Download Logs - session logs can be downloaded in HTML or JSON format from the web interface.
+- Upload Logs - helper menu allows tracked session logs to be uploaded on any third party services. To use this feature, the developer must implement the upload function.
+- Delete Logs - from the helper menu user can delete session logs.
 
 ## Sample App
 
-Sample implementation for reference.
-
-- [Example App](https://github.com/PLG-Works/app-logger/tree/master/example/LogTrackerExample)
+We have provided a [sample app](https://github.com/PLG-Works/app-logger/tree/master/example/LogTrackerExample) for implementation reference and a quick sneak-peek.
 
 # Installation
 
+```sh
+npm install @plgworks/applogger --save
+```
+
 ### Add Dependencies
 
-Install the required packages in your react native project.
-
-```
-npm install applogger --save
-```
-
-To take benefit of all functionality, `applogger` requires a number of peer dependencies. It is recommended that you follow the install instructions for each package to verify that it is properly configured.
+`applogger` has some peer dependencies. It is recommended that you follow the installation instructions of each package to verify that it is properly configured.
 
 - [@react-native-async-storage/async-storage](https://www.npmjs.com/package/@react-native-async-storage/async-storage)
 - [react-native-device-info](https://www.npmjs.com/package/react-native-device-info)
@@ -54,13 +45,13 @@ To take benefit of all functionality, `applogger` requires a number of peer depe
 - [react-native-network-info](https://www.npmjs.com/package/react-native-network-info)
 - [react-native-shake](https://www.npmjs.com/package/react-native-shake)
 
-```
+```sh
 npm install @react-native-async-storage/async-storage react-native-device-info react-native-fs react-native-get-random-values react-native-http-bridge react-native-network-info react-native-shake
 ```
 
 Navigate to your ios folder and run:
 
-```
+```sh
 pod install
 ```
 
@@ -74,7 +65,7 @@ To get started, you'll need to call the `useAppLogger` hook in your project's ro
 type appLoggerParams = {
   port?: number;
   loggerConfig?: LogTrackerConfigInterface;
-}
+};
 ```
 
 `port` is an optional prop on which the server should start, default port is `5561`.
@@ -94,60 +85,61 @@ interface LogTrackerConfigInterface {
 }
 ```
 
-Right now we can configure only below mentioned parameters:
+We can configure the following parameters:
 
 - `writeFrequencyInSeconds` - frequency in which logs should be written in storage, default value is `5`.
 - `uploadLogs` - Function to upload the logs to any third party storage serivce like s3. Upload will not work unless developer provides a function for it.
 - `clearStorageOnLogUpload` - Boolean to clear the storage when logs are uploaded.
 - `isTrackingDisabled` - Flag to disable log tracking. Default values - for production env : true, for dev env : false.
-- `logRotateDurationInHours` - Flag to clear the logs after certain intervals.
+- `logRotateDurationInHours` - Flag to clear the logs after certain intervals. If not provided, it will not automatically clear the logs from storage.
 - `sensitiveDataKeywords` - Array containing sensitive keywords which when encountered in params will be redacted.
 
-Here is a code snippet to configure `applogger` on port 8000.
+Here is a code snippet to configure `@plgworks/applogger` on port 8000.
 
 ```javascript
 import {useAppLogger, HelperMenu} from 'applogger';
 
 function App() {
-      const uploadFile = filePath => {
-        return new Promise((resolve, reject) => {
-          s3.upload(filePath)
-            .then(() => {
-              resolve(true);
-            })
-            .catch(() => {
-              reject();
-            });
+  const uploadFile = filePath => {
+    return new Promise((resolve, reject) => {
+      s3.upload(filePath)
+        .then(() => {
+          resolve(true);
+        })
+        .catch(() => {
+          reject();
         });
-      };
+    });
+  };
 
-      const uploaderFunction = (sessionLogFilePaths, onLogUploadComplete) => {
-        return new Promise(resolve => {
-          sessionLogFilePaths.forEach((singleSessionLogFilePath, index) => {
-            uploadFile(singleSessionLogFilePath).then(() => {
-              if (index == sessionLogFilePaths.length - 1) {
-                // Call this function to delete log files from local app storage
-                onLogUploadComplete();
-                return resolve(true);
-              }
-            });
-          });
+  const uploaderFunction = (sessionLogFilePaths, onLogUploadComplete) => {
+    return new Promise(resolve => {
+      sessionLogFilePaths.forEach((singleSessionLogFilePath, index) => {
+        uploadFile(singleSessionLogFilePath).then(() => {
+          if (index == sessionLogFilePaths.length - 1) {
+            // Call this function to delete log files from local app storage
+            onLogUploadComplete();
+            return resolve(true);
+          }
         });
-      };
+      });
+    });
+  };
 
-      const appLoggerParams = {
-        port: 8000,
-        loggerConfig: {
-          writeFrequencyInSeconds: 5,
-          uploadLogs: uploaderFunction,
-          clearStorageOnLogUpload: false,
-          isTrackingDisabled: false,
-          logRotateDurationInHours: 24,
-          sensitiveDataKeywords: ['password'],
-        },
-      };
+  const appLoggerParams = {
+    port: 8000,
+    loggerConfig: {
+      writeFrequencyInSeconds: 5,
+      uploadLogs: uploaderFunction,
+      clearStorageOnLogUpload: false,
+      isTrackingDisabled: false,
+      logRotateDurationInHours: 24,
+      sensitiveDataKeywords: ['password'],
+    },
+  };
 
-  const {navigationRef, onNavigationStateChange} = useAppLogger(appLoggerParams);
+  const {navigationRef, onNavigationStateChange} =
+    useAppLogger(appLoggerParams);
 
   return (
     <NavigationContainer
@@ -174,14 +166,37 @@ Following are some of the react native components that applogger provides with t
 - TouchableOpacity
 - TouchableWithoutFeedback
 
-How to use these components ? - Just import these components from `applogger` instead of `react-native` and provide a testID.
+How to use these components ? - Just import these components from `@plgworks/applogger` instead of `react-native` and provide a testID.
 
 Eg - To import TouchableWithoutFeedback :
 
 ```javascript
-import {TouchableWithoutFeedback} from 'applogger';
+import {TouchableWithoutFeedback} from '@plgworks/applogger';
 
-<TouchableWithoutFeedback testID={'some_test_id'} />
+<TouchableWithoutFeedback testID={'some_test_id'} />;
+```
+
+## How to use Generic component
+
+The generic component from `appLogger` can be used to integrate app logger with any other component other than those specified above. The only difference would be that the developer needs to wrap the component or list of components in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
+
+Example snippets showing the usage of component wrapper:
+
+```javascript
+import {ComponentWrapper} from ‘@plgworks/applogger’;
+
+<ComponentWrapper>
+    <Component testID="component_test_id" {...props}/>
+</ComponentWrapper>
+```
+
+```javascript
+import {ComponentWrapper} from ‘@plgworks/applogger’;
+<ComponentWrapper>
+  <Component1 testID="component1_test_id" {...props} />
+  <Component2 testID="component2_test_id" {...props} />
+  <Component3 testID="component3_test_id" {...props} />
+</ComponentWrapper>
 ```
 
 ## Supported functions list
@@ -205,11 +220,11 @@ Following are few functions that have log tracking enabled in them.
 - onRefresh
 - onValueChange
 
-How to use these functions ? - No change, you can write it as you would normally do and the `applogger` will take care of the rest, provided your component is imported from `applogger`.
+How to use these functions ? - No change, you can write it as you would normally do and the `applogger` will take care of the rest, provided your component is imported from `@plgworks/applogger`.
 
 ## Custom Tracking
 
-You can use tracking for any other function that you choose, in addition to the ones listed above. `applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
+You can use tracking for any other function that you choose, in addition to the ones listed above. `@plgworks/applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
 
 ```typescript
 interface TrackInterface {
@@ -247,28 +262,7 @@ function CustomTrackingDemo() {
 }
 ```
 
-## How to use Generic component
-
-The generic component from `appLogger` can be used to integrate app logger with any other component other than those specified above. The only difference would be that the developer would need to wrap the component or list of components in a `ComponentWrapper`. Apart from that, the wrapped components' logic stays unchanged; the developer needs to add the `testID` to the component to which he wishes to add log tracking. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
-
-Some snippets showing the usage of component wrapper:
-
-```javascript
-import {ComponentWrapper} from ‘applogger’;
-
-<ComponentWrapper>
-    <Component testID="component_test_id" {...props}/>
-</ComponentWrapper>
-```
-
-```javascript
-<ComponentWrapper>
-    <Component1 testID="component1_test_id" {...props}/>
-    <Component2 testID="component2_test_id" {...props}/>
-    <Component3 testID="component3_test_id" {...props}/>
-</ComponentWrapper>
-```
-## DEMO
+## Screenshots
 
 <img width="1102" alt="Screenshot 2022-06-07 at 1 15 53 PM" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
 <img width="1516" alt="Screenshot 2022-06-07 at 1 15 17 PM" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
@@ -286,7 +280,6 @@ import {ComponentWrapper} from ‘applogger’;
         </td>
   </tr>
   </table>
-
 
 ## Contributors
 
