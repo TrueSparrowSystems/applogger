@@ -1,6 +1,6 @@
 {
-  "name": "applogger",
-  "version": "0.0.1",
+  "name": "@plgworks/applogger",
+  "version": "1.0.0-beta.1",
   "private": false,
   "scripts": {
     "android": "react-native run-android",
