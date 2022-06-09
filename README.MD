@@ -96,7 +96,7 @@ We can configure the following parameters:
 - `logRotateDurationInHours` - Flag to clear the logs after certain intervals. If not provided, it will not automatically clear the logs from storage.
 - `sensitiveDataKeywords` - Array containing sensitive keywords which when encountered in params will be redacted.
 
-Here is a code snippet to configure `@plgworks/applogger` on port 8000.
+Here is a code snippet to configure `applogger` on port 8000.
 
 ```javascript
 import {useAppLogger, HelperMenu} from '@plgworks/applogger';
@@ -226,7 +226,7 @@ How to use these functions ? - No change, you can write it as you would normally
 
 ## Custom Tracking
 
-You can use tracking for any other function that you choose, in addition to the ones listed above. `@plgworks/applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
+You can use tracking for any other function that you choose, in addition to the ones listed above. `applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
 
 ```typescript
 interface TrackInterface {
