@@ -2,28 +2,28 @@
 
 ## Overview
 
-`applogger` is an application framework that helps minimise QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
+`applogger` is a React Native mobile application framework that helps in minimizing QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
 
-## Why App Logger?
+## Why applogger?
 
-Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix the issue. A lot of time, finding out these reproducible steps becomes a time-consuming effort.
+Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix it. A lot of time, finding out these reproducible steps becomes a time-consuming effort.
 
-On the developer side, QA data isn't always appropriate for replicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
+On the developer side, QA data isn't always accurate for replicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
 
 To solve these problems, we need to track the user actions and application state and allow them to be shared easily.
 
 `applogger` provides React Native components with customized tracking to minimize the integration effort in any existing or a new application. It also provides a generic wrapper that can be used with any React Native component. A simple `track` function can be used by developers to provide tracking logic to custom methods.
 
-The developer can access the app sessions including the steps and associated logs via the web interface using the device's IP address. The web interface includes a session dashboard with a list of sessions and a session details page that includes device information as well as user action and developer logs.
+Developers can access the app sessions including the steps and associated logs via the web interface using the device's IP address. The web interface includes a session dashboard with a list of sessions and a session details page that includes device information as well as user action and developer logs.
 
 ### Other features of the applogger:
 
 - Session management - from the helper menu, the user can stop the current session, start a new one, and can temporarily disable tracking in the current session.
 - Download Logs - session logs can be downloaded in HTML or JSON format from the web interface.
-- Upload Logs - helper menu allows tracked session logs to be uploaded on any third party services. To use this feature, the developer must implement the upload function.
+- Upload Logs - helper menu allows tracked session logs to be uploaded on any third party services. To use this feature, you must implement the upload function.
 - Delete Logs - from the helper menu user can delete session logs.
 
-**Important Note:** The Web Server would work only in a LAN connection i.e. both devices(one on which application is running, other on which web interface is being accessed) should be on the same network. Also, the application must be running in foreground.
+**Important Note:** The Web Server would work only in a LAN connection i.e. both devices (one on which application is running, other on which web interface is being accessed) should be on the same network. Also, the application must be running in foreground.
 
 ## Sample App
 
@@ -94,7 +94,7 @@ We can configure the following parameters:
 - `clearStorageOnLogUpload` - Boolean to clear the storage when logs are uploaded.
 - `isTrackingDisabled` - Flag to disable log tracking. Default values - for production env : true, for dev env : false.
 - `logRotateDurationInHours` - Flag to clear the logs after certain intervals. If not provided, it will not automatically clear the logs from storage.
-- `sensitiveDataKeywords` - Array containing sensitive keywords which when encountered in params will be redacted.
+- `sensitiveDataKeywords` - Array containing sensitive keys which when encountered in params will be redacted.
 
 Here is a code snippet to configure `applogger` on port 8000.
 
@@ -168,7 +168,7 @@ Following are some of the react native components that applogger provides with t
 - TouchableOpacity
 - TouchableWithoutFeedback
 
-How to use these components ? - Just import these components from `@plgworks/applogger` instead of `react-native` and provide a testID.
+How to use these components? Just import these components from `@plgworks/applogger` instead of `react-native` and provide a testID.
 
 Eg - To import TouchableWithoutFeedback :
 
@@ -180,9 +180,9 @@ import {TouchableWithoutFeedback} from '@plgworks/applogger';
 
 ## How to use Generic component
 
-The generic component from `appLogger` can be used to integrate app logger with any other component other than those specified above. The only difference would be that the developer needs to wrap the component or list of components in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
+The generic component from `appLogger` can be used to integrate applogger with any other component other than those specified above. The only difference would be that the developer needs to wrap the component or list of components in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
 
-Example snippets showing the usage of component wrapper:
+Example snippets:
 
 ```javascript
 import {ComponentWrapper} from ‘@plgworks/applogger’;
@@ -203,7 +203,7 @@ import {ComponentWrapper} from ‘@plgworks/applogger’;
 
 ## Supported functions list
 
-Following are few functions that have log tracking enabled in them.
+Following are the functions that have log tracking enabled in them.
 
 - onChange
 - onPress
@@ -222,7 +222,7 @@ Following are few functions that have log tracking enabled in them.
 - onRefresh
 - onValueChange
 
-How to use these functions ? - No change, you can write it as you would normally do and the `applogger` will take care of the rest, provided your component is imported from `@plgworks/applogger`.
+How to use these functions? No change, you can write it as you would normally do and the `applogger` will take care of the rest, provided your component is imported from `@plgworks/applogger` or wrapped inside `ComponentWrapper`.
 
 ## Custom Tracking
 
@@ -283,8 +283,8 @@ function CustomTrackingDemo() {
   </table>
   
 ### Web Interface
-<img width="1102" alt="Screenshot 2022-06-07 at 1 15 53 PM" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
-<img width="1516" alt="Screenshot 2022-06-07 at 1 15 17 PM" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
+<img width="1102" alt="Session Dashboard - PLG Works applogger" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
+<img width="1516" alt="Session Details - PLG Works applogger" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
 
 ## Contributors
 
