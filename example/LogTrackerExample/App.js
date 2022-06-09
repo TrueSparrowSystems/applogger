@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import RootNavigation from './src/components/RootNavigation/RootNavigation';
-import {useAppLogger, HelperMenu} from 'applogger';
+import {useAppLogger, HelperMenu} from '@plgworks/applogger';
 
 function App() {
   const {navigationRef, onNavigationStateChange} = useAppLogger({port: 5561});
