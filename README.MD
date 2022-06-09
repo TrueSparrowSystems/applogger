@@ -23,6 +23,8 @@ The developer can access the app sessions including the steps and associated log
 - Upload Logs - helper menu allows tracked session logs to be uploaded on any third party services. To use this feature, the developer must implement the upload function.
 - Delete Logs - from the helper menu user can delete session logs.
 
+**Important Note:** The Web Server would work only in a LAN connection i.e. both devices(one on which application is running, other on which web interface is being accessed) should be on the same network. Also, the application must be running in foreground.
+
 ## Sample App
 
 We have provided a [sample app](https://github.com/PLG-Works/app-logger/tree/master/example/LogTrackerExample) for implementation reference and a quick sneak-peek.
@@ -97,7 +99,7 @@ We can configure the following parameters:
 Here is a code snippet to configure `@plgworks/applogger` on port 8000.
 
 ```javascript
-import {useAppLogger, HelperMenu} from 'applogger';
+import {useAppLogger, HelperMenu} from '@plgworks/applogger';
 
 function App() {
   const uploadFile = filePath => {
@@ -241,7 +243,7 @@ Here is an example for custom tracking using `applogger`. Consider keeping track
 ```javascript
 import {useCallback} from 'react';
 import {Image} from 'react-native';
-import {getLogTracker} from 'applogger';
+import {getLogTracker} from '@plgworks/applogger';
 
 function CustomTrackingDemo() {
     const imageTestID = 'custom_tracking_demo_image';
@@ -262,9 +264,10 @@ function CustomTrackingDemo() {
 }
 ```
 
-## Screenshots 
+## Screenshots
 
 ### Sample App
+
 <table>
 <tr>
   <td>
