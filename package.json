@@ -3,7 +3,7 @@
   "version": "1.0.0-beta.2",
   "description": "An application that helps minimize QA issue reporting time and developer debugging time.",
   "private": false,
-  "main": "lib/index.js",
+  "main": "index.js",
   "types": "lib/index.d.js",
   "files": [
     "lib/**/*",
@@ -12,12 +12,16 @@
   ],
   "license": "LGPL-3.0",
   "author": "PLG Works",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PLG-Works/applogger.git"
   },
-  "keywords": ["applogger", "logger","react-native", "react-component"],
+  "keywords": [
+    "applogger",
+    "logger",
+    "react-native",
+    "react-component"
+  ],
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
