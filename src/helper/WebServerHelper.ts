@@ -61,11 +61,7 @@ class WebServerHelper {
         message: url,
       };
 
-      Share.share(shareContent)
-        .then(value => {
-          console.log(value);
-        })
-        .catch(err => console.log('There was an error while sharing. ', err));
+      Share.share(shareContent).catch(() => {});
     });
   }
 
@@ -74,16 +70,12 @@ class WebServerHelper {
    * @param  {any} request object
    */
   onStart(request: any) {
-    console.log('request: ', request);
-    console.log('split: ', request.url.split('/'));
-
     const requestUrlComponents = request.url.split('/');
 
     if (request.type === 'POST' && requestUrlComponents[3] === 'download') {
       this.logTracker
         .getSessionDetails(requestUrlComponents[2])
         .then(res => {
-          console.log('session data', res);
           return httpBridge.respond(
             request.requestId,
             200,
@@ -91,8 +83,7 @@ class WebServerHelper {
             JSON.stringify(res),
           );
         })
-        .catch(error => {
-          console.log({error});
+        .catch(() => {
           httpBridge.respond(
             request.requestId,
             500,
@@ -122,7 +113,6 @@ class WebServerHelper {
             }
 
             const userActionsSteps = DataParser.getUserActionData(sessionData);
-            console.log('userActionsSteps: ', userActionsSteps);
 
             let responseHtml = sessionDetails.replace(
               '{{user_actions}}',
@@ -132,7 +122,6 @@ class WebServerHelper {
             const devLogs = DataParser.getDevLogs(sessionData);
             responseHtml = responseHtml.replace('{{dev_logs}}', devLogs);
 
-            console.log('-------> deviceInfo: ', deviceInfo);
             httpBridge.respond(
               request.requestId,
               200,

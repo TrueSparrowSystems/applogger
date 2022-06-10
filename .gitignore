@@ -36,6 +36,9 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+yarn.lock
+
+package-lock.json
 
 # BUCK
 buck-out/
@@ -72,3 +75,5 @@ tar
 #docs
 docs
 
+#Compiled JS
+lib
