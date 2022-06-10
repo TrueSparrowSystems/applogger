@@ -46,9 +46,11 @@ npm install @plgworks/applogger --save
 - [react-native-http-bridge](https://www.npmjs.com/package/@kingstinct/react-native-http-bridge)
 - [react-native-network-info](https://www.npmjs.com/package/react-native-network-info)
 - [react-native-shake](https://www.npmjs.com/package/react-native-shake)
+- [react-native-exit-app](https://www.npmjs.com/package/react-native-exit-app)
+- [react-native-exception-handler](https://www.npmjs.com/package/react-native-exception-handler)
 
 ```sh
-npm install @react-native-async-storage/async-storage react-native-device-info react-native-fs react-native-get-random-values react-native-http-bridge react-native-network-info react-native-shake
+npm install @react-native-async-storage/async-storage react-native-device-info react-native-fs react-native-get-random-values react-native-http-bridge react-native-network-info react-native-shake react-native-exit-app react-native-exception-handler
 ```
 
 Navigate to your ios folder and run:
