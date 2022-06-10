@@ -11,7 +11,7 @@ import DailyForecast from '../../components/DailyForecast';
 import ForecastSearch from '../../components/ForcastSearch';
 import {bgImage} from '../../assets/index';
 import useSearchScreen from './useSearchScreen';
-import {RefreshControl} from 'applogger';
+import {RefreshControl} from '@plgworks/applogger';
 
 export default function SearchScreen() {
   const {

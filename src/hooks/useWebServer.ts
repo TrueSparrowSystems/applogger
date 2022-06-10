@@ -19,9 +19,7 @@ export function useWebServer(port?: number) {
   const {isAppInBackground} = useAppStateListener();
 
   useEffect(() => {
-    deviceInfoModule.getIpAddress().then(ip => {
-      console.log('-------------> ip address: ', ip);
-    });
+    deviceInfoModule.getIpAddress();
     const RnShakeSubscription = RNShake.addListener(() => {
       if (isAppInBackground) {
         return;

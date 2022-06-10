@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {TextInput, Pressable, Switch, Button} from 'applogger';
+import {TextInput, Pressable, Switch} from '@plgworks/applogger';
 
 const ForecastSearch = ({
   toggleSearch,
-  setToggleSearch,
   city,
   setCity,
   fetchWeatherData,
@@ -17,14 +16,6 @@ const ForecastSearch = ({
   const navigation = useNavigation();
   const handleSubmit = e => {
     fetchWeatherData();
-  };
-
-  const setToggleByCity = () => {
-    setToggleSearch('city');
-  };
-
-  const setToggleByPostal = () => {
-    setToggleSearch('postal');
   };
 
   const onTemperatureChange = useCallback(

@@ -25,7 +25,7 @@ export function useAppLogger(appLoggerParams?: appLoggerParams) {
   }, []);
   const logTracker = getLogTracker();
   const jsErrorHandler = useCallback(
-    (e, isFatal) => {
+    (e: Error, isFatal: boolean) => {
       if (isFatal) {
         logTracker
           .trackAndStore({
@@ -45,7 +45,7 @@ export function useAppLogger(appLoggerParams?: appLoggerParams) {
   );
 
   const nativeErrorHandler = useCallback(
-    exceptionString => {
+    (exceptionString: string) => {
       logTracker
         .trackAndStore({
           description: 'App Crashed',

@@ -38,7 +38,6 @@ export function useTracker() {
       //   nextAppState === 'active'
       //   appCurrentState = 'App is in back'
       // ) {
-      //   console.log('App has come to the foreground!');
       // }
 
       // appState.current = nextAppState;
@@ -80,9 +79,7 @@ export function useTracker() {
     }
     const previousScreenName = screenNameRef.current;
     const currentScreenName = navigationRef.current?.getCurrentRoute()?.name;
-    console.log({previousScreenName, currentScreenName});
     if (currentScreenName && previousScreenName !== currentScreenName) {
-      console.log('currentScreenName is ', currentScreenName, 'now track this');
       logTracker.track({
         description: `Navigate to ${currentScreenName} screen`,
         type: LogTypes.Navigation,

@@ -123,7 +123,6 @@ export class LogTracker {
   public createNewSession() {
     this.resetLogger();
     this.sessionId = uuidv4();
-    console.log('Tracker initialized with config: ', this.config);
 
     this.sessionState = SessionState.Active;
 
@@ -298,7 +297,6 @@ export class LogTracker {
     if (this.isTrackingDisabled() || !this.isSessionActive()) {
       return;
     }
-    console.log('track: ', logData);
     if (this.config?.sensitiveDataKeywords?.length) {
       this.checkSensitiveData(logData);
     }
@@ -330,8 +328,7 @@ export class LogTracker {
             .then(() => {
               return resolve(dir + filename);
             })
-            .catch(err => {
-              console.log('error creating log file - ', err);
+            .catch(() => {
               return reject('');
             });
         })
@@ -429,31 +426,19 @@ export class LogTracker {
    * @function storeSessionId function to store session id with current timeStamp in async store
    */
   private storeSessionId() {
-    console.log('Tracker storeSessionId called: ', this.sessionId);
     AsyncStorage.getItem(LOG_SESSION_KEY)
       .then(jsonData => {
         let data: Record<string, number> = {};
-        console.log('get existing Session id: ', data);
         if (jsonData) {
-          console.log('Here: ', jsonData);
           data = JSON.parse(jsonData!);
         }
-        console.log('=======> jsonData: ', jsonData);
-        console.log('=======> data: ', data);
         data[this.sessionId] = Date.now();
 
-        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
-          .then(() => {
-            // Do nothing
-            console.log('store session id: ', data);
-          })
-          .catch(err => {
-            console.error('Error while storing the log session', err);
-          });
+        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
+          () => {},
+        );
       })
-      .catch(err => {
-        console.error('Error while getting the log session', err);
-      });
+      .catch(() => {});
   }
   /**
    * @function store function to store to session log data in async store
@@ -461,9 +446,7 @@ export class LogTracker {
   private store() {
     return new Promise<void>(resolve => {
       const data = this.currentData;
-      console.log('store called ', data);
       if (isEmpty(data)) {
-        console.log('Data is empty will do nothing');
         if (this.isTrackingDisabled() || !this.isSessionActive()) {
           return resolve();
         }
@@ -471,23 +454,15 @@ export class LogTracker {
           this.store();
         }, this.config.writeFrequencyInSeconds);
       } else {
-        console.log('Data exists');
         this.currentData = {};
         this.currentStoreId = 0;
 
         this.sessionData.push(data);
 
-        console.log('storing ', JSON.stringify(this.sessionData));
         AsyncStorage.setItem(this.sessionId, JSON.stringify(this.sessionData))
-          .then(() => {
-            console.log('Successfully stored the logs');
-          })
-          .catch(err => {
-            console.error('Error while storing the logs', err);
-          })
+          .catch(() => {})
           .finally(() => {
             resolve();
-            console.log('scheduling for ', this.config.writeFrequencyInSeconds);
             if (this.isTrackingDisabled() || !this.isSessionActive()) {
               return resolve();
             }
@@ -508,7 +483,6 @@ export class LogTracker {
     return new Promise(resolve => {
       AsyncStorage.getItem(sessionId)
         .then(jsonData => {
-          console.log('session data: ', jsonData);
           try {
             if (jsonData) {
               resolve(JSON.parse(jsonData));
@@ -516,12 +490,10 @@ export class LogTracker {
               resolve({});
             }
           } catch (error) {
-            console.log('Error while parsing session data: ', error);
             resolve({});
           }
         })
-        .catch(err => {
-          console.log('Error while getting all sessions: ', err);
+        .catch(() => {
           resolve({});
         });
     });
@@ -543,12 +515,10 @@ export class LogTracker {
               resolve('');
             }
           } catch (error) {
-            console.log('Error while parsing session data: ', error);
             resolve('');
           }
         })
-        .catch(err => {
-          console.log('Error while getting all sessions: ', err);
+        .catch(() => {
           resolve('');
         });
     });
@@ -562,7 +532,6 @@ export class LogTracker {
     return new Promise(resolve => {
       AsyncStorage.getItem(LOG_SESSION_KEY)
         .then(jsonData => {
-          console.log('All sessions: ', jsonData);
           try {
             if (jsonData) {
               resolve(JSON.parse(jsonData));
@@ -570,12 +539,10 @@ export class LogTracker {
               resolve({});
             }
           } catch (error) {
-            console.log('Error while parsing session data: ', error);
             resolve({});
           }
         })
-        .catch(err => {
-          console.log('Error while getting all sessions: ', err);
+        .catch(() => {
           resolve({});
         });
     });
