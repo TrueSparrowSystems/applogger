@@ -27,7 +27,6 @@ export function useLoggingFunctions(props: any, type: string) {
   const getComponentName = useCallback(
     (testID: string) => {
       let componentName = capitalize(testID.replaceAll?.('_', ' '));
-      console.log('componentName: ', componentName);
 
       if (!componentName.toLowerCase().trim().endsWith(type)) {
         componentName = `${componentName} ${type}`;
