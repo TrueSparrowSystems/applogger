@@ -75,3 +75,5 @@ tar
 #docs
 docs
 
+#Compiled JS
+lib
