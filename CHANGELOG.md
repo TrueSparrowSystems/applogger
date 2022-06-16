@@ -1,7 +1,7 @@
 ## app-logger v1.0.1
 
 - Updated license.
-- Removed one dev dependency `uuid`.
+- Replaced one dependency `uuidv4` with `uuid`.
 
 ## app-logger v1.0.0
 
