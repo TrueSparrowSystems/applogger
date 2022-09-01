@@ -133,34 +133,53 @@ class WebServerHelper {
         const sessionData: string[] = [];
         this.logTracker.getAllSessions().then((allSessions: any) => {
           if (allSessions) {
-            for (const key in allSessions) {
-              if (Object.prototype.hasOwnProperty.call(allSessions, key)) {
-                const ts = allSessions[key];
-                sessionData.push(`
+            const allKeys = Object.keys(allSessions);
 
-                  <div class="div-table-row">
-                    <div class="div-table-col1"><div class="text"><a href="/session/${key}">${key}</a></div></div>
-                    <div class="div-table-col2"><div class="text">${moment(
-                      ts,
-                    ).format('DD MMM YYYY hh:mm:ss')}</div></div>
-                    
-                  </div>
+            for (let index = 0; index < allKeys.length; index++) {
+              const key = allKeys[index];
+              this.logTracker
+                .getSessionDetails(key)
+                .then(currentSessionData => {
+                  let numberOfSteps = 0;
+                  if (Array.isArray(currentSessionData)) {
+                    for (
+                      let currentSessionDataIndex = 0;
+                      currentSessionDataIndex < currentSessionData.length;
+                      currentSessionDataIndex++
+                    ) {
+                      const dataChunk =
+                        currentSessionData[currentSessionDataIndex];
+                      const chunkValue = Object.values(dataChunk);
+                      numberOfSteps += chunkValue.length;
+                    }
+                  }
+                  if (Object.prototype.hasOwnProperty.call(allSessions, key)) {
+                    const ts = allSessions[key];
+                    sessionData.push(`
+                            <div class="div-table-row">
+                                <div class="div-table-col1"><div class="text"><a href="/session/${key}">${key}</a></div></div>
+                                <div class="div-table-col2"><div class="text">${moment(
+                                  ts,
+                                ).format('DD MMM YYYY hh:mm:ss')}</div></div>
+                                <div class="div-table-col3"><div class="text">${numberOfSteps}</div></div>
+                            </div>
+                        `);
+                  }
 
-
-          `);
-              }
+                  if (index === allKeys.length - 1) {
+                    httpBridge.respond(
+                      request.requestId,
+                      200,
+                      'text/html',
+                      sessionDash.replace(
+                        '{{session_data}}',
+                        sessionData.reverse().join(''),
+                      ),
+                    );
+                  }
+                });
             }
           }
-
-          httpBridge.respond(
-            request.requestId,
-            200,
-            'text/html',
-            sessionDash.replace(
-              '{{session_data}}',
-              sessionData.reverse().join(''),
-            ),
-          );
         });
       }
     } else {

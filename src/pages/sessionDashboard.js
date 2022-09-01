@@ -99,7 +99,7 @@ export const sessionDash = `<!DOCTYPE html>
         margin-bottom: 7px;
       }
       .div-table-col1 {
-        width: 50%;
+        width: 33%;
         float: left; /* fix for  buggy browsers */
         display: table-column;
         background-color: transparent;
@@ -108,7 +108,15 @@ export const sessionDash = `<!DOCTYPE html>
         color: #b5bccd;
       }
       .div-table-col2 {
-        width: 50%;
+        width: 33%;
+        float: left; /* fix for  buggy browsers */
+        display: table-column;
+        background-color: transparent;
+        border-bottom: 2px solid #36415f;
+        color: #b5bccd;
+      }
+      .div-table-col3 {
+        width: 33%;
         float: left; /* fix for  buggy browsers */
         display: table-column;
         background-color: transparent;
@@ -138,7 +146,7 @@ export const sessionDash = `<!DOCTYPE html>
         </span>
         <span class="headText"> Session Dash </span>
       </div>
-
+      
       <div class="div-table">
         <div class="div-table-row-header">
           <div class="div-table-col1">
@@ -147,9 +155,11 @@ export const sessionDash = `<!DOCTYPE html>
           <div class="div-table-col2">
             <div class="div-table-col-header-text">Session Start Time</div>
           </div>
+          <div class="div-table-col3">
+            <div class="div-table-col-header-text">Steps Tracked</div>
+          </div>
         </div>
         {{session_data}}
-        
 
       </div>
     </div>
