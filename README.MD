@@ -56,6 +56,9 @@ npm install @react-native-async-storage/async-storage react-native-device-info r
 Navigate to your ios folder and run:
 
 ```sh
+
+cd ios
+
 pod install
 ```
 
@@ -157,9 +160,28 @@ function App() {
 export default App;
 ```
 
+The helper menu can now be accessed by **shaking your device**.
+This will enable you to do the following things: 
+- Share server URL.
+- Upload logs.
+- Delete Logs.
+- Pause/resume current session.
+- Stop current session and start a new session.
+
+You can access your logs using the link below.
+```
+<your-ip-address>:<port>/session
+```
+For example:
+```
+192.168.0.1:8000/session
+```
+
+This link can be shared from the `Share server URL` option in the helper menu.
+
 ## Components provided by `applogger`
 
-Following are some of the react native components that applogger provides with tracking.
+Following are some of the [React Native components](https://reactnative.dev/docs/components-and-apis) that applogger provides with tracking.
 
 - Button
 - Pressable
@@ -182,7 +204,10 @@ import {TouchableWithoutFeedback} from '@plgworks/applogger';
 
 ## How to use Generic component
 
-The generic component from `appLogger` can be used to integrate applogger with any other component other than those specified above. The only difference would be that the developer needs to wrap the component or list of components in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged. As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
+- The generic component from `appLogger` can be used to enable tracking for any component other than those listed above. 
+  - The only additional step would be that to wrap the component (or list of components) in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged. 
+- As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. 
+- As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
 
 Example snippets:
 
