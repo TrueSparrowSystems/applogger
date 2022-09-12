@@ -210,6 +210,35 @@ export const sessionDash = `<!DOCTYPE html>
         border-bottom: 2px solid #36415f;
         color: #b5bccd;
       }
+      .pagination {
+        display: inline-block;
+        float: right;
+      }
+      
+      .pagination a {
+        box-sizing: border-box;
+        width: 48px;
+        height: 48px;
+        border: 2px solid #36415F;
+        border-radius: 4px;
+        padding: 8px 16px;
+        text-decoration: none;
+        border: 2px solid #36415F;
+
+      }
+      
+      .pagination a.disabled {
+        background-color: #6f7373;
+        color: white;
+        border: 1px solid #6f7373;
+      }
+
+      .pagination a.active {
+        background: #101F3F;
+        color: white;
+      }
+      
+      .pagination a:hover:not(.active,.disabled) {background-color: #ffffff70;}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js" integrity="sha512-xcHCGC5tQ0SHlRX8Anbz6oy/OullASJkEhb4gjkneVpGE3/QGYejf14CUO5n5q5paiHfRFTa9HKgByxzidw2Bw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
@@ -379,6 +408,7 @@ export const sessionDash = `<!DOCTYPE html>
           </div>
           {{session_data}}
         </div>
+        {{pagination_component}}
       </div>
     </div>
   </body>
