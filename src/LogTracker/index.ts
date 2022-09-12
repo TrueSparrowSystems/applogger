@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
+import {uuid} from 'uuidv4';
 import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
@@ -22,7 +22,7 @@ enum SessionState {
 
 export class LogTracker {
   deviceInfo = new DeviceInfo();
-  sessionId: string = uuidv4();
+  sessionId: string = uuid();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   currentStoreId: number = 0;
@@ -122,7 +122,7 @@ export class LogTracker {
    */
   public createNewSession() {
     this.resetLogger();
-    this.sessionId = uuidv4();
+    this.sessionId = uuid();
 
     this.sessionState = SessionState.Active;
 
@@ -598,7 +598,7 @@ export class LogTracker {
 let logTracker: LogTracker;
 let logTrackerConfig: LogTrackerConfigInterface | undefined;
 
-function createLogTrackerInstance() {
+function createLogTrackerInstance(config?: LogTrackerConfigInterface) {
   const defaultConfig: LogTrackerConfigInterface = {
     writeFrequencyInSeconds: 5,
     clearStorageOnLogUpload: false,
@@ -606,14 +606,16 @@ function createLogTrackerInstance() {
   };
   if (logTrackerConfig) {
     return new LogTracker(logTrackerConfig);
+  } else if (config) {
+    return new LogTracker(config);
   } else {
     return new LogTracker(defaultConfig);
   }
 }
 
-export function getLogTracker(): LogTracker {
+export function getLogTracker(config?: LogTrackerConfigInterface): LogTracker {
   if (!logTracker) {
-    logTracker = createLogTrackerInstance();
+    logTracker = createLogTrackerInstance(config);
   }
   return logTracker;
 }

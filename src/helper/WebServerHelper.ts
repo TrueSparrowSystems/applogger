@@ -3,6 +3,7 @@ import {Share} from 'react-native';
 import deviceInfoModule from 'react-native-device-info';
 import {getLogTracker} from '../LogTracker';
 import {DataParser} from '../LogTracker/DataParser';
+import {LogTrackerConfigInterface} from '../LogTracker/LogTrackerConfigInterface';
 import {sessionDash} from '../pages/sessionDashboard';
 import {sessionDetails} from '../pages/sessionDetails';
 
@@ -11,10 +12,12 @@ var httpBridge = require('react-native-http-bridge');
 export const DEFAULT_SERVER_PORT = 5561;
 class WebServerHelper {
   port: number | undefined;
+  loggerConfig: LogTrackerConfigInterface | undefined;
   logTracker;
 
-  constructor() {
-    this.logTracker = getLogTracker();
+  constructor(loggerConfig?: LogTrackerConfigInterface) {
+    this.loggerConfig = loggerConfig;
+    this.logTracker = getLogTracker(this.loggerConfig);
   }
   /**
    * @public Function which starts a web server on a given `port`.
@@ -193,4 +196,11 @@ class WebServerHelper {
   }
 }
 
-export default new WebServerHelper();
+let _webServerHelper: WebServerHelper;
+const getWebServerHelperInstance = (config?: LogTrackerConfigInterface) => {
+  if (!_webServerHelper) {
+    _webServerHelper = new WebServerHelper(config);
+  }
+  return _webServerHelper;
+};
+export {getWebServerHelperInstance};

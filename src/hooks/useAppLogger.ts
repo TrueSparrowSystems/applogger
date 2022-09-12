@@ -16,14 +16,14 @@ export type appLoggerParams = {
 };
 
 export function useAppLogger(appLoggerParams?: appLoggerParams) {
-  useWebServer(appLoggerParams?.port);
+  useWebServer(appLoggerParams?.port, appLoggerParams?.loggerConfig);
   useEffect(() => {
     setConfig(appLoggerParams?.loggerConfig);
     setJSExceptionHandler(jsErrorHandler, true);
     setNativeExceptionHandler(nativeErrorHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const logTracker = getLogTracker();
+  const logTracker = getLogTracker(appLoggerParams?.loggerConfig);
   const jsErrorHandler = useCallback(
     (e: Error, isFatal: boolean) => {
       if (isFatal) {
