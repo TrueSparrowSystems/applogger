@@ -36,19 +36,24 @@ export class DataParser {
    * @param  {any} sessionLogs
    * @returns string
    */
-  static getDevLogs(sessionLogs: any): string {
+  static getDevLogs(sessionLogs: any, pageNumber: number): string {
     const steps: string[] = [];
     let stepCount = 0;
 
     for (let index = 0; index < sessionLogs.length; index++) {
+      if (stepCount > pageNumber * 10) {
+        break;
+      }
+
       const dataChunk = sessionLogs[index];
 
       const chunkValue = Object.values(dataChunk);
       for (let subIndex = 0; subIndex < chunkValue.length; subIndex++) {
         const log = chunkValue[subIndex] as TrackInterface;
         stepCount++;
-        steps.push(
-          `
+        if (stepCount > (pageNumber - 1) * 10 && stepCount <= pageNumber * 10) {
+          steps.push(
+            `
           <div class="div-table-row-value">
           <div class="div-table-dev-logs-col1">
                 <div class="text">${stepCount}</div>
@@ -66,9 +71,24 @@ export class DataParser {
               </div>
             </div>
           `,
-        );
+          );
+        }
       }
     }
     return steps.join('');
+  }
+
+  /**
+   * @param  {any} sessionLogs
+   * @returns number
+   */
+  static getTotalSteps(sessionLogs: any): number {
+    let totalNumberOfSteps: number = 0;
+    for (let index = 0; index < sessionLogs.length; index++) {
+      const dataChunk = sessionLogs[index];
+      const chunkValue = Object.values(dataChunk);
+      totalNumberOfSteps += chunkValue.length;
+    }
+    return totalNumberOfSteps;
   }
 }

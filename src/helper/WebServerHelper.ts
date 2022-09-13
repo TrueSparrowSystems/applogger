@@ -125,12 +125,13 @@ class WebServerHelper {
       request.type === 'GET' &&
       requestUrlComponents[1].includes('session')
     ) {
-      console.log({requestUrlComponents});
       const sessionUrlComponents = requestUrlComponents[1].split('?');
-      console.log({sessionUrlComponents});
+
       if (sessionUrlComponents[0] === 'session') {
         if (requestUrlComponents.length >= 3) {
-          const sessionId = requestUrlComponents[2];
+          const urlComponentForSession = requestUrlComponents[2].split('?');
+          const sessionId = urlComponentForSession[0];
+
           this.logTracker.getSessionDetails(sessionId).then(sessionData => {
             const deviceInfo: any = this.logTracker.getDeviceInfo();
             const deviceInfoData: string[] = [];
@@ -144,9 +145,8 @@ class WebServerHelper {
                     '$1 ',
                   );
                   deviceInfoData.push(`
-  
-  <div class="device-info-text">${infoKey}: &nbsp; <span style="font-weight: 700;">${val}</span></div >
-    `);
+                    <div class="device-info-text">${infoKey}: &nbsp; <span style="font-weight: 700;">${val}</span></div >
+                 `);
                 }
               }
             }
@@ -194,8 +194,73 @@ class WebServerHelper {
                 
              </div>`;
 
+            let paginationComponent = '';
+            const totalNumberOfSteps = DataParser.getTotalSteps(sessionData);
+            const numberOfPages = Math.ceil(totalNumberOfSteps / 10);
+            const baseUrl = `${sessionId}?pn=`;
+            const currentIndex = parseInt(
+              urlComponentForSession?.[1]?.split('=')?.[1] || 1,
+              10,
+            );
+            if (currentIndex === numberOfPages) {
+              paginationComponent = `<div class="pagination">
+                 <a href="${baseUrl}${
+                currentIndex - 1
+              }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 </a>
+                 <a href="${baseUrl}${currentIndex - 2}" >${
+                currentIndex - 2
+              }</a>
+                 <a href="${baseUrl}${currentIndex - 1}" >${
+                currentIndex - 1
+              }</a>
+                 <a href="${baseUrl}${currentIndex}" class="active">${currentIndex}</a>
+                 <a class="disabled"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 </a>
+             </div>`;
+            } else if (currentIndex > 1) {
+              paginationComponent = `<div class="pagination">
+                 <a href="${baseUrl}${
+                currentIndex - 1
+              }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 </a>
+                 <a href="${baseUrl}${currentIndex - 1}">${currentIndex - 1}</a>
+                 <a href="${baseUrl}${currentIndex}" class="active">${currentIndex}</a>
+                 <a href="${baseUrl}${currentIndex + 1}">${currentIndex + 1}</a>
+                 <a href="${baseUrl}${
+                currentIndex + 1
+              }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 </a>
+             </div>
+         `;
+            } else {
+              paginationComponent = `<div class="pagination">
+                 <a class="disabled"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 </a>
+                 <a href="${baseUrl}1" class="active">1</a>
+                 <a href="${baseUrl}2">2</a>
+                 <a href="${baseUrl}3">3</a>
+                 <a href="${baseUrl}${
+                currentIndex + 1
+              }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                 </svg>
+                 </a>
+             </div>`;
+            }
+
             const userActionsSteps = DataParser.getUserActionData(sessionData);
-            const devLogs = DataParser.getDevLogs(sessionData);
+            const devLogs = DataParser.getDevLogs(sessionData, currentIndex);
             let responseHtml = this.replace(sessionDetails, {
               user_actions: userActionsSteps,
               dev_logs: devLogs,
@@ -203,6 +268,7 @@ class WebServerHelper {
               device_name: deviceName,
               sessionId: sessionId,
               bug_button: bugButton,
+              pagination_component: paginationComponent,
             });
             httpBridge.respond(
               request.requestId,
