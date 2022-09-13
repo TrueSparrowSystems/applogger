@@ -301,7 +301,7 @@ class WebServerHelper {
           });
         } else {
           const currentIndex = parseInt(
-            sessionUrlComponents?.[1]?.split('=')?.[1] || 0,
+            sessionUrlComponents?.[1]?.split('=')?.[1] || 1,
             10,
           );
           if (currentIndex === 0) {
