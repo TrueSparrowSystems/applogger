@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import {uuid} from 'uuidv4';
+import uuid from 'uuid';
 import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
@@ -23,7 +23,7 @@ enum SessionState {
 
 export class LogTracker {
   deviceInfo = new DeviceInfo();
-  sessionId: string = uuid();
+  sessionId: string = uuid.v4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
   bugSessionMap: Record<string, boolean> = {};
@@ -134,7 +134,7 @@ export class LogTracker {
    */
   public createNewSession() {
     this.resetLogger();
-    this.sessionId = uuid();
+    this.sessionId = uuid.v4();
 
     this.sessionState = SessionState.Active;
 
@@ -446,9 +446,11 @@ export class LogTracker {
         }
         data[this.sessionId] = Date.now();
 
-        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
-          () => {},
-        );
+        AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
+          AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
+            () => {},
+          );
+        });
       })
       .catch(() => {});
   }

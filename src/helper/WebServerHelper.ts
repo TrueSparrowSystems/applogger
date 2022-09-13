@@ -7,6 +7,8 @@ import {DataParser} from '../LogTracker/DataParser';
 import {LogTrackerConfigInterface} from '../LogTracker/LogTrackerConfigInterface';
 import {sessionDash} from '../pages/sessionDashboard';
 import {sessionDetails} from '../pages/sessionDetails';
+import Cache from '../services/Cache';
+import {CacheKey} from '../services/Cache/CacheKey';
 
 var httpBridge = require('react-native-http-bridge');
 
@@ -117,7 +119,14 @@ class WebServerHelper {
       request.type === 'POST' &&
       requestUrlComponents[3] === 'logBug'
     ) {
-      this.logTracker.toggleBugStatusBySessionId(requestUrlComponents[2]);
+      this.logTracker
+        .toggleBugStatusBySessionId(requestUrlComponents[2])
+        .then(() => {
+          return httpBridge.respond(request.requestId, 200);
+        })
+        .catch(() => {
+          httpBridge.respond(request.requestId, 500);
+        });
     }
 
     // you can use request.url, request.type and request.postData here
@@ -313,6 +322,7 @@ class WebServerHelper {
             );
           } else {
             // const sessionData = [];
+            Cache.setValue(CacheKey.currentDashboardIndex, currentIndex);
             let totalNumberOfSteps = 0;
             this.logTracker.getAllSessions().then((allSessions: any) => {
               if (allSessions) {
@@ -481,7 +491,9 @@ class WebServerHelper {
                           <a href="${baseUrl}1" class="active">1</a>
                           <a href="${baseUrl}2">2</a>
                           <a href="${baseUrl}3">3</a>
-                          <a href="${baseUrl}4"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <a href="${baseUrl}${
+                              currentIndex + 1
+                            }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                           </a>

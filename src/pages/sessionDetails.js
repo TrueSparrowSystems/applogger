@@ -1,3 +1,6 @@
+import Cache from '../services/Cache';
+import {CacheKey} from '../services/Cache/CacheKey';
+
 export const sessionDetails = `<!DOCTYPE html>
 <html>
   <head>
@@ -375,7 +378,12 @@ export const sessionDetails = `<!DOCTYPE html>
     }
 
     function onBackButtonClick(){
-      window.location.href = "/session";
+      const dashboardIndex = ${Cache.getValue(CacheKey.currentDashboardIndex)};
+      if(dashboardIndex){
+        window.location.href = "/session?pn="+dashboardIndex;
+      }else{
+        window.location.href = "/session";
+      }
     }
 
     async function downloadZipFile(filename, content) {
