@@ -369,7 +369,7 @@ export const sessionDetails = `<!DOCTYPE html>
     }
 
     function onBackButtonClick(){
-      history.back();
+      window.location.href = "/session";
     }
 
     async function downloadZipFile(filename, content) {
