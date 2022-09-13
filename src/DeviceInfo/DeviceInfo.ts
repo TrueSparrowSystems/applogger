@@ -148,7 +148,7 @@ export class DeviceInfo {
     });
 
     deviceInfoModule.getPowerState().then(state => {
-      this.deviceConstants.powerState = JSON.stringify(state);
+      this.deviceConstants.powerState = state;
     });
 
     deviceInfoModule.getProduct().then(product => {
@@ -256,7 +256,7 @@ export class DeviceInfo {
     });
 
     deviceInfoModule.getAvailableLocationProviders().then(providers => {
-      this.deviceConstants.locationProviders = JSON.stringify(providers);
+      this.deviceConstants.locationProviders = providers;
     });
 
     deviceInfoModule.getBrightness().then(brightness => {

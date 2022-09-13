@@ -1,4 +1,4 @@
-import {isNull, isUndefined} from 'lodash';
+import {isArray, isNull, isUndefined} from 'lodash';
 import moment from 'moment';
 import {Share} from 'react-native';
 import deviceInfoModule from 'react-native-device-info';
@@ -139,14 +139,23 @@ class WebServerHelper {
             if (deviceInfo) {
               for (const key in deviceInfo) {
                 if (Object.prototype.hasOwnProperty.call(deviceInfo, key)) {
-                  const val = deviceInfo[key];
-                  const infoKey: string = key.replace(
-                    /([a-zA-Z])(?=[A-Z])/g,
-                    '$1 ',
-                  );
-                  deviceInfoData.push(`
-                    <div class="device-info-text">${infoKey}: &nbsp; <span style="font-weight: 700;">${val}</span></div >
-                 `);
+                  let infoValue = deviceInfo[key];
+                  if (key !== 'uniqueId') {
+                    if (typeof infoValue === 'object' && !isArray(infoValue)) {
+                      const dataArray: Array<string> = [];
+                      Object.keys(infoValue).map(objectKey => {
+                        dataArray.push(
+                          `${objectKey}: <span style="font-weight: 400;">${infoValue[objectKey]}</span>`,
+                        );
+                      });
+                      infoValue = '<br/>' + dataArray.join('<br/>');
+                    }
+                    const infoKey = key.replace(/([a-zA-Z])(?=[A-Z])/g, '$1 ');
+                    deviceInfoData.push(`
+                                        
+                     <div class="device-info-text">${infoKey}: &nbsp; <span style="font-weight: 700;">${infoValue}</span></div>
+                    `);
+                  }
                 }
               }
             }

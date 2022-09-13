@@ -317,20 +317,26 @@ export const sessionDetails = `<!DOCTYPE html>
         text-transform: capitalize;
       }
       .pagination {
-        display: inline-block;
+        display: flex;
         float: right;
         margin-top: 50px;
+        margin-bottom: 50px;
       }
       
       .pagination a {
         box-sizing: border-box;
         width: 48px;
         height: 48px;
-        border: 2px solid #36415F;
         border-radius: 4px;
-        padding: 8px 16px;
+        padding: 8px 12px;
         text-decoration: none;
         border: 2px solid #36415F;
+        display: flex;
+        align-items: center;
+        margin: 2px;
+        justify-content: center;
+        color: #999999;
+
       }
       
       .pagination a.disabled {
