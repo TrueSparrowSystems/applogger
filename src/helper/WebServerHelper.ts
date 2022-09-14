@@ -1,4 +1,4 @@
-import {isArray, isNull, isUndefined} from 'lodash';
+import {isArray, isEmpty, isNull, isUndefined} from 'lodash';
 import moment from 'moment';
 import {Share} from 'react-native';
 import deviceInfoModule from 'react-native-device-info';
@@ -6,7 +6,12 @@ import {getLogTracker} from '../LogTracker';
 import {DataParser} from '../LogTracker/DataParser';
 import {LogTrackerConfigInterface} from '../LogTracker/LogTrackerConfigInterface';
 import {sessionDash} from '../pages/sessionDashboard';
-import {sessionDetails} from '../pages/sessionDetails';
+import {
+  devLogDiv,
+  emptyUserActionSteps,
+  sessionDetails,
+  userActionDiv,
+} from '../pages/sessionDetails';
 import Cache from '../services/Cache';
 import {CacheKey} from '../services/Cache/CacheKey';
 
@@ -331,15 +336,27 @@ class WebServerHelper {
             }
 
             const userActionsSteps = DataParser.getUserActionData(sessionData);
-            const devLogs = DataParser.getDevLogs(sessionData, currentIndex);
+            const devLogSteps = DataParser.getDevLogs(
+              sessionData,
+              currentIndex,
+            );
+
             let responseHtml = this.replace(sessionDetails, {
-              user_actions: userActionsSteps,
-              dev_logs: devLogs,
+              user_actions: isEmpty(userActionsSteps)
+                ? emptyUserActionSteps
+                : this.replace(userActionDiv, {
+                    user_action_steps: userActionsSteps,
+                  }),
+              dev_logs: isEmpty(devLogSteps)
+                ? ''
+                : this.replace(devLogDiv, {
+                    dev_log_steps: devLogSteps,
+                    pagination_component: paginationComponent,
+                  }),
               device_info: deviceInfoData.join(''),
               device_name: deviceName,
               sessionId: sessionId,
               bug_button: bugButton,
-              pagination_component: paginationComponent,
             });
             httpBridge.respond(
               request.requestId,
