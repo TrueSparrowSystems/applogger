@@ -65,11 +65,12 @@ export class DataParser {
                 <div class="dev-log-text">${log.type}</div>
               </div>
               <div class="div-table-dev-logs-col4"> 
-                <div class="dev-log-text" style="font-family: monospace; max-width: 30vw;">${JSON.stringify(
+                <div class="dev-log-text" style="font-family: monospace; color: #A1C3FF; max-width: 30vw;">${JSON.stringify(
                   log.params,
                 )}</div>
               </div>
             </div>
+
           `,
           );
         }
