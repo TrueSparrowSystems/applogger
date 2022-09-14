@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import {uuid} from 'uuidv4';
+import uuid from 'uuid';
 import {LogTrackerConfigInterface} from './LogTrackerConfigInterface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
@@ -10,6 +10,7 @@ import {DeviceConstantKeys, DeviceConstants} from '../DeviceInfo/types';
 import Constants from '../constants/Constants';
 
 const LOG_SESSION_KEY = 'log_session';
+const BUG_SESSION_MAP_KEY = 'bug_session_map';
 
 enum TrackingState {
   Enabled = 'Enabled',
@@ -22,9 +23,10 @@ enum SessionState {
 
 export class LogTracker {
   deviceInfo = new DeviceInfo();
-  sessionId: string = uuid();
+  sessionId: string = uuid.v4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
+  bugSessionMap: Record<string, boolean> = {};
   currentStoreId: number = 0;
   uploadLogs?: (
     sessionLogFilePaths: string[],
@@ -57,8 +59,15 @@ export class LogTracker {
     if (this.config?.logRotateDurationInHours) {
       this.removeOldTrackingLogs();
     }
-
-    this.createNewSession();
+    AsyncStorage.getItem(BUG_SESSION_MAP_KEY)
+      .then(res => {
+        if (res) {
+          this.bugSessionMap = JSON.parse(res);
+        }
+      })
+      .finally(() => {
+        this.createNewSession();
+      });
   }
   /**
    * @function bind function to bind all the class functions
@@ -88,6 +97,9 @@ export class LogTracker {
     this.getDeviceInfoByKeys.bind(this);
     this.deleteAllLogs.bind(this);
     this.deleteSessionLogFiles.bind(this);
+    this.toggleBugStatusBySessionId.bind(this);
+    this.getBugStatusBySessionId.bind(this);
+    this.getBugCount.bind(this);
   }
 
   /**
@@ -122,7 +134,7 @@ export class LogTracker {
    */
   public createNewSession() {
     this.resetLogger();
-    this.sessionId = uuid();
+    this.sessionId = uuid.v4();
 
     this.sessionState = SessionState.Active;
 
@@ -434,9 +446,11 @@ export class LogTracker {
         }
         data[this.sessionId] = Date.now();
 
-        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
-          () => {},
-        );
+        AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
+          AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
+            () => {},
+          );
+        });
       })
       .catch(() => {});
   }
@@ -563,6 +577,41 @@ export class LogTracker {
    */
   getDeviceInfoByKeys(keys: DeviceConstantKeys[]): DeviceConstants {
     return this.deviceInfo.getByKeys(keys);
+  }
+
+  /**
+   * @param  {string} sessionId
+   * @returns Promise
+   */
+  async toggleBugStatusBySessionId(sessionId: string): Promise<void> {
+    return new Promise(resolve => {
+      if (this.bugSessionMap[sessionId]) {
+        delete this.bugSessionMap[sessionId];
+      } else {
+        this.bugSessionMap[sessionId] = true;
+      }
+      AsyncStorage.setItem(
+        BUG_SESSION_MAP_KEY,
+        JSON.stringify(this.bugSessionMap),
+      ).then(() => {
+        return resolve();
+      });
+    });
+  }
+
+  /**
+   * @param  {string} sessionId
+   * @returns boolean
+   */
+  getBugStatusBySessionId(sessionId: string): boolean {
+    return !!this.bugSessionMap?.[sessionId];
+  }
+
+  /**
+   * @returns number
+   */
+  getBugCount(): number {
+    return Object.keys(this.bugSessionMap).length;
   }
 }
 
