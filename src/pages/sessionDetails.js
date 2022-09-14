@@ -3,6 +3,7 @@ import {CacheKey} from '../services/Cache/CacheKey';
 export const sessionDetails = `<!DOCTYPE html>
 <html>
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <style>
       html,
@@ -64,15 +65,15 @@ export const sessionDetails = `<!DOCTYPE html>
       }
 
       .div-title-text{
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 300;
-      font-size: 24px;
-      line-height: 29px;
-      display: flex;
-      align-items: center;
-      color: #FFFFFF;
-      margin-bottom: 30px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 300;
+        font-size: 24px;
+        line-height: 29px;
+        display: flex;
+        align-items: center;
+        color: #FFFFFF;
+        margin-bottom: 30px;
       }
       .div-table {
         width: 100%;
@@ -228,9 +229,6 @@ export const sessionDetails = `<!DOCTYPE html>
       }
       .content-container{
         background: #0F1242;
-        padding-left: 100px;
-        padding-right: 100px;
-        padding-bottom: 50px;
       }
 
       .log-container {
@@ -262,9 +260,13 @@ export const sessionDetails = `<!DOCTYPE html>
         color: #FFFFFF;
       }
       .downloadLogButton {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 800;
         color: #B5BCCD;
         text-align: center;
         text-decoration: none;
+        letter-spacing: 3px;
         font-size: 16px;
         padding-left: 25px;
         padding-right: 14px;
@@ -376,6 +378,20 @@ export const sessionDetails = `<!DOCTYPE html>
         justify-content: center;
         color: #999999;
       }
+
+      .details-container {
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-bottom: 50px;
+      }
+
+      .dev-logs-container {
+        padding-top: 20px;
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-bottom: 50px;
+        background-color: #0A0C2D;
+      }
   
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js" integrity="sha512-xcHCGC5tQ0SHlRX8Anbz6oy/OullASJkEhb4gjkneVpGE3/QGYejf14CUO5n5q5paiHfRFTa9HKgByxzidw2Bw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -474,7 +490,7 @@ export const sessionDetails = `<!DOCTYPE html>
           <div class="flex-row">
            {{bug_button}}
             <div class="flex-row" onclick="downloadLogs()">
-              <div class="downloadLogButton">Download Logs</div>
+              <div class="downloadLogButton">DOWNLOAD</div>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 13L1 14C1 15.6569 2.34315 17 4 17L14 17C15.6569 17 17 15.6569 17 14L17 13M13 9L9 13M9 13L5 9M9 13L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -484,6 +500,7 @@ export const sessionDetails = `<!DOCTYPE html>
       </div>
 
       <div class="content-container">
+      <div class="details-container">
         <div class="log-container">
           <div class="device-info-container">
             <div class="div-title-text">Device Details</div>
@@ -491,7 +508,7 @@ export const sessionDetails = `<!DOCTYPE html>
               <div class="device-details-table">
                 <div class="div-table-row-header">
                   <div class="div-table-col1" style='width: 100%;'>
-                    <div class="div-table-col-header-text" style='color: #ffffff;'>{{device_name}}</div>
+                    <div class="div-table-col-header-text" style='font-weight:700; color: #ffffff;'>{{device_name}}</div>
                   </div>
                 </div>
                 <div class="scroll">
@@ -516,26 +533,29 @@ export const sessionDetails = `<!DOCTYPE html>
             </div>
           </div>
         </div>
-        
-        <div class="div-title-text" style="margin-top: 40px">Dev Logs</div>
-        <div class="div-table" style="margin-top: 20px;">
-          <div class="div-table-row-header">
-            <div class="div-table-dev-logs-col1">
-              <div class="div-table-col-header-text">Step</div>
-            </div>
-            <div class="div-table-dev-logs-col2">
-              <div class="div-table-col-header-text">Time Stamp</div>
-            </div>
-            <div class="div-table-dev-logs-col3"> 
-              <div class="div-table-col-header-text">Type</div>
-            </div>
-            <div class="div-table-dev-logs-col4"> 
-              <div class="div-table-col-header-text">Params</div>
-            </div>
-          </div>
-          {{dev_logs}}
         </div>
-        {{pagination_component}}
+
+        <div class="dev-logs-container">
+          <div class="div-title-text" style="margin-top: 40px">Dev Logs</div>
+          <div class="div-table" style="margin-top: 20px;">
+            <div class="div-table-row-header">
+              <div class="div-table-dev-logs-col1">
+                <div class="div-table-col-header-text">Steps</div>
+              </div>
+              <div class="div-table-dev-logs-col2">
+                <div class="div-table-col-header-text">Time Stamp</div>
+              </div>
+              <div class="div-table-dev-logs-col3"> 
+                <div class="div-table-col-header-text">Type</div>
+              </div>
+              <div class="div-table-dev-logs-col4"> 
+                <div class="div-table-col-header-text">Params</div>
+              </div>
+            </div>
+            {{dev_logs}}
+          </div>
+          {{pagination_component}}
+          </div>
       </div>  
     </div>
   </body>
