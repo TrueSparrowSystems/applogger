@@ -132,6 +132,7 @@ export const sessionDetails = `<!DOCTYPE html>
         letter-spacing: 3px;
         text-transform: uppercase;
       }
+      
       .text {
         display: block; 
         overflow: hidden;
@@ -146,9 +147,28 @@ export const sessionDetails = `<!DOCTYPE html>
         align-items: center;
         letter-spacing: -0.006em;
         color: #ffffff;
-        margin-top: 7px;
-        margin-bottom: 7px;
+        margin-top: 5px;
+        margin-bottom: 5px;
       }
+
+      .dev-log-text {
+        display: block; 
+        overflow: hidden;
+        word-wrap: break-word;
+        text-overflow: ellipsis;
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        /* identical to box height, or 143% */
+        align-items: center;
+        letter-spacing: -0.006em;
+        color: #ffffff;
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+    
       .full-width{
         width:100%;
       }

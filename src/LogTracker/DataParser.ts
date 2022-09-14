@@ -56,16 +56,16 @@ export class DataParser {
             `
           <div class="div-table-row-value">
           <div class="div-table-dev-logs-col1">
-                <div class="text">${stepCount}</div>
+                <div class="dev-log-text">${stepCount}</div>
               </div>
               <div class="div-table-dev-logs-col2">
-                <div class="text">${log.ts}</div>
+                <div class="dev-log-text">${log.ts}</div>
               </div>
               <div class="div-table-dev-logs-col3"> 
-                <div class="text">${log.type}</div>
+                <div class="dev-log-text">${log.type}</div>
               </div>
               <div class="div-table-dev-logs-col4"> 
-                <div class="text" style="font-family: monospace; max-width: 30vw;">${JSON.stringify(
+                <div class="dev-log-text" style="font-family: monospace; max-width: 30vw;">${JSON.stringify(
                   log.params,
                 )}</div>
               </div>
