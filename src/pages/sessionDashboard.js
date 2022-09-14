@@ -122,7 +122,7 @@ export const sessionDash = `<!DOCTYPE html>
         margin-top: 25px;
         margin-bottom: 25px;
         font-family: "Inter";
-        // font-style: normal;
+         font-style: normal;
         font-weight: 800;
         font-size: 16px;
         line-height: 19px;
