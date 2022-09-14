@@ -71,6 +71,108 @@ class WebServerHelper {
     });
   }
 
+  getPaginationComponent(
+    baseUrl: string,
+    numberOfPages: number,
+    currentIndex: number,
+  ) {
+    const leftArrow = `<svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>`;
+
+    const rightArrow = `<svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>`;
+
+    const leftArrowComponent = ` <a href="${baseUrl}${
+      currentIndex - 1
+    }" class="${currentIndex === 1 ? 'disabled' : ''} pagination-arrows">
+                                      ${leftArrow}
+                                  </a>`;
+
+    const firstPageButtonComponent = `<a href="${baseUrl}1">1</a>`;
+
+    const paginationListSeparatorComponent = ` <div class="pagination-list-separator" >
+                                                ...
+                                                </div>`;
+
+    const lastPageButtonComponent = `<a href="${baseUrl}${numberOfPages}">${numberOfPages}</a>`;
+
+    const rightArrowComponent = ` <a href="${baseUrl}${
+      currentIndex + 1
+    }" class="${
+      currentIndex === numberOfPages ? 'disabled' : ''
+    } pagination-arrows">
+      ${rightArrow}
+  </a>`;
+
+    const renderMiddlePageButtons = () => {
+      if (numberOfPages <= 5) {
+        return [...Array(numberOfPages).keys()].map(val => {
+          const finalValue = val + 1;
+          return `<a href="${baseUrl}${finalValue}" class="${
+            finalValue === currentIndex ? 'active' : ''
+          }">${finalValue}</a>`;
+        });
+      } else {
+        const isEndIndices = currentIndex + 2 >= numberOfPages;
+        const isStartIndices = currentIndex <= 2;
+
+        const values = [
+          isEndIndices ? numberOfPages - 2 : isStartIndices ? 1 : currentIndex,
+          isEndIndices
+            ? numberOfPages - 1
+            : isStartIndices
+            ? 2
+            : currentIndex + 1,
+          isEndIndices ? numberOfPages : isStartIndices ? 3 : currentIndex + 2,
+        ];
+
+        if (currentIndex === numberOfPages - 3) {
+          values.push(numberOfPages);
+        }
+
+        return values.map(val => {
+          return `<a href="${baseUrl}${val}" class="${
+            val === currentIndex ? 'active' : ''
+          }">${val}</a>`;
+        });
+      }
+    };
+
+    return `<div class="pagination">
+                ${leftArrowComponent}
+
+                ${
+                  currentIndex >= 3 && numberOfPages > 5
+                    ? firstPageButtonComponent
+                    : ''
+                }
+
+                ${
+                  currentIndex >= 3 && numberOfPages > 5
+                    ? paginationListSeparatorComponent
+                    : ''
+                }
+
+                ${renderMiddlePageButtons()}
+
+                ${
+                  currentIndex < numberOfPages - 3 && numberOfPages > 5
+                    ? paginationListSeparatorComponent
+                    : ''
+                }
+
+                ${
+                  currentIndex < numberOfPages - 3 && numberOfPages > 5
+                    ? lastPageButtonComponent
+                    : ''
+                }
+
+                ${rightArrowComponent}
+            </div>`;
+  }
+
   /**
    * @param  {string} string
    * @param  {Record<string} replaceObject
@@ -221,73 +323,11 @@ class WebServerHelper {
             );
             if (numberOfPages > 1) {
               const baseUrl = `${sessionId}?pn=`;
-              if (numberOfPages === 2) {
-                paginationComponent = `<div class="pagination">
-               <a href="${baseUrl}1" ${
-                  currentIndex === 1 ? 'class=active' : ''
-                }>1</a>
-               <a href="${baseUrl}2" ${
-                  currentIndex === 2 ? 'class=active' : ''
-                }>2</a>
-           </div>`;
-              } else {
-                if (currentIndex === numberOfPages) {
-                  paginationComponent = `<div class="pagination">
-                 <a href="${baseUrl}${
-                    currentIndex - 1
-                  }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 </svg>
-                 </a>
-                 <a href="${baseUrl}${currentIndex - 2}" >${
-                    currentIndex - 2
-                  }</a>
-                 <a href="${baseUrl}${currentIndex - 1}" >${
-                    currentIndex - 1
-                  }</a>
-                 <a href="${baseUrl}${currentIndex}" class="active">${currentIndex}</a>
-                 <a class="disabled"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 </svg>
-                 </a>
-             </div>`;
-                } else if (currentIndex > 1) {
-                  paginationComponent = `<div class="pagination">
-                 <a href="${baseUrl}${
-                    currentIndex - 1
-                  }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 </svg>
-                 </a>
-                 <a href="${baseUrl}${currentIndex - 1}">${currentIndex - 1}</a>
-                 <a href="${baseUrl}${currentIndex}" class="active">${currentIndex}</a>
-                 <a href="${baseUrl}${currentIndex + 1}">${currentIndex + 1}</a>
-                 <a href="${baseUrl}${
-                    currentIndex + 1
-                  }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 </svg>
-                 </a>
-             </div>
-         `;
-                } else {
-                  paginationComponent = `<div class="pagination">
-                 <a class="disabled"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 </svg>
-                 </a>
-                 <a href="${baseUrl}1" class="active">1</a>
-                 <a href="${baseUrl}2">2</a>
-                 <a href="${baseUrl}3">3</a>
-                 <a href="${baseUrl}${
-                    currentIndex + 1
-                  }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                 </svg>
-                 </a>
-             </div>`;
-                }
-              }
+              paginationComponent = this.getPaginationComponent(
+                baseUrl,
+                numberOfPages,
+                currentIndex,
+              );
             }
 
             const userActionsSteps = DataParser.getUserActionData(sessionData);
@@ -429,77 +469,11 @@ class WebServerHelper {
                       let paginationComponent = '';
                       if (numberOfPages > 1) {
                         const baseUrl = 'session?pn=';
-                        if (numberOfPages === 2) {
-                          paginationComponent = `<div class="pagination">
-                         <a href="${baseUrl}1" ${
-                            currentIndex === 1 ? 'class=active' : ''
-                          }>1</a>
-                         <a href="${baseUrl}2" ${
-                            currentIndex === 2 ? 'class=active' : ''
-                          }>2</a>
-                     </div>`;
-                        } else {
-                          if (currentIndex === numberOfPages) {
-                            paginationComponent = `<div class="pagination">
-                          <a href="${baseUrl}${
-                              currentIndex - 1
-                            }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          </a>
-                          <a href="${baseUrl}${currentIndex - 2}" >${
-                              currentIndex - 2
-                            }</a>
-                          <a href="${baseUrl}${currentIndex - 1}" >${
-                              currentIndex - 1
-                            }</a>
-                          <a href="${baseUrl}${currentIndex}" class="active">${currentIndex}</a>
-                          <a class="disabled"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          </a>
-                      </div>`;
-                          } else if (currentIndex > 1) {
-                            paginationComponent = `<div class="pagination">
-                          <a href="${baseUrl}${
-                              currentIndex - 1
-                            }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          </a>
-                          <a href="${baseUrl}${currentIndex - 1}">${
-                              currentIndex - 1
-                            }</a>
-                          <a href="${baseUrl}${currentIndex}" class="active">${currentIndex}</a>
-                          <a href="${baseUrl}${currentIndex + 1}">${
-                              currentIndex + 1
-                            }</a>
-                          <a href="${baseUrl}${
-                              currentIndex + 1
-                            }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          </a>
-                      </div>
-                  `;
-                          } else {
-                            paginationComponent = `<div class="pagination">
-                          <a class="disabled"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          </a>
-                          <a href="${baseUrl}1" class="active">1</a>
-                          <a href="${baseUrl}2">2</a>
-                          <a href="${baseUrl}3">3</a>
-                          <a href="${baseUrl}${
-                              currentIndex + 1
-                            }"><svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 1.5L10 10.5L1 19.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          </a>
-                      </div>`;
-                          }
-                        }
+                        paginationComponent = this.getPaginationComponent(
+                          baseUrl,
+                          numberOfPages,
+                          currentIndex,
+                        );
                       }
 
                       if (index === allKeys.length - 1) {

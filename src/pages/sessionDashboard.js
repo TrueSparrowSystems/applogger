@@ -18,6 +18,11 @@ export const sessionDash = `<!DOCTYPE html>
         color: white;
       }
 
+      ::selection{
+        background-color: #ffffff;
+        color: #000000;
+      }
+
       .container {
         background-color: #040E2F;
         width: "100%";
@@ -219,33 +224,52 @@ export const sessionDash = `<!DOCTYPE html>
         margin-bottom: 50px;
       }
       
-      .pagination a {
+      .pagination a{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999999;
+        padding: 8px 12px;
+
+      }
+      
+      .pagination a:not(.pagination-arrows) {
         box-sizing: border-box;
         width: 48px;
         height: 48px;
         border-radius: 4px;
-        padding: 8px 12px;
         text-decoration: none;
         border: 2px solid #36415F;
-        display: flex;
-        align-items: center;
         margin: 2px;
-        justify-content: center;
-
       }
       
-      .pagination a.disabled {
+      .pagination a.disabled:not(.pagination-arrows) {
         background-color: #6f7373;
         color: white;
         border: 1px solid #6f7373;
+      }
+
+      .pagination a.disabled{
+        display:none
       }
 
       .pagination a.active {
         background: #101F3F;
         color: white;
       }
-      
-      .pagination a:hover:not(.active,.disabled) {background-color: #ffffff70;}
+
+      .pagination a:hover:not(.active,.disabled,.pagination-arrows) {
+        background-color: #36415F;
+      }
+
+      .pagination .pagination-list-separator{
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999999;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js" integrity="sha512-xcHCGC5tQ0SHlRX8Anbz6oy/OullASJkEhb4gjkneVpGE3/QGYejf14CUO5n5q5paiHfRFTa9HKgByxzidw2Bw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
