@@ -36,7 +36,7 @@ export class DataParser {
    * @param  {any} sessionLogs
    * @returns string
    */
-  static getDevLogs(sessionLogs: any, pageNumber: number): string {
+  static getDevLogs(sessionLogs: any, pageNumber: number = 1): string {
     const steps: string[] = [];
     let stepCount = 0;
 
