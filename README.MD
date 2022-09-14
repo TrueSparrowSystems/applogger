@@ -1,6 +1,8 @@
-# appLogger
+![Group 11088](https://user-images.githubusercontent.com/22423684/190075493-4df6c7fc-14c5-4684-9c63-1aff15113a2d.png)
 
-## Overview
+![npm version](https://img.shields.io/npm/v/@plgworks/applogger.svg?style=flat)
+
+# Overview
 
 `appLogger` is a React Native mobile application framework that helps in minimizing QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
 
