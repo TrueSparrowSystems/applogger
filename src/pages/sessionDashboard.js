@@ -1,6 +1,8 @@
 export const sessionDash = `<!DOCTYPE html>
 <html>
   <head>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
       html,
       body {
@@ -66,7 +68,7 @@ export const sessionDash = `<!DOCTYPE html>
       .card-count-text {
         margin-top: 20px;
         margin-bottom: 10px;
-        font-family: "Inter";
+        font-family: 'Inter';
         font-style: normal;
         font-weight: 700;
         font-size: 20px;
@@ -81,7 +83,7 @@ export const sessionDash = `<!DOCTYPE html>
         font-size: 15px;
         line-height: 18px;
         align-items: center;
-        color: #ffffff;
+        color: #B5BCCD;
       }
       .star-box {
         display: flex;
@@ -120,7 +122,7 @@ export const sessionDash = `<!DOCTYPE html>
         margin-top: 25px;
         margin-bottom: 25px;
         font-family: "Inter";
-        font-style: normal;
+         font-style: normal;
         font-weight: 800;
         font-size: 16px;
         line-height: 19px;
@@ -157,10 +159,10 @@ export const sessionDash = `<!DOCTYPE html>
       }
       .link-text{
         text-decoration: none;
-        color: #A1C3FF;
+        color: #A2C3FF;
       }
       .link-text:hover{
-        color: #A1C3FF5A;
+        color: #A2C3FF5A;
       }
       .div-table-col0 {
         width: 8%;
