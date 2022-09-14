@@ -1,10 +1,10 @@
-# applogger
+# appLogger
 
 ## Overview
 
-`applogger` is a React Native mobile application framework that helps in minimizing QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
+`appLogger` is a React Native mobile application framework that helps in minimizing QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
 
-## Why applogger?
+## Why appLogger?
 
 Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix it. A lot of time, finding out these reproducible steps becomes a time-consuming effort.
 
@@ -12,11 +12,11 @@ On the developer side, QA data isn't always accurate for replicating the problem
 
 To solve these problems, we need to track the user actions and application state and allow them to be shared easily.
 
-`applogger` provides React Native components with customized tracking to minimize the integration effort in any existing or a new application. It also provides a generic wrapper that can be used with any React Native component. A simple `track` function can be used by developers to provide tracking logic to custom methods.
+`appLogger` provides React Native components with customized tracking to minimize the integration effort in any existing or a new application. It also provides a generic wrapper that can be used with any React Native component. A simple `track` function can be used by developers to provide tracking logic to custom methods.
 
 Developers can access the app sessions including the steps and associated logs via the web interface using the device's IP address. The web interface includes a session dashboard with a list of sessions and a session details page that includes device information as well as user action and developer logs.
 
-### Other features of the applogger:
+### Other features of the appLogger:
 
 - Session management - from the helper menu, the user can stop the current session, start a new one, and can temporarily disable tracking in the current session.
 - Download Logs - session logs can be downloaded in HTML or JSON format from the web interface.
@@ -32,12 +32,12 @@ We have provided a [sample app](https://github.com/PLG-Works/app-logger/tree/mas
 # Installation
 
 ```sh
-npm install @plgworks/applogger --save
+npm install @plgworks/appLogger --save
 ```
 
 ### Add Dependencies
 
-`applogger` has some peer dependencies. It is recommended that you follow the installation instructions of each package to verify that it is properly configured.
+`appLogger` has some peer dependencies. It is recommended that you follow the installation instructions of each package to verify that it is properly configured.
 
 - [@react-native-async-storage/async-storage](https://www.npmjs.com/package/@react-native-async-storage/async-storage)
 - [react-native-device-info](https://www.npmjs.com/package/react-native-device-info)
@@ -76,7 +76,7 @@ type appLoggerParams = {
 ```
 
 `port` is an optional prop on which the server should start, default port is `5561`.
-`loggerConfig` is an object of type `LogTrackerConfigInterface`. It's used to configure `applogger`. If not provided, it will use default configuration.
+`loggerConfig` is an object of type `LogTrackerConfigInterface`. It's used to configure `appLogger`. If not provided, it will use default configuration.
 
 ```typescript
 interface LogTrackerConfigInterface {
@@ -101,10 +101,10 @@ We can configure the following parameters:
 - `logRotateDurationInHours` - Flag to clear the logs after certain intervals. If not provided, it will not automatically clear the logs from storage.
 - `sensitiveDataKeywords` - Array containing sensitive keys which when encountered in params will be redacted.
 
-Here is a code snippet to configure `applogger` on port 8000.
+Here is a code snippet to configure `appLogger` on port 8000.
 
 ```javascript
-import {useAppLogger, HelperMenu} from '@plgworks/applogger';
+import {useAppLogger, HelperMenu} from '@plgworks/appLogger';
 
 function App() {
   const uploadFile = filePath => {
@@ -161,7 +161,8 @@ export default App;
 ```
 
 The helper menu can now be accessed by **shaking your device**.
-This will enable you to do the following things: 
+This will enable you to do the following things:
+
 - Share server URL.
 - Upload logs.
 - Delete Logs.
@@ -169,19 +170,22 @@ This will enable you to do the following things:
 - Stop current session and start a new session.
 
 You can access your logs using the link below.
+
 ```
 <your-ip-address>:<port>/session
 ```
+
 For example:
+
 ```
 192.168.0.1:8000/session
 ```
 
 This link can be shared from the `Share server URL` option in the helper menu.
 
-## Components provided by `applogger`
+## Components provided by `appLogger`
 
-Following are some of the [React Native components](https://reactnative.dev/docs/components-and-apis) that applogger provides with tracking.
+Following are some of the [React Native components](https://reactnative.dev/docs/components-and-apis) that appLogger provides with tracking.
 
 - Button
 - Pressable
@@ -192,27 +196,27 @@ Following are some of the [React Native components](https://reactnative.dev/docs
 - TouchableOpacity
 - TouchableWithoutFeedback
 
-How to use these components? Just import these components from `@plgworks/applogger` instead of `react-native` and provide a testID.
+How to use these components? Just import these components from `@plgworks/appLogger` instead of `react-native` and provide a testID.
 
 Eg - To import TouchableWithoutFeedback :
 
 ```javascript
-import {TouchableWithoutFeedback} from '@plgworks/applogger';
+import {TouchableWithoutFeedback} from '@plgworks/appLogger';
 
 <TouchableWithoutFeedback testID={'some_test_id'} />;
 ```
 
 ## How to use Generic component
 
-- The generic component from `appLogger` can be used to enable tracking for any component other than those listed above. 
-  - The only additional step would be that to wrap the component (or list of components) in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged. 
-- As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component. 
+- The generic component from `appLogger` can be used to enable tracking for any component other than those listed above.
+  - The only additional step would be that to wrap the component (or list of components) in a `ComponentWrapper` and provide a `testID` to those components. Apart from that, the wrapped components' logic stays unchanged.
+- As it supports all `ViewProps`, the `ComponentWrapper` can be used in place of the `View` Component.
 - As of now `ComponentWrapper` works only on a single level, which means it does not track action on children components of wrapped components.
 
 Example snippets:
 
 ```javascript
-import {ComponentWrapper} from ‘@plgworks/applogger’;
+import {ComponentWrapper} from ‘@plgworks/appLogger’;
 
 <ComponentWrapper>
     <Component testID="component_test_id" {...props}/>
@@ -220,7 +224,7 @@ import {ComponentWrapper} from ‘@plgworks/applogger’;
 ```
 
 ```javascript
-import {ComponentWrapper} from ‘@plgworks/applogger’;
+import {ComponentWrapper} from ‘@plgworks/appLogger’;
 <ComponentWrapper>
   <Component1 testID="component1_test_id" {...props} />
   <Component2 testID="component2_test_id" {...props} />
@@ -249,11 +253,11 @@ Following are the functions that have log tracking enabled in them.
 - onRefresh
 - onValueChange
 
-How to use these functions? No change, you can write it as you would normally do and the `applogger` will take care of the rest, provided your component is imported from `@plgworks/applogger` or wrapped inside `ComponentWrapper`.
+How to use these functions? No change, you can write it as you would normally do and the `appLogger` will take care of the rest, provided your component is imported from `@plgworks/appLogger` or wrapped inside `ComponentWrapper`.
 
 ## Custom Tracking
 
-You can use tracking for any other function that you choose, in addition to the ones listed above. `applogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
+You can use tracking for any other function that you choose, in addition to the ones listed above. `appLogger` provides a track interface for custom tracking of activity. Here `type` and `params` are mandatory, while other fields are optional.
 
 ```typescript
 interface TrackInterface {
@@ -265,12 +269,12 @@ interface TrackInterface {
 }
 ```
 
-Here is an example for custom tracking using `applogger`. Consider keeping track of any error that occurs when loading the image. It's implementation could be as follows.
+Here is an example for custom tracking using `appLogger`. Consider keeping track of any error that occurs when loading the image. It's implementation could be as follows.
 
 ```javascript
 import {useCallback} from 'react';
 import {Image} from 'react-native';
-import {getLogTracker} from '@plgworks/applogger';
+import {getLogTracker} from '@plgworks/appLogger';
 
 function CustomTrackingDemo() {
     const imageTestID = 'custom_tracking_demo_image';
@@ -310,8 +314,8 @@ function CustomTrackingDemo() {
   </table>
   
 ### Web Interface
-<img width="1102" alt="Session Dashboard - PLG Works applogger" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
-<img width="1516" alt="Session Details - PLG Works applogger" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
+<img width="1102" alt="Session Dashboard - PLG Works appLogger" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
+<img width="1516" alt="Session Details - PLG Works appLogger" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
 
 ## Contributors
 
