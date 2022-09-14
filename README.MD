@@ -1,6 +1,19 @@
-![Group 11088](https://user-images.githubusercontent.com/22423684/190075493-4df6c7fc-14c5-4684-9c63-1aff15113a2d.png)
+<h1 align="center">
+  <a href="https://plgworks.com/applogger">
+    AppLogger </a>
+</h1>
 
-![npm version](https://img.shields.io/npm/v/@plgworks/applogger.svg?style=flat)
+<div align="center">
+ <image src="https://user-images.githubusercontent.com/22423684/190075493-4df6c7fc-14c5-4684-9c63-1aff15113a2d.png" />
+</div>
+<p align="center">
+ <a href="https://github.com/PLG-Works/applogger/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="AppLogger is released under the MIT license." />
+  </a>
+    <a href="https://www.npmjs.org/package/react-native">
+    <img src="https://img.shields.io/npm/v/@plgworks/applogger?color=brightgreen&label=npm%20package" alt="Current npm package version." />
+  </a>
+</p>
 
 # Overview
 
