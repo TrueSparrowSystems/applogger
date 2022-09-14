@@ -319,6 +319,12 @@ function CustomTrackingDemo() {
 <img width="1102" alt="Session Dashboard - PLG Works appLogger" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
 <img width="1516" alt="Session Details - PLG Works appLogger" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
 
+## Contribution
+
+We welcome more helping hands to make appLogger better. Feel free to report issues, raise PRs for fixes & enhancements.
+
+<p align="left">Built with :heart: by <a href="https://plgworks.com/" target="_blank">PLG Works</a></p>
+
 ## Contributors
 
 - [Deepesh Kumar Nath](https://github.com/deepesh-kn)
