@@ -453,12 +453,6 @@ export const sessionDetails = `<!DOCTYPE html>
         color: #999999;
       }
 
-      .details-container {
-        padding-left: 100px;
-        padding-right: 100px;
-        padding-bottom: 50px;
-      }
-
       .dev-logs-container {
         padding-top: 20px;
         padding-left: 100px;
@@ -574,7 +568,6 @@ export const sessionDetails = `<!DOCTYPE html>
       </div>
 
       <div class="content-container">
-      <div class="details-container">
         <div class="log-container">
           <div class="device-info-container">
             <div class="div-title-text">Device Details</div>
@@ -597,15 +590,11 @@ export const sessionDetails = `<!DOCTYPE html>
               {{user_actions}}
 
             </div>
-            {{dev_logs}}
-          </div>
-          {{pagination_component}}
           </div>
 
-        </div>
        </div>  
-      {{dev_logs}}
-
+        {{dev_logs}}
+      </div>
     </div>
   </body>
 </html>`;
