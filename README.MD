@@ -4,7 +4,7 @@
 </h1>
 
 <div align="center">
- <image src="https://user-images.githubusercontent.com/22423684/190075493-4df6c7fc-14c5-4684-9c63-1aff15113a2d.png" />
+ <img width="526" alt="Screenshot 2022-09-15 at 7 16 25 PM" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png">
 </div>
 <p align="center">
  <a href="https://github.com/PLG-Works/applogger/blob/master/LICENSE">
@@ -15,6 +15,7 @@
   </a>
 </p>
 
+
 # Overview
 
 `AppLogger` is a React Native mobile application framework that helps in minimizing QA issue-reporting time and developer debugging time by providing a web interface for the logs generated and steps taken by the user on a device using the device's IP address. The user can keep track of their sessions and logs, as well as upload, download, and delete them.
@@ -23,13 +24,21 @@
 
 Whenever an issue is reported, developers need issue reproducible steps along with some data to understand, debug and fix it. A lot of time, finding out these reproducible steps becomes a time-consuming effort.
 
-On the developer side, QA data isn't always accurate for replicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
+### On the Developer side:
+
+QA data isn't always accurate for replicating the problem, and incomplete data can complicate troubleshooting. As a result, debugging time increases, and the issue may go unresolved since it is not reproducible.
 
 To solve these problems, we need to track the user actions and application state and allow them to be shared easily.
 
 `AppLogger` provides React Native components with customized tracking to minimize the integration effort in any existing or a new application. It also provides a generic wrapper that can be used with any React Native component. A simple `track` function can be used by developers to provide tracking logic to custom methods.
 
 Developers can access the app sessions including the steps and associated logs via the web interface using the device's IP address. The web interface includes a session dashboard with a list of sessions and a session details page that includes device information as well as user action and developer logs.
+
+### On the QA side: 
+
+`AppLogger` proves to be a boon by eliminating the need to perform same steps manually for a number of times. Additionally, it simplifies the process to convey the bug's replication steps to developers.
+
+It saves their time by keeping track of the steps in case of Random testing even when the issues are not reproducible.
 
 ### Other features of the AppLogger:
 
