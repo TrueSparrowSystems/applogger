@@ -12,10 +12,10 @@ import {
   sessionDetails,
   userActionDiv,
 } from '../pages/sessionDetails';
-import Cache from '../services/Cache';
-import {CacheKey} from '../services/Cache/CacheKey';
 
 var httpBridge = require('react-native-http-bridge');
+
+export const URL_PARAM_DELIMITER: string = '$';
 
 export const DEFAULT_SERVER_PORT = 5561;
 class WebServerHelper {
@@ -81,6 +81,10 @@ class WebServerHelper {
     numberOfPages: number,
     currentIndex: number,
   ) {
+    function saveNextPage(pageNum: number): string {
+      return `onclick="return saveCurrentPageNumber(${pageNum});"`;
+    }
+
     const leftArrow = `<svg width="11" height="21" viewBox="0 0 11 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M10 19.5L1 10.5L10 1.5" stroke="#36415F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>`;
@@ -91,23 +95,29 @@ class WebServerHelper {
 
     const leftArrowComponent = ` <a href="${baseUrl}${
       currentIndex - 1
-    }" class="${currentIndex === 1 ? 'disabled' : ''} pagination-arrows">
+    }" class="${
+      currentIndex === 1 ? 'disabled' : ''
+    } pagination-arrows" ${saveNextPage(currentIndex - 1)}>
                                       ${leftArrow}
                                   </a>`;
 
-    const firstPageButtonComponent = `<a href="${baseUrl}1">1</a>`;
+    const firstPageButtonComponent = `<a href="${baseUrl}1" ${saveNextPage(
+      1,
+    )}>1</a>`;
 
     const paginationListSeparatorComponent = ` <div class="pagination-list-separator" >
                                                 ...
                                                 </div>`;
 
-    const lastPageButtonComponent = `<a href="${baseUrl}${numberOfPages}">${numberOfPages}</a>`;
+    const lastPageButtonComponent = `<a href="${baseUrl}${numberOfPages}" ${saveNextPage(
+      numberOfPages,
+    )}>${numberOfPages}</a>`;
 
     const rightArrowComponent = ` <a href="${baseUrl}${
       currentIndex + 1
     }" class="${
       currentIndex === numberOfPages ? 'disabled' : ''
-    } pagination-arrows">
+    } pagination-arrows" ${saveNextPage(currentIndex + 1)}>
       ${rightArrow}
   </a>`;
 
@@ -117,7 +127,7 @@ class WebServerHelper {
           const finalValue = val + 1;
           return `<a href="${baseUrl}${finalValue}" class="${
             finalValue === currentIndex ? 'active' : ''
-          }">${finalValue}</a>`;
+          }" ${saveNextPage(finalValue)}>${finalValue}</a>`;
         });
       } else {
         const isEndIndices = currentIndex + 2 >= numberOfPages;
@@ -140,7 +150,7 @@ class WebServerHelper {
         return values.map(val => {
           return `<a href="${baseUrl}${val}" class="${
             val === currentIndex ? 'active' : ''
-          }">${val}</a>`;
+          }" ${saveNextPage(val)}>${val}</a>`;
         });
       }
     };
@@ -203,37 +213,46 @@ class WebServerHelper {
   onStart(request: any) {
     const requestUrlComponents = request.url.split('/');
 
+    const urlParamsArray: string[] =
+      requestUrlComponents[2]?.split?.(URL_PARAM_DELIMITER) || [];
+
+    const sessionId = urlParamsArray?.[0];
+
     if (request.type === 'POST' && requestUrlComponents[3] === 'download') {
-      this.logTracker
-        .getSessionDetails(requestUrlComponents[2])
-        .then(res => {
-          return httpBridge.respond(
-            request.requestId,
-            200,
-            'application/json',
-            JSON.stringify(res),
-          );
-        })
-        .catch(() => {
-          httpBridge.respond(
-            request.requestId,
-            500,
-            'application/json',
-            '{"message": "Bad Request"}',
-          );
-        });
+      if (sessionId) {
+        this.logTracker
+          .getSessionDetails(sessionId)
+          .then(res => {
+            return httpBridge.respond(
+              request.requestId,
+              200,
+              'application/json',
+              JSON.stringify(res),
+            );
+          })
+          .catch(() => {
+            httpBridge.respond(
+              request.requestId,
+              500,
+              'application/json',
+              '{"message": "Bad Request"}',
+            );
+          });
+      }
     } else if (
       request.type === 'POST' &&
       requestUrlComponents[3] === 'logBug'
     ) {
-      this.logTracker
-        .toggleBugStatusBySessionId(requestUrlComponents[2])
-        .then(() => {
-          return httpBridge.respond(request.requestId, 200);
-        })
-        .catch(() => {
-          httpBridge.respond(request.requestId, 500);
-        });
+      if (sessionId) {
+        this.logTracker
+          .toggleBugStatusBySessionId(sessionId)
+          .then(() => {
+            return httpBridge.respond(request.requestId, 200);
+          })
+          .catch(() => {
+            httpBridge.respond(request.requestId, 500);
+          });
+      }
     }
 
     // you can use request.url, request.type and request.postData here
@@ -241,13 +260,11 @@ class WebServerHelper {
       request.type === 'GET' &&
       requestUrlComponents[1].includes('session')
     ) {
-      const sessionUrlComponents = requestUrlComponents[1].split('?');
-
-      if (sessionUrlComponents[0] === 'session') {
-        if (requestUrlComponents.length >= 3) {
-          const urlComponentForSession = requestUrlComponents[2].split('?');
-          const sessionId = urlComponentForSession[0];
-
+      //URL params for Session Dashboard route.
+      const urlParamsArrayForSessionDashboard: string[] =
+        requestUrlComponents[1]?.split?.(URL_PARAM_DELIMITER);
+      if (urlParamsArrayForSessionDashboard[0] === 'session') {
+        if (requestUrlComponents.length >= 3 && sessionId) {
           this.logTracker.getSessionDetails(sessionId).then(sessionData => {
             const deviceInfo: any = this.logTracker.getDeviceInfo();
             const deviceInfoData: string[] = [];
@@ -277,7 +294,7 @@ class WebServerHelper {
             }
             const isBug = this.logTracker.getBugStatusBySessionId(sessionId);
             const bugButton = `
-              <div onclick="toggleBug()" >
+              <div onclick="toggleBug()" class="action-button">
                   <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:${
                     isBug ? 'block' : 'none'
                   };">
@@ -322,12 +339,9 @@ class WebServerHelper {
             let paginationComponent = '';
             const totalNumberOfSteps = DataParser.getTotalSteps(sessionData);
             const numberOfPages = Math.ceil(totalNumberOfSteps / 10);
-            const currentIndex = parseInt(
-              urlComponentForSession?.[1]?.split('=')?.[1] || 1,
-              10,
-            );
+            const currentIndex = parseInt(urlParamsArray?.[1], 10) || 1;
             if (numberOfPages > 1) {
-              const baseUrl = `${sessionId}?pn=`;
+              const baseUrl = `${sessionId}${URL_PARAM_DELIMITER}`;
               paginationComponent = this.getPaginationComponent(
                 baseUrl,
                 numberOfPages,
@@ -366,10 +380,8 @@ class WebServerHelper {
             );
           });
         } else {
-          const currentIndex = parseInt(
-            sessionUrlComponents?.[1]?.split('=')?.[1] || 1,
-            10,
-          );
+          const currentIndex =
+            parseInt(urlParamsArrayForSessionDashboard[1], 10) || 1;
           if (currentIndex === 0) {
             httpBridge.respond(
               request.requestId,
@@ -379,7 +391,6 @@ class WebServerHelper {
             );
           } else {
             // const sessionData = [];
-            Cache.setValue(CacheKey.currentDashboardIndex, currentIndex);
             let totalNumberOfSteps = 0;
             this.logTracker.getAllSessions().then((allSessions: any) => {
               if (allSessions) {
@@ -485,7 +496,7 @@ class WebServerHelper {
                       }
                       let paginationComponent = '';
                       if (numberOfPages > 1) {
-                        const baseUrl = 'session?pn=';
+                        const baseUrl = `session${URL_PARAM_DELIMITER}`;
                         paginationComponent = this.getPaginationComponent(
                           baseUrl,
                           numberOfPages,
