@@ -329,8 +329,9 @@ function CustomTrackingDemo() {
   </table>
   
 ### Web Interface
-<img width="1102" alt="Session Dashboard - PLG Works AppLogger" src="https://user-images.githubusercontent.com/87412080/172325908-6cc47d78-0d6b-41a4-a596-26174b6c27b3.png">
-<img width="1516" alt="Session Details - PLG Works AppLogger" src="https://user-images.githubusercontent.com/87412080/172326006-8adf4739-5160-4672-b813-7d59457036a6.png">
+<img width="1158" alt="Screenshot 2022-09-15 at 10 19 58 AM" src="https://user-images.githubusercontent.com/22423684/190317302-f49ff346-f64b-410b-a1f8-e0b024c0a917.png">
+<img width="1784" alt="Screenshot 2022-09-15 at 10 15 10 AM" src="https://user-images.githubusercontent.com/22423684/190317297-1e823f15-bd40-407e-a999-ed79ec2b187a.png">
+<img width="1699" alt="Screenshot 2022-09-15 at 10 15 29 AM" src="https://user-images.githubusercontent.com/22423684/190317277-ed5d9b2d-68c1-4b2b-a03d-f3d449dbde36.png">
 
 ## Contribution
 
