@@ -235,15 +235,29 @@ export class LogTracker {
           if (Array.isArray(sessionId)) {
             for (let index = 0; index < sessionId.length; index++) {
               delete data[sessionId[index]];
+              if (this.bugSessionMap?.[sessionId[index]]) {
+                delete this.bugSessionMap[sessionId[index]];
+              }
             }
             try {
+              await AsyncStorage.setItem(
+                BUG_SESSION_MAP_KEY,
+                JSON.stringify(this.bugSessionMap),
+              );
               await AsyncStorage.multiRemove(sessionId);
             } catch {
               reject();
             }
           } else {
             delete data[sessionId];
+            if (this.bugSessionMap?.[sessionId]) {
+              delete this.bugSessionMap[sessionId];
+            }
             try {
+              await AsyncStorage.setItem(
+                BUG_SESSION_MAP_KEY,
+                JSON.stringify(this.bugSessionMap),
+              );
               await AsyncStorage.removeItem(sessionId);
             } catch {
               reject();
