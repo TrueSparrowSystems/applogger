@@ -335,9 +335,11 @@ function CustomTrackingDemo() {
 
 ## Contribution
 
-We welcome more helping hands to make AppLogger better. Feel free to report issues, raise PRs for fixes & enhancements.
+`AppLogger` is an open source project and will always remain free to use. Feel free to report issues, raise PRs for fixes & enhancements. If you think     it's cool, please star it 🌟<br />
 
-<p align="left">Built with :heart: by <a href="https://plgworks.com/" target="_blank">PLG Works</a></p>
+ <a href="https://plgworks.com/#requestForm"> Contact us </a> if you need any help with this or just want to say hi!
+
+Made with ❤️ at <a href="https://plgworks.com/" target="_blank">PLG Works</a>
 
 ## Contributors
 
