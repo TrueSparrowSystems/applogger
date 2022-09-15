@@ -1,5 +1,3 @@
-import Cache from '../services/Cache';
-import {CacheKey} from '../services/Cache/CacheKey';
 export const sessionDetails = `<!DOCTYPE html>
 <html>
   <head>
@@ -18,7 +16,7 @@ export const sessionDetails = `<!DOCTYPE html>
       }
 
       ::selection{
-        background-color: #ffffff;
+        background-color: #ffffffcc;
         color: #000000;
       }
 
@@ -460,10 +458,17 @@ export const sessionDetails = `<!DOCTYPE html>
         padding-bottom: 50px;
         background-color: #0A0C2D;
       }
+
+      .action-button:hover{
+        cursor:pointer;
+      }
   
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js" integrity="sha512-xcHCGC5tQ0SHlRX8Anbz6oy/OullASJkEhb4gjkneVpGE3/QGYejf14CUO5n5q5paiHfRFTa9HKgByxzidw2Bw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+
+    document.title = "Session Details"
+
     function flag(sessionId) {
         // Creating Our XMLHttpRequest object 
         var xhr = new XMLHttpRequest();
@@ -484,9 +489,9 @@ export const sessionDetails = `<!DOCTYPE html>
     }
 
     function onBackButtonClick(){
-      const dashboardIndex = ${Cache.getValue(CacheKey.currentDashboardIndex)};
+      let dashboardIndex = window.localStorage.getItem('session_dashboard_pagination_index')
       if(dashboardIndex){
-        window.location.href = "/session?pn="+dashboardIndex;
+        window.location.href = "/session$" + dashboardIndex;
       }else{
         window.location.href = "/session";
       }
@@ -496,7 +501,7 @@ export const sessionDetails = `<!DOCTYPE html>
       const zip = new JSZip();
       zip.file("Log.txt", content);
       zip.file("Log.json", content);
-      const htmlData=encodeURIComponent(document.documentElement.outerHTML)
+      const htmlData = document.documentElement.innerHTML;
       zip.file("Log.html", htmlData);
   
       zip.generateAsync({
@@ -557,7 +562,7 @@ export const sessionDetails = `<!DOCTYPE html>
           </div>
           <div class="flex-row">
            {{bug_button}}
-            <div class="flex-row" onclick="downloadLogs()">
+            <div class="flex-row action-button" onclick="downloadLogs()">
               <div class="downloadLogButton">DOWNLOAD</div>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 13L1 14C1 15.6569 2.34315 17 4 17L14 17C15.6569 17 17 15.6569 17 14L17 13M13 9L9 13M9 13L5 9M9 13L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
