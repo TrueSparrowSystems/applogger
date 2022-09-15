@@ -3,6 +3,8 @@ export const sessionDash = `<!DOCTYPE html>
   <head>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://user-images.githubusercontent.com/86605635/190392201-30ee5a6d-5abe-4bd2-bc86-f0040ae5f5b5.png">
+
     <style>
       html,
       body {
