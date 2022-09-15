@@ -59,6 +59,7 @@ export class LogTracker {
     if (this.config?.logRotateDurationInHours) {
       this.removeOldTrackingLogs();
     }
+
     AsyncStorage.getItem(BUG_SESSION_MAP_KEY)
       .then(res => {
         if (res) {
@@ -66,7 +67,9 @@ export class LogTracker {
         }
       })
       .finally(() => {
-        this.createNewSession();
+        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify({})).then(() => {
+          this.createNewSession();
+        });
       });
   }
   /**
@@ -447,9 +450,12 @@ export class LogTracker {
         data[this.sessionId] = Date.now();
 
         AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
-          AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
-            () => {},
-          );
+          AsyncStorage.getItem(LOG_SESSION_KEY).then(() => {
+            AsyncStorage.setItem(
+              LOG_SESSION_KEY,
+              JSON.stringify({...data}),
+            ).catch(() => {});
+          });
         });
       })
       .catch(() => {});
