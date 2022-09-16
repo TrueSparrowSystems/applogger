@@ -392,45 +392,45 @@ class WebServerHelper {
           } else {
             // const sessionData = [];
             let totalNumberOfSteps = 0;
-            this.logTracker.getAllSessions().then((allSessions: any) => {
-              if (allSessions) {
-                const allKeys = Object.keys(allSessions);
-                allKeys.reverse();
-                const numberOfPages = Math.ceil(allKeys.length / 10);
-                let sessionDataMap: Record<string, Array<string>> = {};
-                for (let index = 0; index < allKeys.length; index++) {
-                  const pageNumber = Math.floor(index / 10) + 1;
-                  const key = allKeys[index];
-                  this.logTracker
-                    .getSessionDetails(key)
-                    .then(currentSessionData => {
-                      let numberOfSteps = 0;
-                      if (Array.isArray(currentSessionData)) {
-                        for (
-                          let currentSessionDataIndex = 0;
-                          currentSessionDataIndex < currentSessionData.length;
-                          currentSessionDataIndex++
-                        ) {
-                          const dataChunk =
-                            currentSessionData[currentSessionDataIndex];
-                          const chunkValue = Object.values(dataChunk);
-                          numberOfSteps += chunkValue.length;
-                        }
-                      }
-                      totalNumberOfSteps += numberOfSteps;
-                      if (
-                        index >= (currentIndex - 1) * 10 &&
-                        index < currentIndex * 10
+            const allSessions: Record<string, any> =
+              this.logTracker.getAllSessions();
+            if (allSessions) {
+              const allKeys = Object.keys(allSessions);
+              allKeys.reverse();
+              const numberOfPages = Math.ceil(allKeys.length / 10);
+              let sessionDataMap: Record<string, Array<string>> = {};
+              for (let index = 0; index < allKeys.length; index++) {
+                const pageNumber = Math.floor(index / 10) + 1;
+                const key = allKeys[index];
+                this.logTracker
+                  .getSessionDetails(key)
+                  .then(currentSessionData => {
+                    let numberOfSteps = 0;
+                    if (Array.isArray(currentSessionData)) {
+                      for (
+                        let currentSessionDataIndex = 0;
+                        currentSessionDataIndex < currentSessionData.length;
+                        currentSessionDataIndex++
                       ) {
-                        const isBug =
-                          this.logTracker.getBugStatusBySessionId(key);
-                        const sessionDataArray =
-                          sessionDataMap[pageNumber] || [];
-                        if (
-                          Object.prototype.hasOwnProperty.call(allSessions, key)
-                        ) {
-                          const ts = allSessions[key];
-                          sessionDataArray.push(`
+                        const dataChunk =
+                          currentSessionData[currentSessionDataIndex];
+                        const chunkValue = Object.values(dataChunk);
+                        numberOfSteps += chunkValue.length;
+                      }
+                    }
+                    totalNumberOfSteps += numberOfSteps;
+                    if (
+                      index >= (currentIndex - 1) * 10 &&
+                      index < currentIndex * 10
+                    ) {
+                      const isBug =
+                        this.logTracker.getBugStatusBySessionId(key);
+                      const sessionDataArray = sessionDataMap[pageNumber] || [];
+                      if (
+                        Object.prototype.hasOwnProperty.call(allSessions, key)
+                      ) {
+                        const ts = allSessions[key];
+                        sessionDataArray.push(`
                                   <div class="div-table-row">
                                   <div class="div-table-col0">
                                       <div class="div-download-button" onclick="toggleBug('${key.toString()}')" >
@@ -491,38 +491,44 @@ class WebServerHelper {
                                       </div> 
                                   </div>
                               `);
-                          sessionDataMap[pageNumber] = sessionDataArray;
-                        }
+                        sessionDataMap[pageNumber] = sessionDataArray;
                       }
-                      let paginationComponent = '';
-                      if (numberOfPages > 1) {
-                        const baseUrl = `session${URL_PARAM_DELIMITER}`;
-                        paginationComponent = this.getPaginationComponent(
-                          baseUrl,
-                          numberOfPages,
-                          currentIndex,
-                        );
-                      }
+                    }
+                    let paginationComponent = '';
+                    if (numberOfPages > 1) {
+                      const baseUrl = `session${URL_PARAM_DELIMITER}`;
+                      paginationComponent = this.getPaginationComponent(
+                        baseUrl,
+                        numberOfPages,
+                        currentIndex,
+                      );
+                    }
 
-                      if (index === allKeys.length - 1) {
-                        const replacedText = this.replace(sessionDash, {
-                          session_data: sessionDataMap[currentIndex].join(''),
-                          session_count: allKeys.length,
-                          bugs_count: this.logTracker.getBugCount(),
-                          steps_count: totalNumberOfSteps,
-                          pagination_component: paginationComponent,
-                        });
-                        httpBridge.respond(
-                          request.requestId,
-                          200,
-                          'text/html',
-                          replacedText,
-                        );
-                      }
-                    });
-                }
+                    if (index === allKeys.length - 1) {
+                      const replacedText = this.replace(sessionDash, {
+                        session_data: sessionDataMap[currentIndex].join(''),
+                        session_count: allKeys.length,
+                        bugs_count: this.logTracker.getBugCount(),
+                        steps_count: totalNumberOfSteps,
+                        pagination_component: paginationComponent,
+                      });
+                      httpBridge.respond(
+                        request.requestId,
+                        200,
+                        'text/html',
+                        replacedText,
+                      );
+                    }
+                  });
               }
-            });
+            } else {
+              httpBridge.respond(
+                request.requestId,
+                204,
+                'application/json',
+                '{"message": "No data Found"}',
+              );
+            }
           }
         }
       } else {

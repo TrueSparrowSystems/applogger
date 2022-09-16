@@ -26,6 +26,7 @@ export class LogTracker {
   sessionId: string = uuidv4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
+  allSessionData: Record<string, any> = {};
   bugSessionMap: Record<string, boolean> = {};
   currentStoreId: number = 0;
   uploadLogs?: (
@@ -55,20 +56,25 @@ export class LogTracker {
     }
     this.uploadLogs = this.config?.uploadLogs;
     this.clearStorageOnUpload = this.config?.clearStorageOnLogUpload;
+    AsyncStorage.getItem(LOG_SESSION_KEY).then(allData => {
+      if (allData) {
+        this.allSessionData = JSON.parse(allData);
+      }
 
-    if (this.config?.logRotateDurationInHours) {
-      this.removeOldTrackingLogs();
-    }
+      if (this.config?.logRotateDurationInHours) {
+        this.removeOldTrackingLogs();
+      }
 
-    AsyncStorage.getItem(BUG_SESSION_MAP_KEY)
-      .then(res => {
-        if (res) {
-          this.bugSessionMap = JSON.parse(res);
-        }
-      })
-      .finally(() => {
-        this.createNewSession();
-      });
+      AsyncStorage.getItem(BUG_SESSION_MAP_KEY)
+        .then(res => {
+          if (res) {
+            this.bugSessionMap = JSON.parse(res);
+          }
+        })
+        .finally(() => {
+          this.createNewSession();
+        });
+    });
   }
   /**
    * @function bind function to bind all the class functions
@@ -183,22 +189,20 @@ export class LogTracker {
    * @returns void
    */
   private removeOldTrackingLogs(): void {
-    let allSessionData: any = {};
-    this.getAllSessions().then(data => {
-      allSessionData = data;
-      const currentTime = Date.now();
-      const sessionIdArray: string[] = [];
-      Object.keys(allSessionData).map(key => {
-        const sessionTS = allSessionData[key];
-        const differenceHours = Math.floor(
-          (currentTime - sessionTS) / 1000 / 3600,
-        );
-        if (differenceHours >= this.config.logRotateDurationInHours!) {
-          sessionIdArray.push(key);
-        }
-      });
-      this.clearTrackingLogsOfSession(sessionIdArray);
+    const currentTime = Date.now();
+    const sessionIdArray: string[] = [];
+    Object.keys(this.allSessionData).map(key => {
+      const sessionTS = this.allSessionData[key];
+      const differenceHours = Math.floor(
+        (currentTime - sessionTS) / 1000 / 3600,
+      );
+      if (differenceHours >= this.config.logRotateDurationInHours!) {
+        sessionIdArray.push(key);
+      }
     });
+    if (sessionIdArray.length > 0) {
+      this.clearTrackingLogsOfSession(sessionIdArray);
+    }
   }
 
   /**
@@ -207,22 +211,16 @@ export class LogTracker {
    */
   public deleteAllLogs(): Promise<object> {
     return new Promise((resolve, reject) => {
-      this.getAllSessions()
-        .then((data: any) => {
-          const sessionIds: string[] = Object.keys(data);
-          this.clearTrackingLogsOfSession(sessionIds)
-            .then(() => {
-              AsyncStorage.setItem(
-                BUG_SESSION_MAP_KEY,
-                JSON.stringify({}),
-              ).then(() => {
-                this.bugSessionMap = {};
-                resolve({});
-              });
-            })
-            .catch(() => {
-              reject();
-            });
+      const data = this.allSessionData;
+      const sessionIds: string[] = Object.keys(data);
+      this.clearTrackingLogsOfSession(sessionIds)
+        .then(() => {
+          AsyncStorage.setItem(BUG_SESSION_MAP_KEY, JSON.stringify({})).then(
+            () => {
+              this.bugSessionMap = {};
+              resolve({});
+            },
+          );
         })
         .catch(() => {
           reject();
@@ -237,50 +235,67 @@ export class LogTracker {
    */
   public clearTrackingLogsOfSession(sessionId: string | string[]) {
     return new Promise((resolve, reject) => {
-      this.getAllSessions()
-        .then(async (data: any) => {
-          if (Array.isArray(sessionId)) {
-            for (let index = 0; index < sessionId.length; index++) {
-              delete data[sessionId[index]];
-              if (this.bugSessionMap?.[sessionId[index]]) {
-                delete this.bugSessionMap[sessionId[index]];
-              }
-            }
-            try {
-              await AsyncStorage.setItem(
-                BUG_SESSION_MAP_KEY,
-                JSON.stringify(this.bugSessionMap),
-              );
-              await AsyncStorage.multiRemove(sessionId);
-            } catch {
-              reject();
-            }
-          } else {
-            delete data[sessionId];
-            if (this.bugSessionMap?.[sessionId]) {
-              delete this.bugSessionMap[sessionId];
-            }
-            try {
-              await AsyncStorage.setItem(
-                BUG_SESSION_MAP_KEY,
-                JSON.stringify(this.bugSessionMap),
-              );
-              await AsyncStorage.removeItem(sessionId);
-            } catch {
-              reject();
-            }
+      const data = this.allSessionData;
+      if (Array.isArray(sessionId)) {
+        for (let index = 0; index < sessionId.length; index++) {
+          delete data[sessionId[index]];
+          if (this.bugSessionMap?.[sessionId[index]]) {
+            delete this.bugSessionMap[sessionId[index]];
           }
-          AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
-            .then(() => {
-              resolve({});
-            })
-            .catch(() => {
-              reject();
-            });
-        })
-        .catch(() => {
-          reject();
-        });
+        }
+        AsyncStorage.multiRemove(sessionId)
+          .then(() => {
+            AsyncStorage.setItem(
+              BUG_SESSION_MAP_KEY,
+              JSON.stringify(this.bugSessionMap),
+            )
+              .then(() => {
+                AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
+                  .then(() => {
+                    this.allSessionData = data;
+                    resolve({});
+                  })
+                  .catch(() => {
+                    reject();
+                  });
+              })
+              .catch(() => {
+                reject();
+              });
+          })
+          .catch(() => {
+            reject();
+          });
+      } else {
+        delete data[sessionId];
+        if (this.bugSessionMap?.[sessionId]) {
+          delete this.bugSessionMap[sessionId];
+        }
+
+        AsyncStorage.removeItem(sessionId)
+          .then(() => {
+            AsyncStorage.setItem(
+              BUG_SESSION_MAP_KEY,
+              JSON.stringify(this.bugSessionMap),
+            )
+              .then(() => {
+                AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
+                  .then(() => {
+                    this.allSessionData = data;
+                    resolve({});
+                  })
+                  .catch(() => {
+                    reject();
+                  });
+              })
+              .catch(() => {
+                reject();
+              });
+          })
+          .catch(() => {
+            reject();
+          });
+      }
     });
   }
   /**
@@ -416,72 +431,56 @@ export class LogTracker {
    */
   public uploadAllSessionLogs(): Promise<boolean> {
     return new Promise(resolve => {
-      AsyncStorage.getItem(LOG_SESSION_KEY).then(jsonData => {
-        if (jsonData) {
-          const sessionIds: string[] = [];
-          const sessionLogFilePaths: string[] = [];
+      const jsonData = this.allSessionData;
+      if (!isEmpty(jsonData)) {
+        const sessionIds: string[] = [];
+        const sessionLogFilePaths: string[] = [];
 
-          Object.keys(JSON.parse(jsonData)).forEach((key, index, arr) => {
-            if (key !== this.sessionId) {
-              sessionIds.push(key);
-            }
-            var dir = RNFS.DocumentDirectoryPath + '/sessionLogs';
-            var filename = `/${key}.json`;
-            this.getSessionDetailsAsJson(key).then(singleSessionData => {
-              this.getJsonLogFile(singleSessionData, filename, dir)
-                .then(path => {
-                  sessionLogFilePaths.push(path);
+        Object.keys(jsonData).forEach((key, index, arr) => {
+          if (key !== this.sessionId) {
+            sessionIds.push(key);
+          }
+          var dir = RNFS.DocumentDirectoryPath + '/sessionLogs';
+          var filename = `/${key}.json`;
+          this.getSessionDetailsAsJson(key).then(singleSessionData => {
+            this.getJsonLogFile(singleSessionData, filename, dir)
+              .then(path => {
+                sessionLogFilePaths.push(path);
 
-                  if (index === arr.length - 1) {
-                    this.uploadLogs?.(sessionLogFilePaths, () => {
-                      this.deleteSessionLogFiles(sessionLogFilePaths);
+                if (index === arr.length - 1) {
+                  this.uploadLogs?.(sessionLogFilePaths, () => {
+                    this.deleteSessionLogFiles(sessionLogFilePaths);
 
-                      if (this.clearStorageOnUpload) {
-                        this.clearTrackingLogsOfSession(sessionIds);
-                      }
+                    if (this.clearStorageOnUpload) {
+                      this.clearTrackingLogsOfSession(sessionIds);
+                    }
+                  })
+                    .then(() => {
+                      return resolve(true);
                     })
-                      .then(() => {
-                        return resolve(true);
-                      })
-                      .catch(() => {
-                        return resolve(false);
-                      });
-                  }
-                })
-                .catch(() => {});
-            });
+                    .catch(() => {
+                      return resolve(false);
+                    });
+                }
+              })
+              .catch(() => {});
           });
-        }
-      });
+        });
+      }
     });
   }
   /**
    * @function storeSessionId function to store session id with current timeStamp in async store
    */
   private storeSessionId() {
-    AsyncStorage.getItem(LOG_SESSION_KEY)
-      .then(jsonData => {
-        let data: Record<string, number> = {};
-        if (jsonData) {
-          data = JSON.parse(jsonData!);
-        }
-        data[this.sessionId] = Date.now();
+    const jsonData = this.allSessionData;
+    let data: Record<string, number> = !isEmpty(jsonData) ? jsonData : {};
 
-        if (jsonData) {
-          AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
-            AsyncStorage.getItem(LOG_SESSION_KEY).then(() => {
-              AsyncStorage.setItem(
-                LOG_SESSION_KEY,
-                JSON.stringify({...data}),
-              ).catch(() => {});
-            });
-          });
-        } else {
-          AsyncStorage.setItem(
-            LOG_SESSION_KEY,
-            JSON.stringify({...data}),
-          ).catch(() => {});
-        }
+    data[this.sessionId] = Date.now();
+
+    AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data))
+      .then(() => {
+        this.allSessionData = data;
       })
       .catch(() => {});
   }
@@ -575,21 +574,12 @@ export class LogTracker {
    */
   getAllSessions(): Promise<object> {
     return new Promise(resolve => {
-      AsyncStorage.getItem(LOG_SESSION_KEY)
-        .then(jsonData => {
-          try {
-            if (jsonData) {
-              resolve(JSON.parse(jsonData));
-            } else {
-              resolve({});
-            }
-          } catch (error) {
-            resolve({});
-          }
-        })
-        .catch(() => {
-          resolve({});
-        });
+      const jsonData = this.allSessionData;
+      if (!isEmpty(jsonData)) {
+        resolve(jsonData);
+      } else {
+        resolve({});
+      }
     });
   }
 
