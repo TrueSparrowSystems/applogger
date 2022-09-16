@@ -3,6 +3,7 @@
 - Updated Dashboard UI.
 - Added Feature to mark a session as Bug.
 - Updated Readme
+- Updated moment package.
 
 ## app-logger v1.0.1
 

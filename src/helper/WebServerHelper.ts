@@ -1,6 +1,6 @@
 import {isArray, isEmpty, isNull, isUndefined} from 'lodash';
 import moment from 'moment';
-import {Share} from 'react-native';
+import {Platform, Share} from 'react-native';
 import deviceInfoModule from 'react-native-device-info';
 import {getLogTracker} from '../LogTracker';
 import {DataParser} from '../LogTracker/DataParser';
@@ -65,10 +65,11 @@ class WebServerHelper {
    * @public Function which opens the native share dialog.
    */
   shareUIUrl() {
+    const majorVersion = parseInt(Platform.Version.toString(), 10);
     this.getUIUrl().then((url: string) => {
       const shareContent = {
         title: 'Log Tracker UI URL',
-        url: url,
+        url: Platform.OS === 'ios' && majorVersion >= 16 ? null : url,
         message: url,
       };
 
