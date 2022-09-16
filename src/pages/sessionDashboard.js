@@ -305,8 +305,6 @@ export const sessionDash = `<!DOCTYPE html>
       const zip = new JSZip();
       zip.file("Log.txt", content);
       zip.file("Log.json", content);
-      const htmlData = document.documentElement.innerHTML;
-      zip.file("Log.html", htmlData);
   
       zip.generateAsync({
               type: "blob"
