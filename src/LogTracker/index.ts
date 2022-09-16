@@ -212,7 +212,13 @@ export class LogTracker {
           const sessionIds: string[] = Object.keys(data);
           this.clearTrackingLogsOfSession(sessionIds)
             .then(() => {
-              resolve({});
+              AsyncStorage.setItem(
+                BUG_SESSION_MAP_KEY,
+                JSON.stringify({}),
+              ).then(() => {
+                this.bugSessionMap = {};
+                resolve({});
+              });
             })
             .catch(() => {
               reject();
