@@ -1,6 +1,6 @@
 {
   "name": "@plgworks/applogger",
-  "version": "1.0.2",
+  "version": "1.0.2-beta.1",
   "description": "An application that helps minimize QA issue reporting time and developer debugging time.",
   "private": false,
   "main": "lib/index.js",
@@ -35,17 +35,17 @@
     "uuid": "8.3.2"
   },
   "peerDependencies": {
-    "@react-native-async-storage/async-storage": "1.17.4",
-    "react": "17.0.2",
-    "react-native": "0.68.2",
-    "react-native-device-info": "8.7.1",
-    "react-native-exception-handler": "2.10.10",
-    "react-native-exit-app": "1.1.0",
-    "react-native-fs": "2.20.0",
-    "react-native-get-random-values": "1.8.0",
-    "react-native-http-bridge": "0.6.1",
-    "react-native-network-info": "5.2.1",
-    "react-native-shake": "5.1.1"
+    "@react-native-async-storage/async-storage": "^1.17.4",
+    "react": "^17.0.2",
+    "react-native": "^0.68.2",
+    "react-native-device-info": "^8.7.1",
+    "react-native-exception-handler": "^2.10.10",
+    "react-native-exit-app": "^1.1.0",
+    "react-native-fs": "^2.20.0",
+    "react-native-get-random-values": "^1.8.0",
+    "react-native-http-bridge": "^0.6.1",
+    "react-native-network-info": "^5.2.1",
+    "react-native-shake": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",

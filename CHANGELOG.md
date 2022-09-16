@@ -1,3 +1,9 @@
+## app-logger v1.0.2-beta.1
+
+- Updated Dashboard UI.
+- Added Feature to mark a session as Bug.
+- Updated Readme
+
 ## app-logger v1.0.1
 
 - Updated license.
