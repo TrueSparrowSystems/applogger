@@ -223,6 +223,22 @@ export const sessionDash = `<!DOCTYPE html>
         border-bottom: 2px solid #36415f;
         color: #b5bccd;
       }
+
+      .div-table-col1 {
+        text-align: center;
+      }
+      .div-table-col3 {
+        text-align: center;
+        width: 27% !important;
+      }
+      .div-table-col2 {
+        width: 20% !important;
+      }
+      .div-table-row .div-table-col3 .text {
+        text-align: right;
+        width: 50%;
+      }
+
       .pagination {
         display: flex;
         float: right;
@@ -408,7 +424,7 @@ export const sessionDash = `<!DOCTYPE html>
               <path d="M14.6916 3.07489V26.0856" stroke="#5F2EEA" stroke-width="1.38858" stroke-linejoin="round"/>
             </svg>
               <div class="card-count-text">{{bugs_count}}</div>
-              <div class="card-detail-text">No of Bugs Logged</div>
+              <div class="card-detail-text">Total Bugs Reported</div>
             </div>
 
             <div class="star-box">
