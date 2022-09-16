@@ -570,17 +570,15 @@ export class LogTracker {
 
   /**
    * @function getAllSessions function to get session log data of all sessions
-   * @returns Promise<object> A promise with the session detail object for all sessions
+   * @returns Record<string, any> the session detail object for all sessions
    */
-  getAllSessions(): Promise<object> {
-    return new Promise(resolve => {
-      const jsonData = this.allSessionData;
-      if (!isEmpty(jsonData)) {
-        resolve(jsonData);
-      } else {
-        resolve({});
-      }
-    });
+  getAllSessions(): Record<string, any> {
+    const jsonData = this.allSessionData;
+    if (!isEmpty(jsonData)) {
+      return jsonData;
+    } else {
+      return {};
+    }
   }
 
   /**
