@@ -1,6 +1,6 @@
 {
   "name": "@plgworks/applogger",
-  "version": "1.0.2-beta.2",
+  "version": "1.0.2-beta.3",
   "description": "An application that helps minimize QA issue reporting time and developer debugging time.",
   "private": false,
   "main": "lib/index.js",
