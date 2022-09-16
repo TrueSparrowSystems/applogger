@@ -118,6 +118,8 @@ export const sessionDetails = `<!DOCTYPE html>
         background-color: #1F1A63;
         height: 50px;
         position: sticky;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
       }
       .div-table-row-value {
         width: 100%;
@@ -325,7 +327,7 @@ export const sessionDetails = `<!DOCTYPE html>
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: -webkit-fill-available;
+        width:100%;
       }
       .back-container {
         margin-left: 60px;
@@ -349,11 +351,22 @@ export const sessionDetails = `<!DOCTYPE html>
         overflow-x: hidden;  /* Hide the horizontal scroll */
         width: 100%;
       }
-      .scroll {
+      .device-detail-scroll {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
+        overflow-y: scroll;
+        overflow-x: scroll;
+        height: 660px;
+      }
+      .step-detail-scroll {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
         overflow-y: scroll;
         height: 660px;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
       }
       ::-webkit-scrollbar {
         width: 0.3vw;
@@ -581,7 +594,7 @@ export const sessionDetails = `<!DOCTYPE html>
               <div class="headText">Details</div>
               <div class="subHeadText">{{sessionId}}</div>
             </div>
-          </div>
+          
           <div class="flex-row">
            {{bug_button}}
             <div class="flex-row action-button" onclick="downloadLogs()">
@@ -590,6 +603,7 @@ export const sessionDetails = `<!DOCTYPE html>
                 <path d="M1 13L1 14C1 15.6569 2.34315 17 4 17L14 17C15.6569 17 17 15.6569 17 14L17 13M13 9L9 13M9 13L5 9M9 13L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -605,7 +619,7 @@ export const sessionDetails = `<!DOCTYPE html>
                   <div class="div-table-col-header-text" style='font-weight:700; color: #ffffff;'>{{device_name}}</div>
                 </div>
               </div>
-              <div class="scroll">
+              <div class="device-detail-scroll">
                 {{device_info}}
               </div>
             </div>  
@@ -625,7 +639,6 @@ export const sessionDetails = `<!DOCTYPE html>
     </div>
   </body>
 </html>`;
-
 export const userActionDiv = `
   
     <div class="div-table-row-header">
@@ -636,12 +649,11 @@ export const userActionDiv = `
         <div class="div-table-col-header-text">Details</div>
       </div>
     </div>
-    <div class="scroll">
+    <div class="step-detail-scroll">
     {{user_action_steps}}
     </div>
 
   `;
-
 export const devLogDiv = `
 <div class="dev-log-container">
   <div class="div-title-text">Dev Logs</div>
@@ -665,7 +677,6 @@ export const devLogDiv = `
   {{pagination_component}}
 </div>
 `;
-
 export const emptyUserActionSteps = `
 <div style="text-align: center;">
     <svg width="117" height="102" viewBox="0 0 117 102" fill="none" xmlns="http://www.w3.org/2000/svg">
