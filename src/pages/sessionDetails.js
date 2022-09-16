@@ -400,6 +400,26 @@ export const sessionDetails = `<!DOCTYPE html>
         padding-right: 20%;
       }
 
+      .div-table-dev-logs-col1 {
+        width : 10% !important;
+      }
+      .div-table-dev-logs-col1 .div-table-col-header-text {
+        justify-content: center;
+      }
+      .div-table-dev-logs-col4 {
+        width : 48% !important;
+      }
+      .div-table-dev-logs-col2 .dev-log-text {
+        text-align: center;
+      }
+      .div-table-dev-logs-col2 .div-table-col-header-text {
+        justify-content: center;
+      }
+      .div-table-dev-logs-col1 .dev-log-text {
+        text-align: right;
+        width: 50%;
+      }
+      
       .pagination {
         display: flex;
         float: right;

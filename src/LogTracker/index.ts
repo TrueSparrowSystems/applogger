@@ -67,9 +67,7 @@ export class LogTracker {
         }
       })
       .finally(() => {
-        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify({})).then(() => {
-          this.createNewSession();
-        });
+        this.createNewSession();
       });
   }
   /**
@@ -463,14 +461,21 @@ export class LogTracker {
         }
         data[this.sessionId] = Date.now();
 
-        AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
-          AsyncStorage.getItem(LOG_SESSION_KEY).then(() => {
-            AsyncStorage.setItem(
-              LOG_SESSION_KEY,
-              JSON.stringify({...data}),
-            ).catch(() => {});
+        if (jsonData) {
+          AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
+            AsyncStorage.getItem(LOG_SESSION_KEY).then(() => {
+              AsyncStorage.setItem(
+                LOG_SESSION_KEY,
+                JSON.stringify({...data}),
+              ).catch(() => {});
+            });
           });
-        });
+        } else {
+          AsyncStorage.setItem(
+            LOG_SESSION_KEY,
+            JSON.stringify({...data}),
+          ).catch(() => {});
+        }
       })
       .catch(() => {});
   }
