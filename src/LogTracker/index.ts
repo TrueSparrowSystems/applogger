@@ -10,6 +10,7 @@ import {DeviceConstantKeys, DeviceConstants} from '../DeviceInfo/types';
 import Constants from '../constants/Constants';
 
 const LOG_SESSION_KEY = 'log_session';
+const BUG_SESSION_MAP_KEY = 'bug_session_map';
 
 enum TrackingState {
   Enabled = 'Enabled',
@@ -25,6 +26,7 @@ export class LogTracker {
   sessionId: string = uuidv4();
   sessionData: Record<number, any>[] = [];
   currentData: Record<number, any> = {};
+  bugSessionMap: Record<string, boolean> = {};
   currentStoreId: number = 0;
   uploadLogs?: (
     sessionLogFilePaths: string[],
@@ -58,7 +60,15 @@ export class LogTracker {
       this.removeOldTrackingLogs();
     }
 
-    this.createNewSession();
+    AsyncStorage.getItem(BUG_SESSION_MAP_KEY)
+      .then(res => {
+        if (res) {
+          this.bugSessionMap = JSON.parse(res);
+        }
+      })
+      .finally(() => {
+        this.createNewSession();
+      });
   }
   /**
    * @function bind function to bind all the class functions
@@ -88,6 +98,9 @@ export class LogTracker {
     this.getDeviceInfoByKeys.bind(this);
     this.deleteAllLogs.bind(this);
     this.deleteSessionLogFiles.bind(this);
+    this.toggleBugStatusBySessionId.bind(this);
+    this.getBugStatusBySessionId.bind(this);
+    this.getBugCount.bind(this);
   }
 
   /**
@@ -223,15 +236,29 @@ export class LogTracker {
           if (Array.isArray(sessionId)) {
             for (let index = 0; index < sessionId.length; index++) {
               delete data[sessionId[index]];
+              if (this.bugSessionMap?.[sessionId[index]]) {
+                delete this.bugSessionMap[sessionId[index]];
+              }
             }
             try {
+              await AsyncStorage.setItem(
+                BUG_SESSION_MAP_KEY,
+                JSON.stringify(this.bugSessionMap),
+              );
               await AsyncStorage.multiRemove(sessionId);
             } catch {
               reject();
             }
           } else {
             delete data[sessionId];
+            if (this.bugSessionMap?.[sessionId]) {
+              delete this.bugSessionMap[sessionId];
+            }
             try {
+              await AsyncStorage.setItem(
+                BUG_SESSION_MAP_KEY,
+                JSON.stringify(this.bugSessionMap),
+              );
               await AsyncStorage.removeItem(sessionId);
             } catch {
               reject();
@@ -434,9 +461,21 @@ export class LogTracker {
         }
         data[this.sessionId] = Date.now();
 
-        AsyncStorage.setItem(LOG_SESSION_KEY, JSON.stringify(data)).catch(
-          () => {},
-        );
+        if (jsonData) {
+          AsyncStorage.removeItem(LOG_SESSION_KEY).then(() => {
+            AsyncStorage.getItem(LOG_SESSION_KEY).then(() => {
+              AsyncStorage.setItem(
+                LOG_SESSION_KEY,
+                JSON.stringify({...data}),
+              ).catch(() => {});
+            });
+          });
+        } else {
+          AsyncStorage.setItem(
+            LOG_SESSION_KEY,
+            JSON.stringify({...data}),
+          ).catch(() => {});
+        }
       })
       .catch(() => {});
   }
@@ -564,6 +603,41 @@ export class LogTracker {
   getDeviceInfoByKeys(keys: DeviceConstantKeys[]): DeviceConstants {
     return this.deviceInfo.getByKeys(keys);
   }
+
+  /**
+   * @param  {string} sessionId
+   * @returns Promise
+   */
+  async toggleBugStatusBySessionId(sessionId: string): Promise<void> {
+    return new Promise(resolve => {
+      if (this.bugSessionMap[sessionId]) {
+        delete this.bugSessionMap[sessionId];
+      } else {
+        this.bugSessionMap[sessionId] = true;
+      }
+      AsyncStorage.setItem(
+        BUG_SESSION_MAP_KEY,
+        JSON.stringify(this.bugSessionMap),
+      ).then(() => {
+        return resolve();
+      });
+    });
+  }
+
+  /**
+   * @param  {string} sessionId
+   * @returns boolean
+   */
+  getBugStatusBySessionId(sessionId: string): boolean {
+    return !!this.bugSessionMap?.[sessionId];
+  }
+
+  /**
+   * @returns number
+   */
+  getBugCount(): number {
+    return Object.keys(this.bugSessionMap).length;
+  }
 }
 
 // example for uploading single log file
@@ -598,7 +672,7 @@ export class LogTracker {
 let logTracker: LogTracker;
 let logTrackerConfig: LogTrackerConfigInterface | undefined;
 
-function createLogTrackerInstance() {
+function createLogTrackerInstance(config?: LogTrackerConfigInterface) {
   const defaultConfig: LogTrackerConfigInterface = {
     writeFrequencyInSeconds: 5,
     clearStorageOnLogUpload: false,
@@ -606,14 +680,16 @@ function createLogTrackerInstance() {
   };
   if (logTrackerConfig) {
     return new LogTracker(logTrackerConfig);
+  } else if (config) {
+    return new LogTracker(config);
   } else {
     return new LogTracker(defaultConfig);
   }
 }
 
-export function getLogTracker(): LogTracker {
+export function getLogTracker(config?: LogTrackerConfigInterface): LogTracker {
   if (!logTracker) {
-    logTracker = createLogTrackerInstance();
+    logTracker = createLogTrackerInstance(config);
   }
   return logTracker;
 }

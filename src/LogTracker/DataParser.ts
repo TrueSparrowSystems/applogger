@@ -36,39 +36,60 @@ export class DataParser {
    * @param  {any} sessionLogs
    * @returns string
    */
-  static getDevLogs(sessionLogs: any): string {
+  static getDevLogs(sessionLogs: any, pageNumber: number = 1): string {
     const steps: string[] = [];
     let stepCount = 0;
 
     for (let index = 0; index < sessionLogs.length; index++) {
+      if (stepCount > pageNumber * 10) {
+        break;
+      }
+
       const dataChunk = sessionLogs[index];
 
       const chunkValue = Object.values(dataChunk);
       for (let subIndex = 0; subIndex < chunkValue.length; subIndex++) {
         const log = chunkValue[subIndex] as TrackInterface;
         stepCount++;
-        steps.push(
-          `
+        if (stepCount > (pageNumber - 1) * 10 && stepCount <= pageNumber * 10) {
+          steps.push(
+            `
           <div class="div-table-row-value">
           <div class="div-table-dev-logs-col1">
-                <div class="text">${stepCount}</div>
+                <div class="dev-log-text">${stepCount}</div>
               </div>
               <div class="div-table-dev-logs-col2">
-                <div class="text">${log.ts}</div>
+                <div class="dev-log-text">${log.ts}</div>
               </div>
               <div class="div-table-dev-logs-col3"> 
-                <div class="text">${log.type}</div>
+                <div class="dev-log-text">${log.type}</div>
               </div>
               <div class="div-table-dev-logs-col4"> 
-                <div class="text" style="font-family: monospace; max-width: 30vw;">${JSON.stringify(
+                <div class="dev-log-text" style="font-family: monospace; color: #A1C3FF; max-width: 30vw;">${JSON.stringify(
                   log.params,
                 )}</div>
               </div>
             </div>
+
           `,
-        );
+          );
+        }
       }
     }
     return steps.join('');
+  }
+
+  /**
+   * @param  {any} sessionLogs
+   * @returns number
+   */
+  static getTotalSteps(sessionLogs: any): number {
+    let totalNumberOfSteps: number = 0;
+    for (let index = 0; index < sessionLogs.length; index++) {
+      const dataChunk = sessionLogs[index];
+      const chunkValue = Object.values(dataChunk);
+      totalNumberOfSteps += chunkValue.length;
+    }
+    return totalNumberOfSteps;
   }
 }

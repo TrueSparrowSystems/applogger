@@ -1,7 +1,7 @@
 import {useCallback, useState, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {LogTypes} from '../../constants';
-import WebServerHelper from '../../helper/WebServerHelper';
+import {getWebServerHelperInstance} from '../../helper/WebServerHelper';
 import {getLogTracker} from '../../LogTracker';
 import Cache from '../../services/Cache';
 import {CacheKey} from '../../services/Cache/CacheKey';
@@ -74,7 +74,7 @@ export default function useHelperMenuData(): HelperMenuDataInterface {
    * @returns {void}
    */
   const shareUrl: () => void = useCallback(() => {
-    WebServerHelper.shareUIUrl();
+    getWebServerHelperInstance().shareUIUrl();
   }, []);
 
   /**
