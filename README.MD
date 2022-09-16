@@ -1,10 +1,5 @@
-<h1 align="center">
-  <a href="https://plgworks.com/applogger">
-    AppLogger </a>
-</h1>
-
 <div align="center">
- <img width="526" alt="Screenshot 2022-09-15 at 7 16 25 PM" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png">
+ <a href="https://plgworks.com/applogger" target="_blank"> <img width="526" alt="Screenshot 2022-09-15 at 7 16 25 PM" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png"></a>
 </div>
 <p align="center">
  <a href="https://github.com/PLG-Works/applogger/blob/master/LICENSE">
@@ -349,12 +344,3 @@ function CustomTrackingDemo() {
  <a href="https://plgworks.com/#requestForm"> Contact us </a> if you need any help with this or just want to say hi!
 
 Made with ❤️ at <a href="https://plgworks.com/" target="_blank">PLG Works</a>
-
-## Contributors
-
-- [Deepesh Kumar Nath](https://github.com/deepesh-kn)
-- [Daksh Bhardwaj](https://github.com/dakshbhardwaj)
-- [Dhruv Tailor](https://github.com/dhruvtailor7)
-- [Mohit Charkha](https://github.com/mohitcharkha)
-- [Harsh Siriah](https://github.com/harshsiri110)
-- [Vinay Harwani](https://github.com/vinayharwani13)
