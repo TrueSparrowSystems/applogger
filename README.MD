@@ -1,5 +1,5 @@
 <div align="center">
- <a href="https://plgworks.com/applogger" target="_blank"> <img width="526" alt="Screenshot 2022-09-15 at 7 16 25 PM" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png"></a>
+ <a href="https://plgworks.com/applogger" target="_blank"> <img width="526" alt="AppLogger-Logo" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png"></a>
 </div>
 <p align="center">
  <a href="https://github.com/PLG-Works/applogger/blob/master/LICENSE">
@@ -321,26 +321,26 @@ function CustomTrackingDemo() {
 <table>
 <tr>
   <td>
-<img width="300" src="https://user-images.githubusercontent.com/87412080/172326209-0a63342b-83ef-4e60-8483-435661ba2615.png">
+<img width="300" alt="AppLogger-Sample-App" src="https://user-images.githubusercontent.com/87412080/172326209-0a63342b-83ef-4e60-8483-435661ba2615.png">
       </td>
      <td>
-<img width="300" src="https://user-images.githubusercontent.com/86604753/172822891-ffe2ca97-ff86-4997-b3f9-c4cba7c4eac7.png">
+<img width="300"alt="AppLogger-Sample-App" src="https://user-images.githubusercontent.com/86604753/172822891-ffe2ca97-ff86-4997-b3f9-c4cba7c4eac7.png">
        </td>
    <td>
-<img width="300" src="https://user-images.githubusercontent.com/87412080/172326232-66f36f17-770c-4a9b-849d-910bb87b24ac.png">
+<img width="300" alt="AppLogger-Sample-App" src="https://user-images.githubusercontent.com/87412080/172326232-66f36f17-770c-4a9b-849d-910bb87b24ac.png">
         </td>
   </tr>
   </table>
   
 ### Web Interface
-<img width="1158" alt="Screenshot 2022-09-15 at 10 19 58 AM" src="https://user-images.githubusercontent.com/22423684/190317302-f49ff346-f64b-410b-a1f8-e0b024c0a917.png">
-<img width="1784" alt="Screenshot 2022-09-15 at 10 15 10 AM" src="https://user-images.githubusercontent.com/22423684/190317297-1e823f15-bd40-407e-a999-ed79ec2b187a.png">
-<img width="1699" alt="Screenshot 2022-09-15 at 10 15 29 AM" src="https://user-images.githubusercontent.com/22423684/190317277-ed5d9b2d-68c1-4b2b-a03d-f3d449dbde36.png">
+<img width="1158" alt="AppLogger-Dashboard" src="https://user-images.githubusercontent.com/22423684/190317302-f49ff346-f64b-410b-a1f8-e0b024c0a917.png">
+<img width="1784" alt="AppLogger-Dashboard" src="https://user-images.githubusercontent.com/22423684/190317297-1e823f15-bd40-407e-a999-ed79ec2b187a.png">
+<img width="1699" alt="AppLogger-Dashboard" src="https://user-images.githubusercontent.com/22423684/190317277-ed5d9b2d-68c1-4b2b-a03d-f3d449dbde36.png">
 
 ## Contribution
 
 `AppLogger` is an open source project and will always remain free to use. Feel free to report issues, raise PRs for fixes & enhancements. If you think     it's cool, please star it 🌟<br />
 
- <a href="https://plgworks.com/#requestForm"> Contact us </a> if you need any help with this or just want to say hi!
-
-Made with ❤️ at <a href="https://plgworks.com/" target="_blank">PLG Works</a>
+ <a href="https://plgworks.com/#requestForm" target="_blank"><img width="1440"  alt="contact_us" src="https://user-images.githubusercontent.com/22423684/190952567-f676c890-da66-4c0b-a4ff-c01d4f5478a0.png"></a>
+ 
+ Made with ❤️ at <a href="https://plgworks.com/" target="_blank">PLG Works</a>
