@@ -381,7 +381,7 @@ class WebServerHelper {
             );
           });
         } else {
-          const currentIndex =
+          let currentIndex: number =
             parseInt(urlParamsArrayForSessionDashboard[1], 10) || 1;
           if (currentIndex === 0) {
             httpBridge.respond(
@@ -399,6 +399,9 @@ class WebServerHelper {
               const allKeys = Object.keys(allSessions);
               allKeys.reverse();
               const numberOfPages = Math.ceil(allKeys.length / 10);
+              if (currentIndex > numberOfPages) {
+                currentIndex = 1;
+              }
               let sessionDataMap: Record<string, Array<string>> = {};
               for (let index = 0; index < allKeys.length; index++) {
                 const pageNumber = Math.floor(index / 10) + 1;
