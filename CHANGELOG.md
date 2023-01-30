@@ -1,16 +1,20 @@
-## app-logger v1.0.2
+## applogger v2.0.0
+
+- Republished package under @truesparrow
+
+## applogger v1.0.2
 
 - Updated Dashboard UI.
 - Added Feature to mark a session as Bug.
 - Updated Readme
 - Updated moment package.
 
-## app-logger v1.0.1
+## applogger v1.0.1
 
 - Updated license.
 - Replaced one dependency `uuidv4` with `uuid`.
 
-## app-logger v1.0.0
+## applogger v1.0.0
 
 - Track the steps performed by user and generate logs
 - Maintain tracking sessions.

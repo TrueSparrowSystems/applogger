@@ -1,15 +1,14 @@
 <div align="center">
- <a href="https://plgworks.com/applogger" target="_blank"> <img width="526" alt="AppLogger-Logo" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png"></a>
+ <a href="/https://truesparrow.com//applogger" target="_blank"> <img width="526" alt="AppLogger-Logo" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png"></a>
 </div>
 <p align="center">
- <a href="https://github.com/PLG-Works/applogger/blob/master/LICENSE">
+ <a href="https://github.com/TrueSparrowSystems/applogger/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="AppLogger is released under the MIT license." />
   </a>
     <a href="https://www.npmjs.org/package/react-native">
-    <img src="https://img.shields.io/npm/v/@plgworks/applogger?color=brightgreen&label=npm%20package" alt="AppLogger Current npm package version." />
+    <img src="https://img.shields.io/npm/v/@truesparrow/applogger?color=brightgreen&label=npm%20package" alt="AppLogger Current npm package version." />
   </a>
 </p>
-
 
 # Overview
 
@@ -29,7 +28,7 @@ To solve these problems, we need to track the user actions and application state
 
 Developers can access the app sessions including the steps and associated logs via the web interface using the device's IP address. The web interface includes a session dashboard with a list of sessions and a session details page that includes device information as well as user action and developer logs.
 
-### On the QA side: 
+### On the QA side:
 
 `AppLogger` proves to be a boon by eliminating the need to perform same steps manually for a number of times. Additionally, it simplifies the process to convey the bug's replication steps to developers.
 
@@ -46,12 +45,12 @@ It saves their time by keeping track of the steps in case of Random testing even
 
 ## Sample App
 
-We have provided a [sample app](https://github.com/PLG-Works/app-logger/tree/master/example/LogTrackerExample) for implementation reference and a quick sneak-peek.
+We have provided a [sample app](https://github.com/TrueSparrowSystems/applogger/tree/master/example/LogTrackerExample) for implementation reference and a quick sneak-peek.
 
 # Installation
 
 ```sh
-npm install @plgworks/applogger --save
+npm install @truesparrow/applogger --save
 ```
 
 ### Add Dependencies
@@ -123,7 +122,7 @@ We can configure the following parameters:
 Here is a code snippet to configure `AppLogger` on port 8000.
 
 ```javascript
-import {useAppLogger, HelperMenu} from '@plgworks/AppLogger';
+import {useAppLogger, HelperMenu} from '@truesparrow/AppLogger';
 
 function App() {
   const uploadFile = filePath => {
@@ -215,12 +214,12 @@ Following are some of the [React Native components](https://reactnative.dev/docs
 - TouchableOpacity
 - TouchableWithoutFeedback
 
-How to use these components? Just import these components from `@plgworks/AppLogger` instead of `react-native` and provide a testID.
+How to use these components? Just import these components from `@truesparrow/AppLogger` instead of `react-native` and provide a testID.
 
 Eg - To import TouchableWithoutFeedback :
 
 ```javascript
-import {TouchableWithoutFeedback} from '@plgworks/AppLogger';
+import {TouchableWithoutFeedback} from '@truesparrow/AppLogger';
 
 <TouchableWithoutFeedback testID={'some_test_id'} />;
 ```
@@ -235,7 +234,7 @@ import {TouchableWithoutFeedback} from '@plgworks/AppLogger';
 Example snippets:
 
 ```javascript
-import {ComponentWrapper} from ‘@plgworks/AppLogger’;
+import {ComponentWrapper} from ‘@truesparrow/AppLogger’;
 
 <ComponentWrapper>
     <Component testID="component_test_id" {...props}/>
@@ -243,7 +242,7 @@ import {ComponentWrapper} from ‘@plgworks/AppLogger’;
 ```
 
 ```javascript
-import {ComponentWrapper} from ‘@plgworks/AppLogger’;
+import {ComponentWrapper} from ‘@truesparrow/AppLogger’;
 <ComponentWrapper>
   <Component1 testID="component1_test_id" {...props} />
   <Component2 testID="component2_test_id" {...props} />
@@ -272,7 +271,7 @@ Following are the functions that have log tracking enabled in them.
 - onRefresh
 - onValueChange
 
-How to use these functions? No change, you can write it as you would normally do and the `AppLogger` will take care of the rest, provided your component is imported from `@plgworks/AppLogger` or wrapped inside `ComponentWrapper`.
+How to use these functions? No change, you can write it as you would normally do and the `AppLogger` will take care of the rest, provided your component is imported from `@truesparrow/AppLogger` or wrapped inside `ComponentWrapper`.
 
 ## Custom Tracking
 
@@ -293,7 +292,7 @@ Here is an example for custom tracking using `AppLogger`. Consider keeping track
 ```javascript
 import {useCallback} from 'react';
 import {Image} from 'react-native';
-import {getLogTracker} from '@plgworks/AppLogger';
+import {getLogTracker} from '@truesparrow/AppLogger';
 
 function CustomTrackingDemo() {
     const imageTestID = 'custom_tracking_demo_image';
@@ -339,8 +338,8 @@ function CustomTrackingDemo() {
 
 ## Contribution
 
-`AppLogger` is an open source project and will always remain free to use. Feel free to report issues, raise PRs for fixes & enhancements. If you think     it's cool, please star it 🌟<br />
+`AppLogger` is an open source project and will always remain free to use. Feel free to report issues, raise PRs for fixes & enhancements. If you think it's cool, please star it 🌟<br />
 
- <a href="https://plgworks.com/#requestForm" target="_blank"><img width="1440"  alt="contact_us" src="https://user-images.githubusercontent.com/22423684/190952567-f676c890-da66-4c0b-a4ff-c01d4f5478a0.png"></a>
- 
- Made with ❤️ at <a href="https://plgworks.com/" target="_blank">PLG Works</a>
+<a href="https://truesparrow.com/#get-in-touch" target="_blank"><img width="1440"  alt="contact_us" src="https://user-images.githubusercontent.com/22423684/190952567-f676c890-da66-4c0b-a4ff-c01d4f5478a0.png"></a>
+
+Made with ❤️ at <a href="https://truesparrow.com/" target="_blank">True Sparrow</a>
