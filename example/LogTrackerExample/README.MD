@@ -5,7 +5,7 @@
 
 - Clone the project
   ```
-  git clone https://github.com/PLG-Works/app-logger.git
+  git clone https://github.com/TrueSparrowSystems/applogger.git
   cd example/LogTrackerExample
   ```
 - Create .env file in the root directory of the project and paste the following lines.

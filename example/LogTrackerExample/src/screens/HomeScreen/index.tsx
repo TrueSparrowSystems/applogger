@@ -4,7 +4,7 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
-} from '@plgworks/applogger';
+} from '@truesparrow/applogger';
 import React, {useCallback, useState} from 'react';
 import {
   Platform,

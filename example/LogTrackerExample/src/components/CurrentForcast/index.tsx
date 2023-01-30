@@ -1,4 +1,4 @@
-import {useMountLogger} from '@plgworks/applogger';
+import {useMountLogger} from '@truesparrow/applogger';
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 

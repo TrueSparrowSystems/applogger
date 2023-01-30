@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {TextInput, Pressable, Switch} from '@plgworks/applogger';
+import {TextInput, Pressable, Switch} from '@truesparrow/applogger';
 
 const ForecastSearch = ({
   toggleSearch,

@@ -14,7 +14,7 @@
     "generate-keystore": "sh ./android/keystore/sample/generate_keystore.sh "
   },
   "dependencies": {
-    "@plgworks/applogger": "1.0.2",
+    "@truesparrow/applogger": "2.0.0",
     "@react-native-async-storage/async-storage": "^1.17.4",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
