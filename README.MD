@@ -1,6 +1,7 @@
 <div align="center">
- <a href="/https://truesparrow.com//applogger" target="_blank"> <img width="526" alt="AppLogger-Logo" src="https://user-images.githubusercontent.com/87412080/190421195-467a0f60-e12d-49a5-a364-56a29957e7b1.png"></a>
+ <a href="/https://truesparrow.com//applogger" target="_blank"> <img width="526" alt="AppLogger-Logo" src="https://user-images.githubusercontent.com/22423684/215479730-9ab3cb6a-8f40-436b-b896-dcb4a525265e.png"></a>
 </div>
+
 <p align="center">
  <a href="https://github.com/TrueSparrowSystems/applogger/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="AppLogger is released under the MIT license." />
